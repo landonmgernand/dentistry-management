@@ -13,6 +13,8 @@ using Microsoft.Extensions.Hosting;
 using System.Linq;
 using DentistryManagement.Server.Data;
 using DentistryManagement.Server.Models;
+using DentistryManagement.Server.Services;
+using DentistryManagement.Shared;
 
 namespace DentistryManagement.Server
 {
@@ -44,6 +46,7 @@ namespace DentistryManagement.Server
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.AddScoped<IService<UserDTO>, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
