@@ -1,0 +1,7 @@
+/client/obj
+/client/bin
+/server/obj
+/server/bin
+/shared/obj
+/shared/bin
+/.vs
