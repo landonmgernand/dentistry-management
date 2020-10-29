@@ -2,47 +2,91 @@
 @using DentistryManagement.Shared
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Spinner
 @inject HttpClient Http
 
-<h3>Users</h3>
-
-@if (users == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    Email
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach(var user in users)
-            {
-                <tr>
-                    <td>@user.Email</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+<div class="col-lg-12 control-section">
+    <div class="content-wrapper">
+        <div class="row">
+            <SfGrid TValue="@UserDTO" AllowPaging="true" Toolbar="@(new string[] {"Add", "Edit" ,"Delete","Update","Cancel" })">
+                <SfDataManager Url="api/User" Adaptor="Adaptors.WebApiAdaptor"></SfDataManager>
+                <GridEvents OnActionBegin="onBegin" OnLoad="onLoad" OnDataBound="onDataBound" OnActionFailure="OnActionFailure" TValue="@UserDTO"></GridEvents>
+                <GridEditSettings AllowAdding="true" AllowEditing="true" AllowDeleting="true" Mode="@EditMode.Dialog" Dialog="DialogParams">
+                    <Template>
+                        @{
+                            var user = (context as UserDTO);
+                        }
+                        <div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <SfTextBox ID="Email" @bind-Value="@(user.Email)" FloatLabelType="FloatLabelType.Always" Placeholder="Email"></SfTextBox>
+                                </div>
+                            </div>
+                            @if (user.Email == null)
+                            {
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <SfTextBox ID="PasswordHash" @bind-Value="@(user.PasswordHash)" FloatLabelType="FloatLabelType.Always" Placeholder="Password"></SfTextBox>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <SfTextBox ID="NormilizedEmail" @bind-Value="@(user.NormilizedEmail)" FloatLabelType="FloatLabelType.Always" Placeholder="NormilizedEmail"></SfTextBox>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </Template>
+                </GridEditSettings>
+                <SfSpinner @bind-Visible="@VisibleSpinner"></SfSpinner>
+                <GridColumns>
+                    <GridColumn Field=@nameof(UserDTO.Email) HeaderText="Email" Width="150" IsPrimaryKey="true"></GridColumn>
+                    <GridColumn Field=@nameof(UserDTO.NormilizedEmail) HeaderText="NormilizedEmail" Width="150"></GridColumn>
+                    <GridColumn Field=@nameof(UserDTO.PasswordHash) HeaderText="PasswordHash" Visible="@AddMode" Width="0" IsPrimaryKey="true" ValidationRules="@(new ValidationRules { Required = true, MinLength = 6, MaxLength = 100 })" ></GridColumn>
+                </GridColumns>
+            </SfGrid>
+        </div>
+    </div>
+</div>
 
 @code {
-    private UserDTO[] users;
+    private DialogSettings DialogParams = new DialogSettings { MinHeight = "400px", Width = "450px" };
+    public bool AddMode { get; set; } = false;
+    private string Password { get; set; }
+    private bool VisibleSpinner { get; set; } = false;
 
-    protected override async Task OnInitializedAsync()
+    public void onBegin(ActionEventArgs<UserDTO> args)
     {
-        try
+        if (args.RequestType == Syncfusion.Blazor.Grids.Action.Add)
         {
-            users = await Http.GetFromJsonAsync<UserDTO[]>("api/User");
+            AddMode = true;
         }
-        catch (AccessTokenNotAvailableException exception)
+        else
         {
-            exception.Redirect();
+            AddMode = false;
         }
+    }
+
+    public void onLoad()
+    {
+        VisibleSpinner = true;
+    }
+
+    public void OnActionFailure(Syncfusion.Blazor.Grids.FailureEventArgs args)
+    {
+        var test = args;
+    }
+
+    public void onDataBound()
+    {
+        VisibleSpinner = false;
     }
 }

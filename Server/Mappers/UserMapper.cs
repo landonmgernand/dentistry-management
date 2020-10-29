@@ -5,11 +5,27 @@ namespace DentistryManagement.Server.Mappers
 {
     public class UserMapper
     {
-        public static UserDTO UserToDTO(ApplicationUser applicationUser)
+        public static UserDTO ApplicationUserToDTO(ApplicationUser applicationUser)
         {
             return new UserDTO
             {
-                Email = applicationUser.Email
+                Id = applicationUser.Id,
+                Email = applicationUser.Email,
+                FirstName = applicationUser.FirstName,
+                LastName = applicationUser.LastName,
+                NormilizedEmail = applicationUser.NormalizedEmail
+            };
+        }
+
+        public static ApplicationUser DTOtoApplicationUser(UserDTO userDTO)
+        {
+            return new ApplicationUser
+            {
+                Email = userDTO.Email,
+                UserName = userDTO.Email,
+                FirstName = userDTO.FirstName,
+                LastName = userDTO.LastName,
+                EmailConfirmed = true
             };
         }
     }
