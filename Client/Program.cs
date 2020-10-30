@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Syncfusion.Blazor;
+using Blazored.Modal;
 
 namespace DentistryManagement.Client
 {
@@ -15,6 +17,7 @@ namespace DentistryManagement.Client
     {
         public static async Task Main(string[] args)
         {
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzQyMTY5QDMxMzgyZTMzMmUzMEs0R2RoQ29vMW5Pc0h1VG0vblJjTjZnNCtGTUV4d2ZaclQ3d2VQaVNDbVk9;MzQyMTcwQDMxMzgyZTMzMmUzMGVYQjBxQzVER2FoSHB2azZmdXJQWDFnSElrbUJsYkgxamdiSUI0WFFRSmc9;MzQyMTcxQDMxMzgyZTMzMmUzMEQ4ZlBBa2prcWo2V3BvT3pGa21QSnBXRm50QUdwOVIza0h3NGRTK0wvMTg9");
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
 
@@ -25,6 +28,8 @@ namespace DentistryManagement.Client
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("DentistryManagement.ServerAPI"));
 
             builder.Services.AddApiAuthorization();
+            builder.Services.AddSyncfusionBlazor();
+            builder.Services.AddBlazoredModal();
 
             await builder.Build().RunAsync();
         }
