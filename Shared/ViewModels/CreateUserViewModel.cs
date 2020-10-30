@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 
-namespace DentistryManagement.Shared
+namespace DentistryManagement.Shared.ViewModels
 {
-    public class UserDTO
+    public class CreateUserViewModel
     {
-        public string Id { get; set; }
-
         [Required]
         [EmailAddress]
         public string Email { get; set; }
@@ -26,7 +23,5 @@ namespace DentistryManagement.Shared
         [Required]
         [DataType(DataType.Text)]
         public string LastName { get; set; }
-
-        public string NormilizedEmail { get; set; }
     }
 }

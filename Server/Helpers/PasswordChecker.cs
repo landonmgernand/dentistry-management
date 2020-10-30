@@ -2,7 +2,7 @@
 
 namespace DentistryManagement.Server.Helpers
 {
-    public static class PasswordChecker
+    public class PasswordChecker
     {
         public static bool ValidatePassword(string password, out string ErrorMessage)
         {

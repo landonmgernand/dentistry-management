@@ -15,6 +15,7 @@ using DentistryManagement.Server.Data;
 using DentistryManagement.Server.Models;
 using DentistryManagement.Server.Services;
 using DentistryManagement.Shared;
+using AutoMapper;
 
 namespace DentistryManagement.Server
 {
@@ -46,6 +47,7 @@ namespace DentistryManagement.Server
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+    
             services.AddScoped<UserService, UserService>();
         }
 

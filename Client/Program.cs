@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Syncfusion.Blazor;
+using Blazored.Modal;
 
 namespace DentistryManagement.Client
 {
@@ -28,6 +29,7 @@ namespace DentistryManagement.Client
 
             builder.Services.AddApiAuthorization();
             builder.Services.AddSyncfusionBlazor();
+            builder.Services.AddBlazoredModal();
 
             await builder.Build().RunAsync();
         }

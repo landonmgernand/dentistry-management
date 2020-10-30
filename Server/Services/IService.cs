@@ -7,5 +7,6 @@ namespace DentistryManagement.Server.Services
         public List<T> GetAll();
         public T Get(string id);
         public void Add(T item);
+        public bool Exist(string id);
     }
 }

@@ -2,36 +2,34 @@
 using System.Threading.Tasks;
 using DentistryManagement.Server.Models;
 using DentistryManagement.Server.Services;
-using DentistryManagement.Shared;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using DentistryManagement.Server.Helpers;
+using DentistryManagement.Shared.ViewModels;
+using DentistryManagement.Server.Mappers;
+using System.Linq;
 
 namespace DentistryManagement.Server.Controllers
 {
-   
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
         private readonly UserService _service;
-        private readonly UserManager<ApplicationUser> _userManager;
 
-        public UserController(UserService service, UserManager<ApplicationUser> userManager)
+        public UserController(UserService service)
         {
             _service = service;
-            _userManager = userManager;
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<UserDTO>> GetUsers()
+        public ActionResult<IEnumerable<UserViewModel>> GetUsers()
         {
-            return _service.GetAll();
+            return _service.GetAll().Select(x => UserMapper.DTOtoUserViewModel(x)).ToArray();
         }
 
         [HttpGet("{id}")]
-        public ActionResult<UserDTO> GetUser(string id)
+        public ActionResult<UserViewModel> GetUser(string id)
         {
             var user = _service.Get(id);
 
@@ -40,48 +38,45 @@ namespace DentistryManagement.Server.Controllers
                 return NotFound();
             }
 
-            return user;
+            return UserMapper.DTOtoUserViewModel(user);
         }
 
         [HttpPost]
-        public async Task<ActionResult<UserDTO>> AddUser([FromBody] UserDTO userDTO)
+        public async Task<ActionResult> CreateUser([FromBody] CreateUserViewModel createUserViewModel)
         {
-            if (!ModelState.IsValid)
+            if (_service.GetByUsername(createUserViewModel.Email) != null)
             {
-                return ValidationProblem();
+                ModelState.AddModelError(nameof(createUserViewModel.Email), "This email is already taken");
+                return BadRequest(ModelState);
             }
 
-            if (_service.GetByUsername(userDTO.Email) != null)
+            if (!PasswordChecker.ValidatePassword(createUserViewModel.PasswordHash, out var message))
             {
-                ModelState.AddModelError("Username", "This username is already taken");
-                return ValidationProblem();
+                ModelState.AddModelError(nameof(createUserViewModel.PasswordHash), message);
+                return BadRequest(ModelState);
             }
 
-            if (!PasswordChecker.ValidatePassword(userDTO.PasswordHash, out var message))
-            {
-                ModelState.AddModelError("Password", message);
-                return ValidationProblem();
-            }
+            var userDTO = UserMapper.AddUserViewModelToDTO(createUserViewModel);
 
-            var returnedUserDTO = await _service.AddUser(userDTO);
+            await _service.CreateUser(userDTO);
 
-            return CreatedAtAction(nameof(GetUser), new { id = returnedUserDTO.Id }, returnedUserDTO);
+            return Ok(ModelState);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(string id, UserDTO userDTO)
+        public async Task<IActionResult> UpdateUser(string id, UpdateUserViewModel updateUserViewModel)
         {
-            if (id != userDTO.Id)
+            if (id != updateUserViewModel.Id)
             {
                 return BadRequest();
             }
 
-            var user = _service.Get(id);
-
-            if (user == null)
+            if (!_service.Exist(id))
             {
                 return NotFound();
             }
+
+            var userDTO = UserMapper.UpdateUserViewModelToDTO(updateUserViewModel);
 
             await _service.UpdateUser(userDTO);
 
@@ -89,16 +84,14 @@ namespace DentistryManagement.Server.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> RemoveUser(string id)
+        public async Task<IActionResult> DeleteUser(string id)
         {
-            var user = _service.Get(id);
-
-            if (user == null)
+            if (!_service.Exist(id))
             {
                 return NotFound();
             }
 
-            await _service.RemoveUser(id);
+            await _service.DeleteUser(id);
 
             return NoContent();
         }

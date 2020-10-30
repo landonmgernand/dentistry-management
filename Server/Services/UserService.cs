@@ -1,20 +1,20 @@
 ﻿using DentistryManagement.Server.Data;
 using DentistryManagement.Server.Mappers;
 using DentistryManagement.Server.Models;
-using DentistryManagement.Shared;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using System;
 using Microsoft.AspNetCore.Mvc;
+using DentistryManagement.Server.DataTransferObjects;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DentistryManagement.Server.Services
 {
-    public class UserService : IService<UserDTO>
+    public class UserService : IUserService<UserDTO>
     {
         private readonly ApplicationDbContext _context;
-
         private readonly UserManager<ApplicationUser> _userManager;
 
         public UserService(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
@@ -30,8 +30,14 @@ namespace DentistryManagement.Server.Services
 
         public UserDTO Get(string id)
         {
-            var user = _context.ApplicationUsers.Find(id);
-            return UserMapper.ApplicationUserToDTO(user);
+            var applicationUser = _context.ApplicationUsers.Find(id);
+
+            if (applicationUser == null)
+            {
+                return null;
+            }
+
+            return UserMapper.ApplicationUserToDTO(applicationUser);
         }
 
         public void Add(UserDTO item)
@@ -41,19 +47,20 @@ namespace DentistryManagement.Server.Services
 
         public ActionResult<UserDTO> GetByUsername(string username)
         {
-            var user = _context.ApplicationUsers.SingleOrDefault(x => x.UserName.Equals(username));
-
-            if (user == null)
+            var applicationUser = _context.ApplicationUsers.SingleOrDefault(x => x.UserName.Equals(username));
+           
+            if (applicationUser == null)
             {
                 return null;
             }
 
-            return UserMapper.ApplicationUserToDTO(user);
+            return UserMapper.ApplicationUserToDTO(applicationUser);
         }
 
-        public async Task<UserDTO> AddUser(UserDTO userDTO)
+        public async Task<UserDTO> CreateUser(UserDTO userDTO)
         {
             var applicationUser = UserMapper.DTOtoApplicationUser(userDTO);
+
             await _userManager.CreateAsync(applicationUser, userDTO.PasswordHash);
 
             return UserMapper.ApplicationUserToDTO(applicationUser);
@@ -67,10 +74,15 @@ namespace DentistryManagement.Server.Services
             await _userManager.UpdateAsync(applicationUser);
         }
 
-        public async Task RemoveUser(string id)
+        public async Task DeleteUser(string id)
         {
             var applicationUser = _context.ApplicationUsers.Find(id);
             await _userManager.DeleteAsync(applicationUser);
+        }
+
+        public bool Exist(string id)
+        {
+            return _context.ApplicationUsers.Any(x => x.Id.Equals(id));
         }
     }
 }
