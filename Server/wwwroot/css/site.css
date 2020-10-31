@@ -53,13 +53,44 @@ body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
 }
+
 .footer {
   position: absolute;
   bottom: 0;
   width: 100%;
-  overflow: scroll;
   white-space: nowrap;
-  /* Set the fixed height of the footer here */
-  height: 60px;
   line-height: 60px; /* Vertically center the text there */
+}
+
+.centered {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.image-centered {
+    margin: auto;
+    display: block;
+}
+
+.login-border {
+    border: 1px solid #dadada;
+    border-radius: 10px;
+}
+
+.grph-primary {
+    background-color: #193C6B;
+}
+
+.grph-primary:hover {
+    background-color: rgba(25,60,107,0.84) !important;
+}
+
+.grph-primary:active {
+    background-color: #193C6B !important;
+}
+
+.grph-primary:focus {
+    box-shadow: none !important;
 }
