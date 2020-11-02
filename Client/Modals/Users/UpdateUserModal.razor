@@ -3,17 +3,32 @@
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using System.Net.Http.Json
 @using Microsoft.Extensions.Logging
+
 @inject ILogger<Users> Logger
 @inject IModalService Modal
 @inject HttpClient Http
 
-<div class="simple-form">
+<div class="grph-modal-form">
     <EditForm Model="@UpdateUserViewModel" OnValidSubmit="@HandleValidSubmit">
         <DataAnnotationsValidator />
-        <ValidationSummary />
-        <InputText id="firstName" @bind-Value="UpdateUserViewModel.FirstName" />
-        <InputText id="lastName" @bind-Value="UpdateUserViewModel.LastName" />
-        <button type="submit" disabled="@disabled">Submit</button>
+
+        <div class="row">
+            <div class="col">
+                <MatTextField @bind-Value="UpdateUserViewModel.FirstName" Label="First Name" Outlined="true"></MatTextField>
+                <ValidationMessage For="@(() => UpdateUserViewModel.FirstName)" />
+            </div>
+            <div class="col">
+                <MatTextField @bind-Value="UpdateUserViewModel.LastName" Label="Last Name" Outlined="true"></MatTextField>
+                <ValidationMessage For="@(() => UpdateUserViewModel.LastName)" />
+            </div>
+        </div>
+
+        <br />
+
+        <div class="input-group grph-button-actions">
+            <button class="btn btn-primary grph-cancel" @onclick="BlazoredModal.Cancel">Cancel</button>
+            <button class="btn btn-primary grph-primary" disabled="@disabled">Create User</button>
+        </div>
 
         <p style="@messageStyles">
             @message
@@ -28,7 +43,7 @@
     public string Id { get; set; }
     private bool disabled;
     private string message;
-    private string messageStyles = "visibility:hidden";
+    private string messageStyles = "display:none";
     private UpdateUserViewModel UpdateUserViewModel = new UpdateUserViewModel();
 
     protected override async Task OnInitializedAsync()
@@ -62,7 +77,7 @@
         {
             Logger.LogError("Form processing error: {Message}", exception.Message);
             disabled = true;
-            messageStyles = "color:red";
+            messageStyles = "display:block";
             message = "There was an error processing the form.";
         }
     }

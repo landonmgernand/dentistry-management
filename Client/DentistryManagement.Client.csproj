@@ -12,6 +12,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="3.2.1" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="3.2.1" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.6" />
+    <PackageReference Include="Skclusive.Material.Paper" Version="2.0.1" />
+    <PackageReference Include="Skclusive.Material.Table" Version="2.0.1" />
     <PackageReference Include="Syncfusion.Blazor" Version="18.3.0.44" />
     <PackageReference Include="System.Net.Http.Json" Version="3.2.0" />
   </ItemGroup>

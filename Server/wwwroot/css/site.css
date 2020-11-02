@@ -84,19 +84,3 @@ body {
     border-radius: 10px;
     background-color: white;
 }
-
-.grph-primary {
-    background-color: #193C6B;
-}
-
-.grph-primary:hover {
-    background-color: rgba(25,60,107,0.84) !important;
-}
-
-.grph-primary:active {
-    background-color: #193C6B !important;
-}
-
-.grph-primary:focus {
-    box-shadow: none !important;
-}

@@ -2,6 +2,7 @@
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #EAF3F9 !important;
 }
 
 a, .btn-link {
@@ -31,9 +32,18 @@ app {
 }
 
     .main .top-row {
-        background-color: #f7f7f7;
+        background-color: #CDE4F0;
         border-bottom: 1px solid #d6d5d5;
         justify-content: flex-end;
+        box-shadow: 0px 3px 3px -2px rgba(0,0,0,0.1), 0px 3px 4px 0px rgba(0,0,0,0.07), 0px 1px 8px 0px rgba(0,0,0,0.05);
+    }
+
+    .main .under-top-row {
+        background-color: white;
+        height: 34px;
+        box-shadow: 0px 3px 3px -2px rgba(0,0,0,0.1), 0px 3px 4px 0px rgba(0,0,0,0.07), 0px 1px 8px 0px rgba(0,0,0,0.05);
+        align-items: center;
+        display: flex;
     }
 
         .main .top-row > a, .main .top-row .btn-link {
@@ -47,7 +57,7 @@ app {
 }
 
 .sidebar {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    background-color: #193C6B;
 }
 
     .sidebar .top-row {
@@ -88,13 +98,11 @@ app {
         }
 
             .sidebar .nav-item a.active {
-                background-color: rgba(255,255,255,0.25);
-                color: white;
+                color: #FAB522;
             }
 
             .sidebar .nav-item a:hover {
-                background-color: rgba(255,255,255,0.1);
-                color: white;
+                background-color: rgba(0, 0, 0, 0.04);
             }
 
 .content {
@@ -106,15 +114,16 @@ app {
 }
 
 .valid.modified:not([type=checkbox]) {
-    outline: 1px solid #26b050;
+
 }
 
 .invalid {
-    outline: 1px solid red;
+    border-color: #b71c1c;
 }
 
 .validation-message {
-    color: red;
+    color: #b71c1c !important;
+    font-size: 0.6428571428571428rem !important;
 }
 
 #blazor-error-ui {
@@ -134,6 +143,10 @@ app {
     position: absolute;
     right: 0.75rem;
     top: 0.5rem;
+}
+
+.mdc-list > li:hover {
+    background-color: rgba(0, 0, 0, 0.04);
 }
 
 @media (max-width: 767.98px) {

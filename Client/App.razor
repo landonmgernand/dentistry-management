@@ -1,25 +1,45 @@
-<CascadingAuthenticationState>
-    <CascadingBlazoredModal>
-        <Router AppAssembly="@typeof(Program).Assembly">
-            <Found Context="routeData">
-                <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
-                    <NotAuthorized>
-                        @if (!context.User.Identity.IsAuthenticated)
-                        {
-                            <RedirectToLogin />
-                        }
-                        else
-                        {
-                            <p>You are not authorized to access this resource.</p>
-                        }
-                    </NotAuthorized>
-                </AuthorizeRouteView>
-            </Found>
-            <NotFound>
-                <LayoutView Layout="@typeof(MainLayout)">
-                    <p>Sorry, there's nothing at this address.</p>
-                </LayoutView>
-            </NotFound>
-        </Router>
+<PaperStyle />
+<TableStyles />
+<MatThemeProvider Theme="@graphene" >
+    <CascadingAuthenticationState>
+        <CascadingBlazoredModal>
+            <Router AppAssembly="@typeof(Program).Assembly">
+                <Found Context="routeData">
+                    <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                        <NotAuthorized>
+                            @if (!context.User.Identity.IsAuthenticated)
+                            {
+                                <RedirectToLogin />
+                            }
+                            else
+                            {
+                                <p>You are not authorized to access this resource.</p>
+                            }
+                        </NotAuthorized>
+                        <Authorizing>
+                            <div class="grph-waiting">
+                                <div class="grph-waiting-status">
+                                    <div class="spinner"></div>
+                                    <h1>Authorizing...</h1>
+                                </div>
+                            </div>
+                        </Authorizing>
+                    </AuthorizeRouteView>
+                </Found>
+                <NotFound>
+                    <LayoutView Layout="@typeof(MainLayout)">
+                        <p>Sorry, there's nothing at this address.</p>
+                    </LayoutView>
+                </NotFound>
+            </Router>
         </CascadingBlazoredModal>
-</CascadingAuthenticationState>
+    </CascadingAuthenticationState>
+</MatThemeProvider>
+@code
+{
+    MatTheme graphene = new MatTheme()
+    {
+        Primary = "#193C6B",
+        Secondary = "#193C6B"
+    };
+}

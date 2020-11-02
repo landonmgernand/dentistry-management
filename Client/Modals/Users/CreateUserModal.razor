@@ -5,34 +5,66 @@
 @using System.Net
 @using System.Net.Http.Json
 @using Microsoft.Extensions.Logging
+
 @inject ILogger<Users> Logger
-@inject IModalService Modal
 @inject HttpClient Http
 
-<div class="simple-form">
+<div class="grph-modal-form">
     <EditForm Model="@AddUserViewModel" OnValidSubmit="@HandleValidSubmit">
         <DataAnnotationsValidator />
         <CustomValidator @ref="customValidator" />
-        <ValidationSummary />
-        <InputText id="Email" @bind-Value="AddUserViewModel.Email" />
-        <InputText id="firstName" @bind-Value="AddUserViewModel.FirstName" />
-        <InputText id="lastName" @bind-Value="AddUserViewModel.LastName" />
-        <InputText id="PasswordHash" @bind-Value="AddUserViewModel.PasswordHash" />
-        <button type="submit" disabled="@disabled">Submit</button>
 
-        <p style="@messageStyles">
+        <p class="validation-message" style="@messageStyles">
             @message
         </p>
+
+        <div class="row">
+            <div class="col">
+                <MatTextField @bind-Value="AddUserViewModel.FirstName" Label="First Name" Outlined="true"></MatTextField>
+                <ValidationMessage For="@(() => AddUserViewModel.FirstName)" />
+            </div>
+            <div class="col">
+                <MatTextField @bind-Value="AddUserViewModel.LastName" Label="Last Name" Outlined="true"></MatTextField>
+                <ValidationMessage For="@(() => AddUserViewModel.LastName)" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <MatTextField @bind-Value="AddUserViewModel.Email" Label="Email" Outlined="true"></MatTextField>
+                <ValidationMessage For="@(() => AddUserViewModel.Email)" />
+            </div>
+            <div class="col">
+                <MatTextField @bind-Value="AddUserViewModel.PasswordHash" Label="Password" Outlined="true"></MatTextField>
+                <ValidationMessage For="@(() => AddUserViewModel.PasswordHash)" />
+            </div>
+        </div>
+
+        <br />
+
+        <div class="input-group grph-button-actions">
+            <button class="btn btn-primary grph-cancel" @onclick="BlazoredModal.Cancel">Cancel</button>
+            <button class="btn btn-primary grph-primary" disabled="@disabled">Create User</button>
+        </div>
+
     </EditForm>
 </div>
 
 @code {
-    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+    [CascadingParameter]
+    BlazoredModalInstance BlazoredModal { get; set; }
     private bool disabled;
     private string message;
-    private string messageStyles = "visibility:hidden";
+    private string messageStyles = "display:none";
     private CreateUserViewModel AddUserViewModel = new CreateUserViewModel();
     private CustomValidator customValidator;
+    private string Email { set; get; }
+
+    private void HandleEmail(ChangeEventArgs arg)
+    {
+        Email = arg.Value?.ToString();
+        AddUserViewModel.Email = Email;
+        StateHasChanged();
+    }
 
     private async Task HandleValidSubmit()
     {
@@ -63,7 +95,7 @@
         {
             Logger.LogError("Form processing error: {Message}", exception.Message);
             disabled = true;
-            messageStyles = "color:red";
+            messageStyles = "display:block";
             message = "There was an error processing the form.";
         }
     }
