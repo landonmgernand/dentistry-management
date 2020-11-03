@@ -1,5 +1,5 @@
 ﻿@using DentistryManagement.Shared.ViewModels
-@using DentistryManagement.Client.Pages
+@using DentistryManagement.Client.Pages.Users
 @using DentistryManagement.Client.Helpers
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using System.Net
@@ -17,7 +17,7 @@
         <p class="validation-message" style="@messageStyles">
             @message
         </p>
-
+     
         <div class="row">
             <div class="col">
                 <MatTextField @bind-Value="AddUserViewModel.FirstName" Label="First Name" Outlined="true"></MatTextField>

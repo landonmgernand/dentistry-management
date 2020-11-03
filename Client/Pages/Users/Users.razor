@@ -24,7 +24,7 @@
 <div class="content px-4">
     @if (users == null)
     {
-        <p><em>Loading...</em></p>
+        <div class="loader">Loading...</div>
     }
     else
     {
@@ -46,7 +46,7 @@
                             <TableCell>@user.LastName</TableCell>
                             <TableCell>@user.Email</TableCell>
                             <TableCell Class="grph-actions">
-                                <span class="oi oi-wrench" @onclick="@(() => Edit(user))" k></span>
+                                <span class="oi oi-pencil" @onclick="@(() => Edit(user))" k></span>
                                 <span class="oi oi-trash" @onclick="@(() => Delete(user))"></span>
                             </TableCell>
                         </Skclusive.Material.Table.TableRow>
@@ -54,8 +54,6 @@
                 </TableBody>
             </Table>
         </Paper>
-
-
     }
 </div>
 

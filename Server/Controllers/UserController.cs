@@ -41,6 +41,19 @@ namespace DentistryManagement.Server.Controllers
             return UserMapper.DTOtoUserViewModel(user);
         }
 
+        [HttpGet("email/{email}")]
+        public ActionResult<UserViewModel> GetUserByEmail(string email)
+        {
+            var user = _service.GetByUsername(email);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return UserMapper.DTOtoUserViewModel(user);
+        }
+
         [HttpPost]
         public async Task<ActionResult> CreateUser([FromBody] CreateUserViewModel createUserViewModel)
         {

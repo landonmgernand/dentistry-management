@@ -79,6 +79,7 @@
 
 .grph-paper {
     box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.1), 0px 2px 2px 0px rgba(0,0,0,0.07), 0px 1px 5px 0px rgba(0,0,0,0.05) !important;
+    border-radius: 0 !important;
 }
 
 .grph-actions {
@@ -203,3 +204,141 @@
         margin: auto;
         background-color: #193C6B;
     }
+
+.grph-header-root {
+    padding-top: 12px;
+    padding-left: 24px;
+    padding-right: 12px;
+    padding-bottom: 12px;
+    background-color: #CDE4F0;
+    display: flex;
+    align-items: center;
+}
+
+.grph-header-content {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    justify-content: space-between;
+}
+
+.grph-form-edit {
+    padding: 2px 6px;
+    font-size: 14px;
+    color: white;
+    background-color: #91C8E5;
+    border: 0;
+}
+
+    .grph-form-edit:hover {
+        background-color: #7DBBD9 !important;
+    }
+
+    .grph-form-edit:active {
+        background-color: #7DBBD9 !important;
+        border: 0 !important;
+    }
+
+    .grph-form-edit:focus {
+        box-shadow: none !important;
+    }
+
+    .grph-form-edit > span {
+        font-size: 10px;
+        margin-right: 2px;
+        display: contents;
+    }
+
+.grph-form-save {
+    padding: 2px 6px;
+    font-size: 14px;
+    color: white;
+    background-color: #FAB522;
+    border: 0;
+}
+
+    .grph-form-save:hover {
+        background-color: #EFA506 !important;
+    }
+
+    .grph-form-save:active {
+        background-color: #EFA506 !important;
+        border: 0 !important;
+    }
+
+    .grph-form-save:focus {
+        box-shadow: none !important;
+    }
+
+    .grph-form-save > span {
+        font-size: 10px;
+        margin-right: 2px;
+        display: contents;
+    }
+
+.grph-form-cancel {
+    padding: 2px 6px;
+    font-size: 14px;
+    color: white;
+    background-color: #193C6B;
+    border: 0;
+}
+
+    .grph-form-cancel:hover {
+        background-color: rgba(25, 60, 107, 0.84) !important;
+    }
+
+    .grph-form-cancel:active {
+        background-color: rgba(25, 60, 107, 0.84) !important;
+        border: 0 !important;
+    }
+
+    .grph-form-cancel:focus {
+        box-shadow: none !important;
+    }
+
+    .grph-form-cancel > span {
+        font-size: 10px;
+        margin-right: 2px;
+        display: contents;
+    }
+
+.grph-content-root {
+    padding-top: 16px;
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-bottom: 16px;
+}
+
+    .grph-content-root > ul {
+        margin: 0;
+        padding: 0;
+        position: relative;
+        list-style: none;
+        vertical-align: top;
+    }
+
+        .grph-content-root > ul > li {
+            width: 100%;
+            display: flex;
+            position: relative;
+            box-sizing: border-box;
+            text-align: left;
+            align-items: center;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            justify-content: flex-start;
+            text-decoration: none;
+        }
+
+        .grph-content-input-disabled {
+            background-color: transparent !important;
+            opacity: inherit !important;
+            border: 0px;
+        }
+
+.grph-content-input:focus {
+    border-color: #193C6B;
+    box-shadow: none;
+}

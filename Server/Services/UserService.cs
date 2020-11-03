@@ -45,7 +45,7 @@ namespace DentistryManagement.Server.Services
             throw new NotImplementedException();
         }
 
-        public ActionResult<UserDTO> GetByUsername(string username)
+        public UserDTO GetByUsername(string username)
         {
             var applicationUser = _context.ApplicationUsers.SingleOrDefault(x => x.UserName.Equals(username));
            

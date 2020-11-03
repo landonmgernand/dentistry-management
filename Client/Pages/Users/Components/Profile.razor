@@ -1,0 +1,111 @@
+﻿@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Extensions.Logging
+@using DentistryManagement.Shared.ViewModels
+@using DentistryManagement.Client.Components
+
+@inject HttpClient Http
+@inject ILogger<Profile> Logger
+@inject HttpClient Http
+
+<Paper Class="grph-paper">
+    <EditForm Model="@UpdateUserViewModel">
+        <DataAnnotationsValidator />
+        <FormPanel
+                    Title="Profile"
+                    ChangeEditMode="ChangeEditMode"
+                    Cancel="Cancel"
+                    Save="Save"
+                    Message="@message"
+                    MessageStyle="@messageStyles"
+            >
+            <li>
+                <div class="col-4">
+                    <span>First Name:</span>
+                </div>
+                <div class="col-8">
+                    <input disabled="@(!EditMode)"
+                           class="form-control @(!EditMode ? "grph-content-input-disabled" : "grph-content-input")"
+                           @bind-value="UpdateUserViewModel.FirstName">
+                    <ValidationMessage For="@(() => UpdateUserViewModel.FirstName)" />
+                </div>
+            </li>
+            <li>
+                <div class="col-4">
+                    <span>Last Name:</span>
+                </div>
+                <div class="col-8">
+                    <input disabled="@(!EditMode)"
+                           class="form-control @(!EditMode ? "grph-content-input-disabled" : "grph-content-input")"
+                           @bind-value="UpdateUserViewModel.LastName">
+                    <ValidationMessage For="@(() => UpdateUserViewModel.LastName)" />
+                </div>
+            </li>
+        </FormPanel>
+    </EditForm>
+</Paper>
+
+@code {
+    [Parameter]
+    public string Email { get; set; }
+
+    private UpdateUserViewModel UpdateUserViewModel = new UpdateUserViewModel();
+
+    private bool EditMode;
+
+    private string message;
+
+    private string messageStyles = "display:none";
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            UpdateUserViewModel = await Http.GetFromJsonAsync<UpdateUserViewModel>("api/User/email/" + Email);
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError("Form processing error: {Message}", exception.Message);
+            messageStyles = "display:block";
+            message = "There was an error getting the data.";
+        }
+    }
+
+    private async Task Save()
+    {
+        try
+        {
+            var response = await Http.PutAsJsonAsync("api/User/" + UpdateUserViewModel.Id, UpdateUserViewModel);
+
+            if (response.IsSuccessStatusCode)
+            {
+                EditMode = false;
+                await OnInitializedAsync();
+            }
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError("Form processing error: {Message}", exception.Message);
+            messageStyles = "display:block";
+            message = "There was an error processing the form.";
+        }
+    }
+
+    private async Task Cancel()
+    {
+        EditMode = false;
+        await OnInitializedAsync();
+    }
+
+    private void ChangeEditMode(bool mode)
+    {
+        EditMode = mode;
+    }
+}

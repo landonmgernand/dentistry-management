@@ -1,0 +1,51 @@
+﻿<div class="grph-header-root">
+    <div class="grph-header-content">
+        <span>@Title</span>
+        <div hidden="@editMode">
+            <button class="btn btn-primary grph-form-edit" @onclick="Toggle"><span class="oi oi-pencil"></span> Edit</button>
+        </div>
+        <div hidden="@(!editMode)">
+            <button class="btn btn-primary grph-form-cancel" @onclick="Cancel"><span class="oi oi-circle-x"></span> Cancel</button>
+            <button class="btn btn-primary grph-form-save" @onclick="Save"><span class="oi oi-hard-drive"></span> Save</button>
+        </div>
+    </div>
+</div>
+<div class="grph-content-root">
+    <p class="validation-message" style="@MessageStyle">
+        @Message
+    </p>
+    <ul>
+        @ChildContent
+    </ul>
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> ChangeEditMode { get; set; }
+
+    [Parameter]
+    public EventCallback Save { get; set; }
+
+    [Parameter]
+    public EventCallback Cancel { get; set; }
+
+    [Parameter]
+    public string MessageStyle { get; set; }
+
+    [Parameter]
+    public string Message { get; set; }
+
+    [Parameter]
+    public string Title { get; set; }
+
+    private bool editMode { get; set; } = false;
+
+    private void Toggle()
+    {
+        editMode = !editMode;
+        ChangeEditMode.InvokeAsync(editMode);
+    }
+}

@@ -10,7 +10,7 @@ namespace DentistryManagement.Server.Services
     {
         public List<T> GetAll();
         public T Get(string id);
-        public ActionResult<T> GetByUsername(string username);
+        public T GetByUsername(string username);
         public Task<T> CreateUser(T item);
         public Task UpdateUser(T item);
         public Task DeleteUser(string id);
