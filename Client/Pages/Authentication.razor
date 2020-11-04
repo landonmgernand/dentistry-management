@@ -1,6 +1,14 @@
 @page "/authentication/{action}"
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
-<RemoteAuthenticatorView Action="@Action" />
+
+@* Create a better component for showing all the states????? *@
+<RemoteAuthenticatorView Action="@Action">
+    <LoggingIn></LoggingIn>
+    <CompletingLoggingIn></CompletingLoggingIn>
+    <CompletingLogOut></CompletingLogOut>
+    <LogOut></LogOut>
+    <LogOutSucceeded></LogOutSucceeded>
+</RemoteAuthenticatorView>
 
 @code{
     [Parameter] public string Action { get; set; }

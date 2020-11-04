@@ -82,6 +82,7 @@ namespace DentistryManagement.Server
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
                 endpoints.MapFallbackToFile("index.html");
+                endpoints.MapFallbackToFile("/settings/{email?}", "index.html");
             });
         }
     }

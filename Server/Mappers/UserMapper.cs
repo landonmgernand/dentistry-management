@@ -13,7 +13,7 @@ namespace DentistryManagement.Server.Mappers
                 Email = addUserViewModel.Email,
                 FirstName = addUserViewModel.FirstName,
                 LastName = addUserViewModel.LastName,
-                PasswordHash = addUserViewModel.PasswordHash
+                Password = addUserViewModel.Password
             };
         }
 
@@ -24,6 +24,16 @@ namespace DentistryManagement.Server.Mappers
                 Id = updateUserViewModel.Id,
                 FirstName = updateUserViewModel.FirstName,
                 LastName = updateUserViewModel.LastName,
+            };
+        }
+
+        public static UserDTO PasswordUserViewModelToDTO(PasswordUserViewModel passwordUserViewModel)
+        {
+            return new UserDTO
+            {
+                Id = passwordUserViewModel.Id,
+                Password = passwordUserViewModel.CurrentPassword,
+                NewPassword = passwordUserViewModel.NewPassword
             };
         }
 

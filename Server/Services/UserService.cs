@@ -6,7 +6,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using System;
-using Microsoft.AspNetCore.Mvc;
 using DentistryManagement.Server.DataTransferObjects;
 using Microsoft.EntityFrameworkCore.Internal;
 
@@ -45,7 +44,7 @@ namespace DentistryManagement.Server.Services
             throw new NotImplementedException();
         }
 
-        public ActionResult<UserDTO> GetByUsername(string username)
+        public UserDTO GetByUsername(string username)
         {
             var applicationUser = _context.ApplicationUsers.SingleOrDefault(x => x.UserName.Equals(username));
            
@@ -61,7 +60,7 @@ namespace DentistryManagement.Server.Services
         {
             var applicationUser = UserMapper.DTOtoApplicationUser(userDTO);
 
-            await _userManager.CreateAsync(applicationUser, userDTO.PasswordHash);
+            await _userManager.CreateAsync(applicationUser, userDTO.Password);
 
             return UserMapper.ApplicationUserToDTO(applicationUser);
         }
@@ -74,6 +73,12 @@ namespace DentistryManagement.Server.Services
             await _userManager.UpdateAsync(applicationUser);
         }
 
+        public async Task UpdatePassword(UserDTO userDTO)
+        {
+            var applicationUser = await _userManager.FindByIdAsync(userDTO.Id);
+            await _userManager.ChangePasswordAsync(applicationUser, userDTO.Password, userDTO.NewPassword);
+        }
+
         public async Task DeleteUser(string id)
         {
             var applicationUser = _context.ApplicationUsers.Find(id);
@@ -83,6 +88,12 @@ namespace DentistryManagement.Server.Services
         public bool Exist(string id)
         {
             return _context.ApplicationUsers.Any(x => x.Id.Equals(id));
+        }
+
+        public async Task<bool> CheckPassword(string id, string password)
+        {
+            var applicationUser =  await _userManager.FindByIdAsync(id);
+            return await _userManager.CheckPasswordAsync(applicationUser, password);
         }
     }
 }

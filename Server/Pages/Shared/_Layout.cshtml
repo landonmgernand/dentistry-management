@@ -7,14 +7,22 @@
     <title>@ViewBag.Title</title>
     <link href="~/css/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="~/css/app.css" rel="stylesheet" />
+    <link href="~/css/graphene.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" />
 </head>
 
 <body>
-    <div class="main">
-        <div class="content px-4">
-            @RenderBody()
+    @RenderBody()
+
+    <footer class="border-top footer pl-3 text-muted">
+        <div class="container">
+            &copy; 2020 - Graphene
         </div>
-    </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
     @RenderSection("Scripts", false)
 </body>
 

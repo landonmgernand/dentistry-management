@@ -41,6 +41,19 @@ namespace DentistryManagement.Server.Controllers
             return UserMapper.DTOtoUserViewModel(user);
         }
 
+        [HttpGet("email/{email}")]
+        public ActionResult<UserViewModel> GetUserByEmail(string email)
+        {
+            var user = _service.GetByUsername(email);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return UserMapper.DTOtoUserViewModel(user);
+        }
+
         [HttpPost]
         public async Task<ActionResult> CreateUser([FromBody] CreateUserViewModel createUserViewModel)
         {
@@ -50,9 +63,9 @@ namespace DentistryManagement.Server.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (!PasswordChecker.ValidatePassword(createUserViewModel.PasswordHash, out var message))
+            if (!PasswordChecker.ValidatePassword(createUserViewModel.Password, out var message))
             {
-                ModelState.AddModelError(nameof(createUserViewModel.PasswordHash), message);
+                ModelState.AddModelError(nameof(createUserViewModel.Password), message);
                 return BadRequest(ModelState);
             }
 
@@ -79,6 +92,33 @@ namespace DentistryManagement.Server.Controllers
             var userDTO = UserMapper.UpdateUserViewModelToDTO(updateUserViewModel);
 
             await _service.UpdateUser(userDTO);
+
+            return NoContent();
+        }
+
+        [HttpPut("password/{id}")]
+        public async Task<IActionResult> UpdatePassword(string id, PasswordUserViewModel passwordUserViewModel)
+        {
+            if (!_service.Exist(id))
+            {
+                return NotFound();
+            }
+
+            if (!await _service.CheckPassword(passwordUserViewModel.Id, passwordUserViewModel.CurrentPassword))
+            {
+                ModelState.AddModelError(nameof(passwordUserViewModel.CurrentPassword), "The password you provided is wrong");
+                return BadRequest(ModelState);
+            }
+
+            if (!PasswordChecker.ValidatePassword(passwordUserViewModel.NewPassword, out var message))
+            {
+                ModelState.AddModelError(nameof(passwordUserViewModel.NewPassword), message);
+                return BadRequest(ModelState);
+            }
+
+            var userDTO = UserMapper.PasswordUserViewModelToDTO(passwordUserViewModel);
+
+            await _service.UpdatePassword(userDTO);
 
             return NoContent();
         }
