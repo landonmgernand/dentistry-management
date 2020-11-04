@@ -1,10 +1,10 @@
 ﻿<div class="grph-header-root">
     <div class="grph-header-content">
         <span>@Title</span>
-        <div hidden="@editMode">
+        <div hidden="@EditMode">
             <button class="btn btn-primary grph-form-edit" @onclick="Toggle"><span class="oi oi-pencil"></span> Edit</button>
         </div>
-        <div hidden="@(!editMode)">
+        <div hidden="@(!EditMode)">
             <button class="btn btn-primary grph-form-cancel" @onclick="Cancel"><span class="oi oi-circle-x"></span> Cancel</button>
             <button class="btn btn-primary grph-form-save" @onclick="Save"><span class="oi oi-hard-drive"></span> Save</button>
         </div>
@@ -41,11 +41,19 @@
     [Parameter]
     public string Title { get; set; }
 
-    private bool editMode { get; set; } = false;
+    [Parameter]
+    public bool EditMode { get; set; }
+
+    private bool editMode { get; set; }
+
+    protected override void OnInitialized()
+    {
+        editMode = EditMode;
+    }
 
     private void Toggle()
     {
-        editMode = !editMode;
+        editMode = !EditMode;
         ChangeEditMode.InvokeAsync(editMode);
     }
 }

@@ -14,25 +14,9 @@ namespace DentistryManagement.Server.Helpers
             var hasLowerChar = new Regex(@"[a-z]+");
             var hasSymbols = new Regex(@"[!@#$%^&*()_+=\[{\]};:<>|./?,-]");
 
-            if (!hasLowerChar.IsMatch(input))
+            if (!hasLowerChar.IsMatch(input) || !hasUpperChar.IsMatch(input) || !hasNumber.IsMatch(input) || !hasSymbols.IsMatch(input))
             {
-                ErrorMessage = "Password should contain At least one lower case letter";
-                return false;
-            }
-            else if (!hasUpperChar.IsMatch(input))
-            {
-                ErrorMessage = "Password should contain At least one upper case letter";
-                return false;
-            }
-            else if (!hasNumber.IsMatch(input))
-            {
-                ErrorMessage = "Password should contain At least one numeric value";
-                return false;
-            }
-
-            else if (!hasSymbols.IsMatch(input))
-            {
-                ErrorMessage = "Password should contain At least one special case characters";
+                ErrorMessage = "Password should contain At least one lower, one upper case letter, one numeric value and one special case character";
                 return false;
             }
             else

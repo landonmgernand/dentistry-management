@@ -34,8 +34,8 @@
                 <ValidationMessage For="@(() => AddUserViewModel.Email)" />
             </div>
             <div class="col">
-                <MatTextField @bind-Value="AddUserViewModel.PasswordHash" Label="Password" Outlined="true"></MatTextField>
-                <ValidationMessage For="@(() => AddUserViewModel.PasswordHash)" />
+                <MatTextField @bind-Value="AddUserViewModel.Password" Label="Password" Outlined="true"></MatTextField>
+                <ValidationMessage For="@(() => AddUserViewModel.Password)" />
             </div>
         </div>
 
@@ -52,11 +52,17 @@
 @code {
     [CascadingParameter]
     BlazoredModalInstance BlazoredModal { get; set; }
+
     private bool disabled;
+
     private string message;
+
     private string messageStyles = "display:none";
+
     private CreateUserViewModel AddUserViewModel = new CreateUserViewModel();
+
     private CustomValidator customValidator;
+
     private string Email { set; get; }
 
     private void HandleEmail(ChangeEventArgs arg)
@@ -74,13 +80,15 @@
         {
             var response = await Http.PostAsJsonAsync("api/User", AddUserViewModel);
 
-            var errors = await response.Content
+            if (response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                var errors = await response.Content
                     .ReadFromJsonAsync<Dictionary<string, List<string>>>();
 
-            if (response.StatusCode == HttpStatusCode.BadRequest &&
-                  errors.Count() > 0)
-            {
-                customValidator.DisplayErrors(errors);
+                if (errors.Count > 0)
+                {
+                    customValidator.DisplayErrors(errors);
+                }
             }
             else
             {
