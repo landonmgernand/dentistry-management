@@ -58,7 +58,11 @@
 </div>
 
 @code {
+    [CascadingParameter]
+    protected MainLayout navigationSet { get; set; }
+
     private List<UserViewModel> users;
+
     private ModalOptions modalOptions = new ModalOptions() { DisableBackgroundCancel = true };
 
     protected override async Task OnInitializedAsync()
@@ -66,6 +70,8 @@
         try
         {
             users = await Http.GetFromJsonAsync<List<UserViewModel>>("api/User");
+            navigationSet.resetNavigationPanelWithoutState();
+            navigationSet.addNavigationItem("Users");
         }
         catch (AccessTokenNotAvailableException exception)
         {

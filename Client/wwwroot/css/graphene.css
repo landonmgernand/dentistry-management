@@ -342,3 +342,33 @@
     border-color: #193C6B;
     box-shadow: none;
 }
+
+.grph-navigation {
+    flex: auto;
+}
+
+.grph-navigation > ol {
+    margin: 0;
+    display: flex;
+    padding: 0;
+    flex-wrap: wrap;
+    list-style: none;
+    align-items: center;
+}
+
+    .grph-navigation > ol > li {
+        color: #193C6B;
+        opacity: 0.4;
+        font-size: 14px;
+    }
+
+    .grph-navigation-active {
+        opacity: 1 !important;
+    }
+
+.grph-separator {
+    margin-right: 8px;
+    color: #193C6B;
+    opacity: 0.4;
+    margin-left: 8px;
+}
