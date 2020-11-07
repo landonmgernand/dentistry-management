@@ -19,5 +19,8 @@ namespace DentistryManagement.Shared.ViewModels
         [DataType(DataType.Text)]
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
+
+        [Display(Name = "Admin")]
+        public bool IsAdmin { get; set; }
     }
 }

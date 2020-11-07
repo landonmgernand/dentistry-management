@@ -16,6 +16,7 @@ using DentistryManagement.Server.Models;
 using DentistryManagement.Server.Services;
 using DentistryManagement.Shared;
 using AutoMapper;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace DentistryManagement.Server
 {
@@ -37,10 +38,17 @@ namespace DentistryManagement.Server
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<ApplicationRole>()  
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddIdentityServer()
-                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+                  .AddApiAuthorization<ApplicationUser, ApplicationDbContext>(options => {
+                      options.IdentityResources["openid"].UserClaims.Add("role");
+                      options.ApiResources.Single().UserClaims.Add("role");
+                  });
+
+            JwtSecurityTokenHandler
+                .DefaultInboundClaimTypeMap.Remove("role");
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();

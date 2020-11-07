@@ -8,7 +8,7 @@
 @inject HttpClient Http
 @inject IModalService Modal
 
-@attribute [Authorize]
+@attribute [Authorize(Roles = "Admin")]
 
 <div class="under-top-row px-4">
     <div class="grph-action-add" @onclick="Add">
@@ -35,6 +35,7 @@
                         <TableCell>First Name</TableCell>
                         <TableCell>Last Name</TableCell>
                         <TableCell>Email</TableCell>
+                        <TableCell>Admin</TableCell>
                         <TableCell></TableCell>
                     </Skclusive.Material.Table.TableRow>
                 </TableHead>
@@ -45,6 +46,7 @@
                             <TableCell>@user.FirstName</TableCell>
                             <TableCell>@user.LastName</TableCell>
                             <TableCell>@user.Email</TableCell>
+                            <TableCell>@(user.IsAdmin ? "Yes" : "No")</TableCell>
                             <TableCell Class="grph-actions">
                                 <span class="oi oi-pencil" @onclick="@(() => Edit(user))" k></span>
                                 <span class="oi oi-trash" @onclick="@(() => Delete(user))"></span>
@@ -58,7 +60,11 @@
 </div>
 
 @code {
+    [CascadingParameter]
+    protected MainLayout navigationSet { get; set; }
+
     private List<UserViewModel> users;
+
     private ModalOptions modalOptions = new ModalOptions() { DisableBackgroundCancel = true };
 
     protected override async Task OnInitializedAsync()
@@ -66,6 +72,8 @@
         try
         {
             users = await Http.GetFromJsonAsync<List<UserViewModel>>("api/User");
+            navigationSet.resetNavigationPanelWithoutState();
+            navigationSet.addNavigationItem("Users");
         }
         catch (AccessTokenNotAvailableException exception)
         {

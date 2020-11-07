@@ -21,6 +21,16 @@
 </div>
 
 @code {
+    [CascadingParameter]
+    protected MainLayout navigationSet { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        navigationSet.resetNavigationPanelWithoutState();
+        navigationSet.addNavigationItem("Settings");
+    }
+
     [Parameter]
     public string Email { get; set; }
 }

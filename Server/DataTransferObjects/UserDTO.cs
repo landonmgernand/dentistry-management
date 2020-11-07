@@ -13,5 +13,6 @@ namespace DentistryManagement.Server.DataTransferObjects
         public string NewPassword { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public bool IsAdmin { get; set; }
     }
 }
