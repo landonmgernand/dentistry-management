@@ -1,6 +1,10 @@
 ﻿using DentistryManagement.Server.DataTransferObjects;
 using DentistryManagement.Server.Models;
 using DentistryManagement.Shared.ViewModels;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.AspNetCore.Identity;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace DentistryManagement.Server.Mappers
 {
@@ -13,7 +17,8 @@ namespace DentistryManagement.Server.Mappers
                 Email = addUserViewModel.Email,
                 FirstName = addUserViewModel.FirstName,
                 LastName = addUserViewModel.LastName,
-                Password = addUserViewModel.Password
+                Password = addUserViewModel.Password,
+                IsAdmin = addUserViewModel.IsAdmin
             };
         }
 
@@ -24,6 +29,7 @@ namespace DentistryManagement.Server.Mappers
                 Id = updateUserViewModel.Id,
                 FirstName = updateUserViewModel.FirstName,
                 LastName = updateUserViewModel.LastName,
+                IsAdmin = updateUserViewModel.IsAdmin
             };
         }
 
@@ -39,12 +45,14 @@ namespace DentistryManagement.Server.Mappers
 
         public static UserDTO ApplicationUserToDTO(ApplicationUser applicationUser)
         {
+
             return new UserDTO
             {
                 Id = applicationUser.Id,
                 Email = applicationUser.Email,
                 FirstName = applicationUser.FirstName,
                 LastName = applicationUser.LastName,
+                IsAdmin = !(applicationUser.UserRoles.FirstOrDefault(x => x.Role.Name.Equals("Admin")) is null)
             };
         }
 
@@ -56,7 +64,8 @@ namespace DentistryManagement.Server.Mappers
                 UserName = userDTO.Email,
                 FirstName = userDTO.FirstName,
                 LastName = userDTO.LastName,
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                UserRoles = new List<ApplicationUserRole>()
             };
         }
 
@@ -68,6 +77,7 @@ namespace DentistryManagement.Server.Mappers
                 FirstName = userDTO.FirstName,
                 LastName = userDTO.LastName,
                 Email = userDTO.Email,
+                IsAdmin = userDTO.IsAdmin
             };
         }
     }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Syncfusion.Blazor;
 using Blazored.Modal;
+using Microsoft.Extensions.Configuration;
 
 namespace DentistryManagement.Client
 {
@@ -22,7 +23,6 @@ namespace DentistryManagement.Client
 
             // Supply HttpClient instances that include access tokens when making requests to the server project
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("DentistryManagement.ServerAPI"));
-
             builder.Services.AddApiAuthorization();
             builder.Services.AddSyncfusionBlazor();
             builder.Services.AddBlazoredModal();

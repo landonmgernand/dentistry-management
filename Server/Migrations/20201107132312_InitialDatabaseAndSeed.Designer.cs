@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DentistryManagement.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201029124544_CreateIdentitySchema")]
-    partial class CreateIdentitySchema
+    [Migration("20201107132312_InitialDatabaseAndSeed")]
+    partial class InitialDatabaseAndSeed
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -87,6 +87,26 @@ namespace DentistryManagement.Server.Migrations
                         .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "B22698B8-42A2-4115-9631-1C2D1E2AC5F7",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "26e8501f-9b54-4596-94f1-41fbe02526e9",
+                            Email = "admin@graphene.com",
+                            EmailConfirmed = true,
+                            FirstName = "Graphene",
+                            LastName = "Graphene",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "admin@graphene.com",
+                            NormalizedUserName = "admin@graphene.com",
+                            PasswordHash = "AQAAAAEAACcQAAAAEAnSuqtmDRykjJZmfhYhFgQ88AbX1WfFA3h/APmAXdOgsCGFEbJ7UoWxpo88EC0icA==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "f86b1443-a993-4fec-9690-7b13a6cf537f",
+                            TwoFactorEnabled = false,
+                            UserName = "admin@graphene.com"
+                        });
                 });
 
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.DeviceFlowCodes", b =>
@@ -180,6 +200,10 @@ namespace DentistryManagement.Server.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
                     b.Property<string>("Name")
                         .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
                         .HasMaxLength(256);
@@ -195,6 +219,8 @@ namespace DentistryManagement.Server.Migrations
                         .HasName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityRole");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -275,11 +301,17 @@ namespace DentistryManagement.Server.Migrations
                     b.Property<string>("RoleId")
                         .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
                     b.HasKey("UserId", "RoleId");
 
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUserRole<string>");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -301,6 +333,43 @@ namespace DentistryManagement.Server.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("DentistryManagement.Server.Models.ApplicationRole", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRole");
+
+                    b.HasDiscriminator().HasValue("ApplicationRole");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "2301D884-221A-4E7D-B509-0113DCC043E1",
+                            ConcurrencyStamp = "e4315321-db50-4cc2-b500-b94d0af455fa",
+                            Name = "Admin",
+                            NormalizedName = "Admin"
+                        },
+                        new
+                        {
+                            Id = "83617646-4e9d-47e3-a089-cfe4691b9e71",
+                            ConcurrencyStamp = "2e4db6d6-1efb-4224-abf9-4377b7326a71",
+                            Name = "User",
+                            NormalizedName = "User"
+                        });
+                });
+
+            modelBuilder.Entity("DentistryManagement.Server.Models.ApplicationUserRole", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUserRole<string>");
+
+                    b.HasDiscriminator().HasValue("ApplicationUserRole");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "B22698B8-42A2-4115-9631-1C2D1E2AC5F7",
+                            RoleId = "2301D884-221A-4E7D-B509-0113DCC043E1"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -335,12 +404,7 @@ namespace DentistryManagement.Server.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DentistryManagement.Server.Models.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasConstraintName("FK_AspNetUserRoles_AspNetRoles_RoleId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -349,6 +413,21 @@ namespace DentistryManagement.Server.Migrations
                 {
                     b.HasOne("DentistryManagement.Server.Models.ApplicationUser", null)
                         .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DentistryManagement.Server.Models.ApplicationUserRole", b =>
+                {
+                    b.HasOne("DentistryManagement.Server.Models.ApplicationRole", "Role")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DentistryManagement.Server.Models.ApplicationUser", "User")
+                        .WithMany("UserRoles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System;
 using DentistryManagement.Server.DataTransferObjects;
 using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.EntityFrameworkCore;
 
 namespace DentistryManagement.Server.Services
 {
@@ -24,12 +25,21 @@ namespace DentistryManagement.Server.Services
 
         public List<UserDTO> GetAll()
         {
-            return _context.ApplicationUsers.Select(x => UserMapper.ApplicationUserToDTO(x)).ToList();
+            var users = _context.ApplicationUsers
+                .Include(ur => ur.UserRoles)
+                .ThenInclude(r => r.Role)
+                .Select(x => UserMapper.ApplicationUserToDTO(x))
+                .ToList();
+            
+            return users;
         }
 
         public UserDTO Get(string id)
         {
-            var applicationUser = _context.ApplicationUsers.Find(id);
+            var applicationUser = _context.ApplicationUsers
+             .Include(ur => ur.UserRoles)
+             .ThenInclude(r => r.Role)
+             .SingleOrDefault(x => x.Id.Equals(id));
 
             if (applicationUser == null)
             {
@@ -46,7 +56,10 @@ namespace DentistryManagement.Server.Services
 
         public UserDTO GetByUsername(string username)
         {
-            var applicationUser = _context.ApplicationUsers.SingleOrDefault(x => x.UserName.Equals(username));
+            var applicationUser = _context.ApplicationUsers
+                .Include(ur => ur.UserRoles)
+                .ThenInclude(r => r.Role)
+                .SingleOrDefault(x => x.UserName.Equals(username))               ;
            
             if (applicationUser == null)
             {
@@ -56,21 +69,57 @@ namespace DentistryManagement.Server.Services
             return UserMapper.ApplicationUserToDTO(applicationUser);
         }
 
-        public async Task<UserDTO> CreateUser(UserDTO userDTO)
+        public async Task CreateUser(UserDTO userDTO)
         {
             var applicationUser = UserMapper.DTOtoApplicationUser(userDTO);
 
             await _userManager.CreateAsync(applicationUser, userDTO.Password);
 
-            return UserMapper.ApplicationUserToDTO(applicationUser);
+            var roleName = "User";
+
+            if (userDTO.IsAdmin)
+            {
+                roleName = "Admin";
+            }
+
+            var role = _context.ApplicationRole.SingleOrDefault(x => x.Name.Equals(roleName));
+
+            applicationUser.UserRoles.Add(new ApplicationUserRole()
+            {
+                User = applicationUser,
+                Role = role,
+            });
+
+            _context.SaveChanges();
         }
 
         public async Task UpdateUser(UserDTO userDTO)
         {
-            var applicationUser = await _userManager.FindByIdAsync(userDTO.Id);
+            var applicationUser = _context.ApplicationUsers
+                .Include(ur => ur.UserRoles)
+                .SingleOrDefault(x => x.Id.Equals(userDTO.Id));
+
+            var roleName = "User";
+
+            if (userDTO.IsAdmin)
+            {
+                roleName = "Admin";
+            }
+
+            applicationUser.UserRoles.Clear();
+
+            var role = _context.ApplicationRole.SingleOrDefault(x => x.Name.Equals(roleName));
+
+            applicationUser.UserRoles.Add(new ApplicationUserRole()
+            {
+                User = applicationUser,
+                Role = role,
+            });
+
             applicationUser.FirstName = userDTO.FirstName;
             applicationUser.LastName = userDTO.LastName;
-            await _userManager.UpdateAsync(applicationUser);
+
+           await _context.SaveChangesAsync();
         }
 
         public async Task UpdatePassword(UserDTO userDTO)
