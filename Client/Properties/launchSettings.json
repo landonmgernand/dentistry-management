@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:55935",
+      "applicationUrl": "http://localhost:55935/dentistry-management",
       "sslPort": 44366
     }
   },
