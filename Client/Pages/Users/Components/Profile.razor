@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using Microsoft.Extensions.Logging
-@using DentistryManagement.Shared.ViewModels
+@using DentistryManagement.Shared.ViewModels.Users;
 @using DentistryManagement.Client.Components
 @using DentistryManagement.Client.Helpers
 @using System.Net
@@ -39,6 +39,17 @@
                                class="@InputStyle"
                                @bind-Value="UpdateUserViewModel.LastName" />
                     <ValidationMessage For="@(() => UpdateUserViewModel.LastName)" />
+                </div>
+            </li>
+            <li>
+                <div class="col-4">
+                    <span>Phone Number:</span>
+                </div>
+                <div class="col-8">
+                    <InputText disabled="@(!EditMode)"
+                               class="@InputStyle"
+                               @bind-Value="UpdateUserViewModel.PhoneNumber" />
+                    <ValidationMessage For="@(() => UpdateUserViewModel.PhoneNumber)" />
                 </div>
             </li>
         </FormPanel>

@@ -1,8 +1,6 @@
 ﻿using DentistryManagement.Server.DataTransferObjects;
 using DentistryManagement.Server.Models;
-using DentistryManagement.Shared.ViewModels;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.AspNetCore.Identity;
+using DentistryManagement.Shared.ViewModels.Users;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -18,6 +16,7 @@ namespace DentistryManagement.Server.Mappers
                 FirstName = addUserViewModel.FirstName,
                 LastName = addUserViewModel.LastName,
                 Password = addUserViewModel.Password,
+                PhoneNumber = addUserViewModel.PhoneNumber,
                 IsAdmin = addUserViewModel.IsAdmin
             };
         }
@@ -29,6 +28,7 @@ namespace DentistryManagement.Server.Mappers
                 Id = updateUserViewModel.Id,
                 FirstName = updateUserViewModel.FirstName,
                 LastName = updateUserViewModel.LastName,
+                PhoneNumber = updateUserViewModel.PhoneNumber,
                 IsAdmin = updateUserViewModel.IsAdmin
             };
         }
@@ -52,6 +52,7 @@ namespace DentistryManagement.Server.Mappers
                 Email = applicationUser.Email,
                 FirstName = applicationUser.FirstName,
                 LastName = applicationUser.LastName,
+                PhoneNumber = applicationUser.PhoneNumber,
                 IsAdmin = !(applicationUser.UserRoles.FirstOrDefault(x => x.Role.Name.Equals("Admin")) is null)
             };
         }
@@ -64,6 +65,7 @@ namespace DentistryManagement.Server.Mappers
                 UserName = userDTO.Email,
                 FirstName = userDTO.FirstName,
                 LastName = userDTO.LastName,
+                PhoneNumber = userDTO.PhoneNumber,
                 EmailConfirmed = true,
                 UserRoles = new List<ApplicationUserRole>()
             };
@@ -77,6 +79,7 @@ namespace DentistryManagement.Server.Mappers
                 FirstName = userDTO.FirstName,
                 LastName = userDTO.LastName,
                 Email = userDTO.Email,
+                PhoneNumber = userDTO.PhoneNumber,
                 IsAdmin = userDTO.IsAdmin
             };
         }

@@ -1,6 +1,6 @@
 ﻿@page "/users"
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
-@using DentistryManagement.Shared.ViewModels
+@using DentistryManagement.Shared.ViewModels.Users;
 @using DentistryManagement.Client.Modals.Users
 @using Skclusive.Material.Paper
 @using Microsoft.AspNetCore.Authorization
@@ -35,6 +35,7 @@
                         <TableCell>First Name</TableCell>
                         <TableCell>Last Name</TableCell>
                         <TableCell>Email</TableCell>
+                        <TableCell>Phone Number</TableCell>
                         <TableCell>Admin</TableCell>
                         <TableCell></TableCell>
                     </Skclusive.Material.Table.TableRow>
@@ -46,9 +47,10 @@
                             <TableCell>@user.FirstName</TableCell>
                             <TableCell>@user.LastName</TableCell>
                             <TableCell>@user.Email</TableCell>
+                            <TableCell>@user.PhoneNumber</TableCell>
                             <TableCell>@(user.IsAdmin ? "Yes" : "No")</TableCell>
                             <TableCell Class="grph-actions">
-                                <span class="oi oi-pencil" @onclick="@(() => Edit(user))" k></span>
+                                <span class="oi oi-pencil" @onclick="@(() => Edit(user))"></span>
                                 <span class="oi oi-trash" @onclick="@(() => Delete(user))"></span>
                             </TableCell>
                         </Skclusive.Material.Table.TableRow>

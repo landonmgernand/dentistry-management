@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DentistryManagement.Shared.ViewModels
+﻿namespace DentistryManagement.Shared.ViewModels.Users
 {
     public class UserViewModel
     {
@@ -13,6 +9,8 @@ namespace DentistryManagement.Shared.ViewModels
         public string LastName { get; set; }
 
         public string Email { get; set; }
+
+        public string PhoneNumber { get; set; }
 
         public bool IsAdmin { get; set; }
     }

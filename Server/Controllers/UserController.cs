@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using DentistryManagement.Server.Services;
 using Microsoft.AspNetCore.Mvc;
 using DentistryManagement.Server.Helpers;
-using DentistryManagement.Shared.ViewModels;
+using DentistryManagement.Shared.ViewModels.Users;
 using DentistryManagement.Server.Mappers;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;

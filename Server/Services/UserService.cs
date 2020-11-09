@@ -59,7 +59,7 @@ namespace DentistryManagement.Server.Services
             var applicationUser = _context.ApplicationUsers
                 .Include(ur => ur.UserRoles)
                 .ThenInclude(r => r.Role)
-                .SingleOrDefault(x => x.UserName.Equals(username))               ;
+                .SingleOrDefault(x => x.UserName.Equals(username));
            
             if (applicationUser == null)
             {
@@ -118,6 +118,7 @@ namespace DentistryManagement.Server.Services
 
             applicationUser.FirstName = userDTO.FirstName;
             applicationUser.LastName = userDTO.LastName;
+            applicationUser.PhoneNumber = userDTO.PhoneNumber;
 
            await _context.SaveChangesAsync();
         }

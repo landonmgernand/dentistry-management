@@ -1,4 +1,4 @@
-﻿@using DentistryManagement.Shared.ViewModels
+﻿@using DentistryManagement.Shared.ViewModels.Users;
 @using DentistryManagement.Client.Pages.Users
 @using DentistryManagement.Client.Helpers
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
@@ -36,6 +36,13 @@
             <div class="col">
                 <MatTextField @bind-Value="AddUserViewModel.Password" Label="Password" Outlined="true"></MatTextField>
                 <ValidationMessage For="@(() => AddUserViewModel.Password)" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <MatTextField @bind-Value="AddUserViewModel.PhoneNumber" Label="Phone Number" Outlined="true"></MatTextField>
+                <ValidationMessage For="@(() => AddUserViewModel.PhoneNumber)" />
             </div>
         </div>
 
