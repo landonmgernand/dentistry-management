@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel.DataAnnotations;
 
-namespace DentistryManagement.Shared.ViewModels
+namespace DentistryManagement.Shared.ViewModels.Users
 {
     public class PasswordUserViewModel
     {

@@ -1,4 +1,4 @@
-﻿@using DentistryManagement.Shared.ViewModels
+﻿@using DentistryManagement.Shared.ViewModels.Users;
 @using DentistryManagement.Client.Pages.Users
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using System.Net.Http.Json
@@ -28,6 +28,13 @@
 
         <div class="row">
             <div class="col">
+                <MatTextField @bind-Value="UpdateUserViewModel.PhoneNumber" Label="Phone Number" Outlined="true"></MatTextField>
+                <ValidationMessage For="@(() => UpdateUserViewModel.PhoneNumber)" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
                 <MatCheckbox Class="grph-checkbox" @bind-Value="UpdateUserViewModel.IsAdmin" Label="Admin"></MatCheckbox>
             </div>
         </div>
@@ -36,7 +43,7 @@
 
         <div class="input-group grph-button-actions">
             <button class="btn btn-primary grph-cancel" @onclick="BlazoredModal.Cancel">Cancel</button>
-            <button class="btn btn-primary grph-primary" disabled="@disabled">Create User</button>
+            <button class="btn btn-primary grph-primary" disabled="@disabled">Update User</button>
         </div>
     </EditForm>
 </div>
