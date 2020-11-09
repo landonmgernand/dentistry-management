@@ -1,6 +1,19 @@
 @page "/authentication/{action}"
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
-<RemoteAuthenticatorView Action="@Action" />
+@using DentistryManagement.Client.Components 
+
+@* Create a better component for showing all the states????? *@
+<RemoteAuthenticatorView Action="@Action">
+    <LoggingIn>
+    <Waiting Name="Logging in..."></Waiting>
+    </LoggingIn>
+    <CompletingLoggingIn></CompletingLoggingIn>
+    <CompletingLogOut></CompletingLogOut>
+    <LogOut></LogOut>
+    <LogOutSucceeded>
+        <Waiting Name="Logging out..."></Waiting>
+    </LogOutSucceeded>
+</RemoteAuthenticatorView>
 
 @code{
     [Parameter] public string Action { get; set; }

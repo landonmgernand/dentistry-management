@@ -1,0 +1,145 @@
+﻿@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Extensions.Logging
+@using DentistryManagement.Shared.ViewModels.Users;
+@using DentistryManagement.Client.Components
+@using DentistryManagement.Client.Helpers
+@using System.Net
+
+@inject HttpClient Http
+@inject ILogger<Profile> Logger
+
+<Paper Class="grph-paper">
+    <EditForm Model="@UpdateUserViewModel">
+        <DataAnnotationsValidator />
+        <CustomValidator @ref="customValidator" />
+        <FormPanel Title="Profile"
+                   ChangeEditMode="ChangeEditMode"
+                   EditMode="@EditMode"
+                   Cancel="Cancel"
+                   Save="Save"
+                   Message="@message"
+                   MessageStyle="@messageStyles">
+            <li>
+                <div class="col-4">
+                    <span>First Name:</span>
+                </div>
+                <div class="col-8">
+                    <InputText disabled="@(!EditMode)"
+                               class="@InputStyle"
+                               @bind-Value="UpdateUserViewModel.FirstName" />
+                    <ValidationMessage For="@(() => UpdateUserViewModel.FirstName)" />
+                </div>
+            </li>
+            <li>
+                <div class="col-4">
+                    <span>Last Name:</span>
+                </div>
+                <div class="col-8">
+                    <InputText disabled="@(!EditMode)"
+                               class="@InputStyle"
+                               @bind-Value="UpdateUserViewModel.LastName" />
+                    <ValidationMessage For="@(() => UpdateUserViewModel.LastName)" />
+                </div>
+            </li>
+            <li>
+                <div class="col-4">
+                    <span>Phone Number:</span>
+                </div>
+                <div class="col-8">
+                    <InputText disabled="@(!EditMode)"
+                               class="@InputStyle"
+                               @bind-Value="UpdateUserViewModel.PhoneNumber" />
+                    <ValidationMessage For="@(() => UpdateUserViewModel.PhoneNumber)" />
+                </div>
+            </li>
+        </FormPanel>
+    </EditForm>
+</Paper>
+
+@code {
+    [Parameter]
+    public string Email { get; set; }
+
+    private UpdateUserViewModel UpdateUserViewModel = new UpdateUserViewModel();
+
+    private CustomValidator customValidator;
+
+    private bool EditMode = false;
+
+    private string message;
+
+    private string messageStyles = "display:none";
+
+    private string InputStyle
+    {
+        get
+        {
+            return "form-control " + (!EditMode ? "grph-content-input-disabled" : "grph-content-input");
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            UpdateUserViewModel = await Http.GetFromJsonAsync<UpdateUserViewModel>("api/User/email/" + Email);
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError("Form processing error: {Message}", exception.Message);
+            messageStyles = "display:block";
+            message = "There was an error getting the data.";
+        }
+    }
+
+    private async Task Save()
+    {
+        customValidator.ClearErrors();
+
+        try
+        {
+            var response = await Http.PutAsJsonAsync("api/User/" + UpdateUserViewModel.Id, UpdateUserViewModel);
+
+            if (response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                var errors = await response.Content
+                    .ReadFromJsonAsync<Dictionary<string, List<string>>>();
+
+                if (errors.Count > 0)
+                {
+                    customValidator.DisplayErrors(errors);
+                }
+            }
+            else
+            {
+                EditMode = false;
+                await OnInitializedAsync();
+            }
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError("Form processing error: {Message}", exception.Message);
+            messageStyles = "display:block";
+            message = "There was an error processing the form.";
+        }
+    }
+
+    private async Task Cancel()
+    {
+        EditMode = false;
+        await OnInitializedAsync();
+    }
+
+    private void ChangeEditMode(bool mode)
+    {
+        EditMode = mode;
+    }
+}

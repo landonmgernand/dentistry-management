@@ -6,19 +6,37 @@
 
 <AuthorizeView>
     <Authorized>
-        <a href="authentication/profile">Hello, @context.User.Identity.Name!</a>
-        <button class="nav-link btn btn-link" @onclick="BeginSignOut">Log out</button>
+        @*<a href="authentication/profile">Hello, @context.User.Identity.Name!</a>
+            <button class="nav-link btn btn-link" @onclick="BeginSignOut">Log out</button>*@
+        <MatButton Class="grph-user" OnClick="@OnClick" RefBack="@buttonForwardRef">
+            <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-person-fill" fill="white">
+                <path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+            </svg>
+        </MatButton>
+        
+        <MatMenu @ref="Menu" TargetForwardRef="@buttonForwardRef">
+            <MatList>
+                <a class="matBlazor_theme_61c89ef7-e932-4848-a4a7-63e25f6b37a1 mdc-list-item mdc-ripple-upgraded" href="settings/@context.User.Identity.Name">Settings</a>
+                <MatListItem @onclick="BeginSignOut">Log out</MatListItem>
+            </MatList>
+        </MatMenu>
     </Authorized>
     <NotAuthorized>
-        <a href="authentication/register">Register</a>
-        <a href="authentication/login">Log in</a>
+        <RedirectToLogin />
     </NotAuthorized>
 </AuthorizeView>
 
 @code{
+    ForwardRef buttonForwardRef = new ForwardRef();
+    BaseMatMenu Menu;
     private async Task BeginSignOut(MouseEventArgs args)
     {
         await SignOutManager.SetSignOutState();
         Navigation.NavigateTo("authentication/logout");
+
+    }
+    public void OnClick(MouseEventArgs e)
+    {
+        this.Menu.OpenAsync();
     }
 }

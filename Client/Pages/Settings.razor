@@ -1,0 +1,36 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@using DentistryManagement.Client.Pages.Users.Components 
+
+@attribute [Authorize]
+@inject HttpClient Http
+
+@page "/settings"
+@page "/settings/{Email}"
+
+<div class="under-top-row px-4"></div>
+
+<div class="content px-4">
+    <div class="row">
+        <div class="col">
+           <Profile Email="@Email" />
+        </div>
+        <div class="col">
+            <Password Email="@Email" />
+        </div>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter]
+    protected MainLayout navigationSet { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        navigationSet.resetNavigationPanelWithoutState();
+        navigationSet.addNavigationItem("Settings");
+    }
+
+    [Parameter]
+    public string Email { get; set; }
+}

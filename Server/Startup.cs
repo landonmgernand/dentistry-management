@@ -13,6 +13,10 @@ using Microsoft.Extensions.Hosting;
 using System.Linq;
 using DentistryManagement.Server.Data;
 using DentistryManagement.Server.Models;
+using DentistryManagement.Server.Services;
+using DentistryManagement.Shared;
+using AutoMapper;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace DentistryManagement.Server
 {
@@ -34,16 +38,25 @@ namespace DentistryManagement.Server
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<ApplicationRole>()  
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddIdentityServer()
-                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+                  .AddApiAuthorization<ApplicationUser, ApplicationDbContext>(options => {
+                      options.IdentityResources["openid"].UserClaims.Add("role");
+                      options.ApiResources.Single().UserClaims.Add("role");
+                  });
+
+            JwtSecurityTokenHandler
+                .DefaultInboundClaimTypeMap.Remove("role");
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+    
+            services.AddScoped<UserService, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -77,6 +90,7 @@ namespace DentistryManagement.Server
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
                 endpoints.MapFallbackToFile("index.html");
+                endpoints.MapFallbackToFile("/settings/{email?}", "index.html");
             });
         }
     }

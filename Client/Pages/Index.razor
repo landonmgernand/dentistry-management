@@ -1,7 +1,16 @@
-﻿@page "/"
+﻿@using Microsoft.AspNetCore.Authorization
 
-<h1>Hello, world!</h1>
+@attribute [Authorize]
 
-Welcome to your new app.
+@page "/"
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+@code {     
+    [CascadingParameter]
+    protected MainLayout navigationSet { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        navigationSet.resetNavigationPanelWithState();
+    }
+}

@@ -1,0 +1,130 @@
+﻿@page "/users"
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using DentistryManagement.Shared.ViewModels.Users;
+@using DentistryManagement.Client.Modals.Users
+@using Skclusive.Material.Paper
+@using Microsoft.AspNetCore.Authorization
+
+@inject HttpClient Http
+@inject IModalService Modal
+
+@attribute [Authorize(Roles = "Admin")]
+
+<div class="under-top-row px-4">
+    <div class="grph-action-add" @onclick="Add">
+        <span>
+            <svg width="1em" height="1em" viewBox="0 0 24 24" fill="#00A8FF">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
+            </svg>
+            Add
+        </span>
+    </div>
+</div>
+
+<div class="content px-4">
+    @if (users == null)
+    {
+        <div class="loader">Loading...</div>
+    }
+    else
+    {
+        <Paper Class="grph-paper">
+            <Table Size="@Skclusive.Core.Component.Size.Small">
+                <TableHead Class="grph-table-head">
+                    <Skclusive.Material.Table.TableRow class="grph-table-row">
+                        <TableCell>First Name</TableCell>
+                        <TableCell>Last Name</TableCell>
+                        <TableCell>Email</TableCell>
+                        <TableCell>Phone Number</TableCell>
+                        <TableCell>Admin</TableCell>
+                        <TableCell></TableCell>
+                    </Skclusive.Material.Table.TableRow>
+                </TableHead>
+                <TableBody>
+                    @foreach (var user in users)
+                    {
+                        <Skclusive.Material.Table.TableRow class="grph-table-row">
+                            <TableCell>@user.FirstName</TableCell>
+                            <TableCell>@user.LastName</TableCell>
+                            <TableCell>@user.Email</TableCell>
+                            <TableCell>@user.PhoneNumber</TableCell>
+                            <TableCell>@(user.IsAdmin ? "Yes" : "No")</TableCell>
+                            <TableCell Class="grph-actions">
+                                <span class="oi oi-pencil" @onclick="@(() => Edit(user))"></span>
+                                <span class="oi oi-trash" @onclick="@(() => Delete(user))"></span>
+                            </TableCell>
+                        </Skclusive.Material.Table.TableRow>
+                    }
+                </TableBody>
+            </Table>
+        </Paper>
+    }
+</div>
+
+@code {
+    [CascadingParameter]
+    protected MainLayout navigationSet { get; set; }
+
+    private List<UserViewModel> users;
+
+    private ModalOptions modalOptions = new ModalOptions() { DisableBackgroundCancel = true };
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            users = await Http.GetFromJsonAsync<List<UserViewModel>>("api/User");
+            navigationSet.resetNavigationPanelWithoutState();
+            navigationSet.addNavigationItem("Users");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+
+
+    private async Task Add()
+    {
+        var addModal = Modal.Show<CreateUserModal>("Create User", modalOptions);
+
+        var result = await addModal.Result;
+
+        if (!result.Cancelled)
+        {
+            await OnInitializedAsync();
+        }
+    }
+
+    private async Task Edit(UserViewModel userViewModel)
+    {
+        var parameters = new ModalParameters();
+
+        parameters.Add(nameof(UpdateUserModal.Id), userViewModel.Id);
+
+        var updateModal = Modal.Show<UpdateUserModal>("Details of " + userViewModel.Email, parameters, modalOptions);
+
+        var result = await updateModal.Result;
+
+        if (!result.Cancelled)
+        {
+            await OnInitializedAsync();
+        }
+    }
+
+    private async Task Delete(UserViewModel userViewModel)
+    {
+        var parameters = new ModalParameters();
+
+        parameters.Add(nameof(UpdateUserModal.Id), userViewModel.Id);
+
+        var deleteModal = Modal.Show<DeleteUserModal>("Confirm delete of " + userViewModel.Email, parameters, modalOptions);
+
+        var result = await deleteModal.Result;
+
+        if (!result.Cancelled)
+        {
+            users.RemoveAll(x => x.Id == userViewModel.Id);
+        }
+    }
+}
