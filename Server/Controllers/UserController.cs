@@ -53,7 +53,7 @@ namespace DentistryManagement.Server.Controllers
             {
                 return NotFound();
             }
-
+           
             return UserMapper.DTOtoUserViewModel(user);
         }
 

@@ -51,11 +51,16 @@
 @code {
     [CascadingParameter]
     BlazoredModalInstance BlazoredModal { get; set; }
+
     [Parameter]
     public string Id { get; set; }
+
     private bool disabled;
+
     private string message;
+
     private string messageStyles = "display:none";
+
     private UpdateUserViewModel UpdateUserViewModel = new UpdateUserViewModel();
 
     protected override async Task OnInitializedAsync()

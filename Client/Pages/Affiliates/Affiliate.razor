@@ -1,0 +1,57 @@
+﻿@using DentistryManagement.Client.Pages.Affiliates.Components;
+@using DentistryManagement.Client.Pages.Affiliates.Modals
+
+@page "/affiliates/{Id}"
+@inject IModalService Modal
+@inject NavigationManager Navigation
+
+<div class="under-top-row px-4">
+    <div class="grph-action-add" @onclick="Delete">
+        <span>
+            <svg width="0.8em" height="0.8em" viewBox="0 1 24 24" fill="#00A8FF">
+                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path>
+            </svg>
+            Delete
+        </span>
+    </div>
+</div>
+
+<div class="content px-4">
+    <div class="row">
+        <div class="col">
+            <Details Id="@Id" />
+        </div>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter]
+    protected MainLayout navigationSet { get; set; }
+
+    [Parameter]
+    public string Id { get; set; }
+
+    private ModalOptions modalOptions = new ModalOptions() { DisableBackgroundCancel = true };
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        navigationSet.addNavigationItem("Affiliate Details");
+    }
+
+    private async Task Delete()
+    {
+        var parameters = new ModalParameters();
+
+        parameters.Add(nameof(Id), int.Parse(Id));
+
+        var deleteModal = Modal.Show<DeleteAffiliateModal>("Confirm delete", parameters, modalOptions);
+
+        var result = await deleteModal.Result;
+
+        if (!result.Cancelled)
+        {
+            Navigation.NavigateTo("/affiliates");
+        }
+    }
+}

@@ -1,14 +1,11 @@
-﻿@page "/users"
+﻿@page "/affiliates"
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
-@using DentistryManagement.Shared.ViewModels.Users;
-@using DentistryManagement.Client.Pages.Users.Modals;
-@using Skclusive.Material.Paper
-@using Microsoft.AspNetCore.Authorization
+@using DentistryManagement.Shared.ViewModels.Affiliates
+@using DentistryManagement.Client.Pages.Affiliates.Modals
 
 @inject HttpClient Http
 @inject IModalService Modal
-
-@attribute [Authorize(Roles = "Admin")]
+@inject NavigationManager Navigation
 
 <div class="under-top-row px-4">
     <div class="grph-action-add" @onclick="Add">
@@ -22,7 +19,7 @@
 </div>
 
 <div class="content px-4">
-    @if (users == null)
+    @if (affiliates == null)
     {
         <div class="loader">Loading...</div>
     }
@@ -32,26 +29,20 @@
             <Table Size="@Skclusive.Core.Component.Size.Small">
                 <TableHead Class="grph-table-head">
                     <Skclusive.Material.Table.TableRow class="grph-table-row">
-                        <TableCell>First Name</TableCell>
-                        <TableCell>Last Name</TableCell>
-                        <TableCell>Email</TableCell>
-                        <TableCell>Phone Number</TableCell>
-                        <TableCell>Admin</TableCell>
+                        <TableCell>Name</TableCell>
+                        <TableCell>Address</TableCell>
                         <TableCell></TableCell>
                     </Skclusive.Material.Table.TableRow>
                 </TableHead>
                 <TableBody>
-                    @foreach (var user in users)
+                    @foreach (var affiliate in affiliates)
                     {
-                        <Skclusive.Material.Table.TableRow class="grph-table-row">
-                            <TableCell>@user.FirstName</TableCell>
-                            <TableCell>@user.LastName</TableCell>
-                            <TableCell>@user.Email</TableCell>
-                            <TableCell>@user.PhoneNumber</TableCell>
-                            <TableCell>@(user.IsAdmin ? "Yes" : "No")</TableCell>
+                        <Skclusive.Material.Table.TableRow class="grph-table-row" OnClick="@(() => Details(affiliate))">
+                            <TableCell>@affiliate.Name</TableCell>
+                            <TableCell>@affiliate.Address</TableCell>
                             <TableCell Class="grph-actions">
-                                <span class="oi oi-pencil" @onclick="@(() => Edit(user))"></span>
-                                <span class="oi oi-trash" @onclick="@(() => Delete(user))"></span>
+                                <span class="oi oi-pencil" @onclick="@(() => Edit(affiliate))"></span>
+                                <span class="oi oi-trash" @onclick="@(() => Delete(affiliate))"></span>
                             </TableCell>
                         </Skclusive.Material.Table.TableRow>
                     }
@@ -61,21 +52,22 @@
     }
 </div>
 
+
 @code {
     [CascadingParameter]
     protected MainLayout navigationSet { get; set; }
 
-    private List<UserViewModel> users;
-
     private ModalOptions modalOptions = new ModalOptions() { DisableBackgroundCancel = true };
+
+    private List<AffiliateViewModel> affiliates;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            users = await Http.GetFromJsonAsync<List<UserViewModel>>("api/User");
+            affiliates = await Http.GetFromJsonAsync<List<AffiliateViewModel>>("api/Affiliate");
             navigationSet.resetNavigationPanelWithoutState();
-            navigationSet.addNavigationItem("Users");
+            navigationSet.addNavigationItem("Affiliates");
         }
         catch (AccessTokenNotAvailableException exception)
         {
@@ -83,10 +75,9 @@
         }
     }
 
-
     private async Task Add()
     {
-        var addModal = Modal.Show<CreateUserModal>("Create User", modalOptions);
+        var addModal = Modal.Show<CreateAffiliateModal>("Create Affiliate", modalOptions);
 
         var result = await addModal.Result;
 
@@ -96,13 +87,13 @@
         }
     }
 
-    private async Task Edit(UserViewModel userViewModel)
+    private async Task Edit(AffiliateViewModel affiliate)
     {
         var parameters = new ModalParameters();
 
-        parameters.Add(nameof(UpdateUserModal.Id), userViewModel.Id);
+        parameters.Add(nameof(affiliate.Id), affiliate.Id);
 
-        var updateModal = Modal.Show<UpdateUserModal>("Details of " + userViewModel.Email, parameters, modalOptions);
+        var updateModal = Modal.Show<UpdateAffiliateModal>("Details of " + affiliate.Name, parameters, modalOptions);
 
         var result = await updateModal.Result;
 
@@ -112,19 +103,24 @@
         }
     }
 
-    private async Task Delete(UserViewModel userViewModel)
+    private async Task Delete(AffiliateViewModel affiliate)
     {
         var parameters = new ModalParameters();
 
-        parameters.Add(nameof(UpdateUserModal.Id), userViewModel.Id);
+        parameters.Add(nameof(affiliate.Id), affiliate.Id);
 
-        var deleteModal = Modal.Show<DeleteUserModal>("Confirm delete of " + userViewModel.Email, parameters, modalOptions);
+        var deleteModal = Modal.Show<DeleteAffiliateModal>("Confirm delete of " + affiliate.Name, parameters, modalOptions);
 
         var result = await deleteModal.Result;
 
         if (!result.Cancelled)
         {
-            users.RemoveAll(x => x.Id == userViewModel.Id);
+            affiliates.RemoveAll(x => x.Id == affiliate.Id);
         }
+    }
+
+    private void Details(AffiliateViewModel affiliate)
+    {
+        Navigation.NavigateTo("/affiliates/" + affiliate.Id);
     }
 }

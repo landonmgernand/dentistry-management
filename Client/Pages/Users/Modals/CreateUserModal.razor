@@ -74,15 +74,6 @@
 
     private CustomValidator customValidator;
 
-    private string Email { set; get; }
-
-    private void HandleEmail(ChangeEventArgs arg)
-    {
-        Email = arg.Value?.ToString();
-        AddUserViewModel.Email = Email;
-        StateHasChanged();
-    }
-
     private async Task HandleValidSubmit()
     {
         customValidator.ClearErrors();

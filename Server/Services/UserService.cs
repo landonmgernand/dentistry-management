@@ -72,9 +72,9 @@ namespace DentistryManagement.Server.Services
         public async Task CreateUser(UserDTO userDTO)
         {
             var applicationUser = UserMapper.DTOtoApplicationUser(userDTO);
-
+          
             await _userManager.CreateAsync(applicationUser, userDTO.Password);
-
+            
             var roleName = "User";
 
             if (userDTO.IsAdmin)

@@ -1,0 +1,62 @@
+﻿@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Extensions.Logging
+@using DentistryManagement.Shared.ViewModels.Addresses; 
+@using DentistryManagement.Client.Components
+@using DentistryManagement.Client.Helpers
+@using System.Net
+
+@inject HttpClient Http
+@inject ILogger<Affiliate> Logger
+
+<Paper Class="grph-paper">
+    @if (addressViewModel == null)
+    {
+
+    }
+    else
+    {
+        <EditForm Model="@addressViewModel">
+        </EditForm>
+    }
+</Paper>
+
+@code {
+    [Parameter]
+    public string AffiliateId { get; set; }
+
+    private UpdateAddressViewModel addressViewModel = new UpdateAddressViewModel();
+
+    private CustomValidator customValidator;
+
+    private bool EditMode = false;
+
+    private string message;
+
+    private string messageStyles = "display:none";
+
+    private string InputStyle
+    {
+        get
+        {
+            return "form-control " + (!EditMode ? "grph-content-input-disabled" : "grph-content-input");
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            addressViewModel = await Http.GetFromJsonAsync<UpdateAddressViewModel>("api/Affiliate/Address");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError("Form processing error: {Message}", exception.Message);
+            messageStyles = "display:block";
+            message = "There was an error getting the data.";
+        }
+    }
+}

@@ -57,6 +57,7 @@ namespace DentistryManagement.Server
             services.AddRazorPages();
     
             services.AddScoped<UserService, UserService>();
+            services.AddScoped<AffiliateService, AffiliateService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -91,6 +92,7 @@ namespace DentistryManagement.Server
                 endpoints.MapControllers();
                 endpoints.MapFallbackToFile("index.html");
                 endpoints.MapFallbackToFile("/settings/{email?}", "index.html");
+                endpoints.MapFallbackToFile("/affiliates/{id?}", "index.html");
             });
         }
     }

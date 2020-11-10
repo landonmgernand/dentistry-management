@@ -10,10 +10,13 @@ namespace DentistryManagement.Server.Models
     {
         [PersonalData]
         public string FirstName { get; set; }
+
         [PersonalData]
         public string LastName { get; set; }
        
         public ICollection<ApplicationUserRole> UserRoles { get; set; }
+
+        public Affiliate Affiliate { get; set; }
 
     }
 }
