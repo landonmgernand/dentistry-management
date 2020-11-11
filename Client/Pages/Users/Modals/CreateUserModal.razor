@@ -34,7 +34,7 @@
                 <ValidationMessage For="@(() => AddUserViewModel.Email)" />
             </div>
             <div class="col">
-                <MatTextField @bind-Value="AddUserViewModel.Password" Label="Password" Outlined="true"></MatTextField>
+                <MatTextField @bind-Value="AddUserViewModel.Password" Label="Password" Type="Password" Outlined="true"></MatTextField>
                 <ValidationMessage For="@(() => AddUserViewModel.Password)" />
             </div>
         </div>
