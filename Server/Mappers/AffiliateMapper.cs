@@ -32,7 +32,8 @@ namespace DentistryManagement.Server.Mappers
             return new AffiliateDTO
             {
                 Id = affiliate.Id,
-                Name = affiliate.Name
+                Name = affiliate.Name,
+                AddressDTO = affiliate.Address is null ? null : AddressMapper.AddressToDTO(affiliate.Address)
             };
         }
 
@@ -49,7 +50,8 @@ namespace DentistryManagement.Server.Mappers
             return new AffiliateViewModel
             {
                 Id = affiliateDTO.Id,
-                Name = affiliateDTO.Name
+                Name = affiliateDTO.Name,
+                Address = affiliateDTO.AddressDTO is null ? null :  AddressMapper.DTOtoAddressString(affiliateDTO.AddressDTO)
             };
         }
     }

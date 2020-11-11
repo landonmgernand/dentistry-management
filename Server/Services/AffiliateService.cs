@@ -1,6 +1,7 @@
 ﻿using DentistryManagement.Server.Data;
 using DentistryManagement.Server.DataTransferObjects;
 using DentistryManagement.Server.Mappers;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,15 +53,20 @@ namespace DentistryManagement.Server.Services
 
         public AffiliateDTO Get(int id)
         {
-            var affiliate = _context.Affiliate.SingleOrDefault(a => a.Id.Equals(id));
+            var affiliate = _context.Affiliate.Include(a => a.Address).SingleOrDefault(a => a.Id.Equals(id));
 
             return AffiliateMapper.AffiliateToDTO(affiliate);
         }
 
-        public AddressDTO GetAffiliateAddress(int id, int affiliateId)
+        public AddressDTO GetAffiliateAddress(int affiliateId)
         {
             var affiliateAddress = _context.Address
-                .SingleOrDefault(a => a.Id.Equals(id) && a.AffiliateId.Equals(affiliateId));
+                .SingleOrDefault(a => a.AffiliateId.Equals(affiliateId));
+
+            if (affiliateAddress is null)
+            {
+                return null;
+            }
 
             return AddressMapper.AddressToDTO(affiliateAddress);
         }
@@ -68,6 +74,7 @@ namespace DentistryManagement.Server.Services
         public List<AffiliateDTO> GetAll()
         {
             var affiliates = _context.Affiliate
+                .Include(a => a.Address)
                 .Select(a => AffiliateMapper.AffiliateToDTO(a))
                 .ToList();
 

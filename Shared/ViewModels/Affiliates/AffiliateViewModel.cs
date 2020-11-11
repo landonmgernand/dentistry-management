@@ -8,6 +8,6 @@ namespace DentistryManagement.Shared.ViewModels.Affiliates
 
         public string Name { get; set; }
 
-        public AddressViewModel Address { get; set; }
+        public string Address { get; set; }
     }
 }

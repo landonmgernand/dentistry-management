@@ -15,7 +15,7 @@ namespace DentistryManagement.Shared.ViewModels.Addresses
         [DataType(DataType.Text)]
         public string Address1 { get; set; }
 
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
         [DataType(DataType.Text)]
         public string Address2 { get; set; }
 
@@ -25,7 +25,7 @@ namespace DentistryManagement.Shared.ViewModels.Addresses
         public string PostalCode { get; set; }
 
         [Required]
-        [StringLength(50, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [StringLength(50, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
         [DataType(DataType.Text)]
         public string City { get; set; }
 

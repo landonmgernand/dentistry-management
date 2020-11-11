@@ -3,32 +3,111 @@
 @using DentistryManagement.Shared.ViewModels.Addresses; 
 @using DentistryManagement.Client.Components
 @using DentistryManagement.Client.Helpers
+@using DentistryManagement.Shared.ViewModels.Affiliates;
+@using DentistryManagement.Client.Pages.Affiliates.Modals; 
 @using System.Net
 
 @inject HttpClient Http
 @inject ILogger<Affiliate> Logger
+@inject IModalService Modal
 
 <Paper Class="grph-paper">
-    @if (addressViewModel == null)
-    {
-
-    }
-    else
-    {
-        <EditForm Model="@addressViewModel">
-        </EditForm>
-    }
+    <EditForm Model="@addressView">
+        <DataAnnotationsValidator />
+        <CustomValidator @ref="customValidator" />
+        @if (affiliateView.Address == null)
+        {
+            <div class="grph-text" hidden="@HideCreateAddress">
+                <div class="grph-text-wrapper">
+                    <p>There is no address attached to @affiliateView.Name's Affiliate</p>
+                    <span class="btn btn-primary grph-primary" @onclick="Add">Create Affiliate Address</span>
+                </div>
+            </div>
+        }
+        <FormPanel Title="Address"
+                   ChangeEditMode="ChangeEditMode"
+                   EditMode="@EditMode"
+                   Cancel="Cancel"
+                   Save="Save"
+                   Message="@message"
+                   MessageStyle="@messageStyles">
+            <li>
+                <div class="col-4">
+                    <span>Address1:</span>
+                </div>
+                <div class="col-8">
+                    <InputText disabled="@(!EditMode)"
+                               class="@InputStyle"
+                               @bind-Value="addressView.Address1" />
+                    <ValidationMessage For="@(() => addressView.Address1)" />
+                </div>
+            </li>
+            <li>
+                <div class="col-4">
+                    <span>Address2:</span>
+                </div>
+                <div class="col-8">
+                    <InputText disabled="@(!EditMode)"
+                               class="@InputStyle"
+                               @bind-Value="addressView.Address2" />
+                    <ValidationMessage For="@(() => addressView.Address2)" />
+                </div>
+            </li>
+            <li>
+                <div class="col-4">
+                    <span>Postal code:</span>
+                </div>
+                <div class="col-8">
+                    <InputText disabled="@(!EditMode)"
+                               class="@InputStyle"
+                               @bind-Value="addressView.PostalCode" />
+                    <ValidationMessage For="@(() => addressView.PostalCode)" />
+                </div>
+            </li>
+            <li>
+                <div class="col-4">
+                    <span>City:</span>
+                </div>
+                <div class="col-8">
+                    <InputText disabled="@(!EditMode)"
+                               class="@InputStyle"
+                               @bind-Value="addressView.City" />
+                    <ValidationMessage For="@(() => addressView.City)" />
+                </div>
+            </li>
+            <li>
+                <div class="col-4">
+                    <span>Country:</span>
+                </div>
+                <div class="col-8">
+                    <InputText disabled="@(!EditMode)"
+                               class="@InputStyle"
+                               @bind-Value="addressView.Country" />
+                    <ValidationMessage For="@(() => addressView.Country)" />
+                </div>
+            </li>
+        </FormPanel>
+    </EditForm>
 </Paper>
 
 @code {
     [Parameter]
     public string AffiliateId { get; set; }
 
-    private UpdateAddressViewModel addressViewModel = new UpdateAddressViewModel();
+    [Parameter]
+    public bool HideCreateAddress { get; set; }
+
+    private UpdateAddressViewModel addressView = new UpdateAddressViewModel();
+
+    private AffiliateViewModel affiliateView = new AffiliateViewModel();
+
+    private ModalOptions modalOptions = new ModalOptions() { DisableBackgroundCancel = true };
 
     private CustomValidator customValidator;
 
     private bool EditMode = false;
+
+    private bool Test;
 
     private string message;
 
@@ -46,7 +125,12 @@
     {
         try
         {
-            addressViewModel = await Http.GetFromJsonAsync<UpdateAddressViewModel>("api/Affiliate/Address");
+            affiliateView = await Http.GetFromJsonAsync<AffiliateViewModel>("api/Affiliate/" + AffiliateId);
+            if (affiliateView.Address != null)
+            {
+                addressView = await Http.GetFromJsonAsync<UpdateAddressViewModel>("api/Affiliate/" + AffiliateId + "/Address");
+                HideCreateAddress = true;
+            }
         }
         catch (AccessTokenNotAvailableException exception)
         {
@@ -57,6 +141,74 @@
             Logger.LogError("Form processing error: {Message}", exception.Message);
             messageStyles = "display:block";
             message = "There was an error getting the data.";
+        }
+    }
+
+    private async Task Save()
+    {
+        customValidator.ClearErrors();
+
+        try
+        {
+            var response = await Http.PutAsJsonAsync("api/Affiliate/" + AffiliateId + "/Address/" + addressView.Id, addressView);
+
+            if (response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                var errors = await response.Content
+                    .ReadFromJsonAsync<Dictionary<string, List<string>>>();
+
+                if (errors.Count > 0)
+                {
+                    customValidator.DisplayErrors(errors);
+                }
+            }
+            else
+            {
+                EditMode = false;
+                await OnInitializedAsync();
+            }
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError("Form processing error: {Message}", exception.Message);
+            messageStyles = "display:block";
+            message = "There was an error processing the form.";
+        }
+    }
+
+    private async Task Cancel()
+    {
+        EditMode = false;
+        await OnInitializedAsync();
+    }
+
+    private void ChangeEditMode(bool mode)
+    {
+        EditMode = mode;
+    }
+
+    private async Task Add()
+    {
+        HideCreateAddress = true;
+
+        var parameters = new ModalParameters();
+
+        parameters.Add(nameof(affiliateView.Id), affiliateView.Id);
+
+        var updateModal = Modal.Show<CreateAffiliateAddressModel>("Create " + affiliateView.Name + "'s address", parameters, modalOptions);
+
+        var result = await updateModal.Result;
+
+        if (!result.Cancelled)
+        {
+            await OnInitializedAsync();
+        } else
+        {
+            HideCreateAddress = false;
         }
     }
 }

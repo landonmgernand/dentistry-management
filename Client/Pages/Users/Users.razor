@@ -2,6 +2,7 @@
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using DentistryManagement.Shared.ViewModels.Users;
 @using DentistryManagement.Client.Pages.Users.Modals;
+@using DentistryManagement.Client.Components;
 @using Skclusive.Material.Paper
 @using Microsoft.AspNetCore.Authorization
 
@@ -11,14 +12,7 @@
 @attribute [Authorize(Roles = "Admin")]
 
 <div class="under-top-row px-4">
-    <div class="grph-action-add" @onclick="Add">
-        <span>
-            <svg width="1em" height="1em" viewBox="0 0 24 24" fill="#00A8FF">
-                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
-            </svg>
-            Add
-        </span>
-    </div>
+    <AddAction Add="Add" />
 </div>
 
 <div class="content px-4">
@@ -29,34 +23,34 @@
     else
     {
         <Paper Class="grph-paper">
-            <Table Size="@Skclusive.Core.Component.Size.Small">
-                <TableHead Class="grph-table-head">
-                    <Skclusive.Material.Table.TableRow class="grph-table-row">
-                        <TableCell>First Name</TableCell>
-                        <TableCell>Last Name</TableCell>
-                        <TableCell>Email</TableCell>
-                        <TableCell>Phone Number</TableCell>
-                        <TableCell>Admin</TableCell>
-                        <TableCell></TableCell>
-                    </Skclusive.Material.Table.TableRow>
-                </TableHead>
-                <TableBody>
+            <table class="grp-table">
+                <thead class="grph-table-head">
+                    <tr class="grph-table-row">
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Phone Number</th>
+                        <th>Admin</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
                     @foreach (var user in users)
                     {
-                        <Skclusive.Material.Table.TableRow class="grph-table-row">
-                            <TableCell>@user.FirstName</TableCell>
-                            <TableCell>@user.LastName</TableCell>
-                            <TableCell>@user.Email</TableCell>
-                            <TableCell>@user.PhoneNumber</TableCell>
-                            <TableCell>@(user.IsAdmin ? "Yes" : "No")</TableCell>
-                            <TableCell Class="grph-actions">
+                        <tr class="grph-table-row">
+                            <td>@user.FirstName</td>
+                            <td>@user.LastName</td>
+                            <td>@user.Email</td>
+                            <td>@user.PhoneNumber</td>
+                            <td>@(user.IsAdmin ? "Yes" : "No")</td>
+                            <td class="grph-actions">
                                 <span class="oi oi-pencil" @onclick="@(() => Edit(user))"></span>
                                 <span class="oi oi-trash" @onclick="@(() => Delete(user))"></span>
-                            </TableCell>
-                        </Skclusive.Material.Table.TableRow>
+                            </td>
+                        </tr>
                     }
-                </TableBody>
-            </Table>
+                </tbody>
+            </table>
         </Paper>
     }
 </div>
@@ -118,7 +112,7 @@
 
         parameters.Add(nameof(UpdateUserModal.Id), userViewModel.Id);
 
-        var deleteModal = Modal.Show<DeleteUserModal>("Confirm delete of " + userViewModel.Email, parameters, modalOptions);
+        var deleteModal = Modal.Show<DeleteUserModal>("Confirm action", parameters, modalOptions);
 
         var result = await deleteModal.Result;
 

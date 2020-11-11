@@ -2,20 +2,14 @@
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using DentistryManagement.Shared.ViewModels.Affiliates
 @using DentistryManagement.Client.Pages.Affiliates.Modals
+@using DentistryManagement.Client.Components
 
 @inject HttpClient Http
 @inject IModalService Modal
 @inject NavigationManager Navigation
 
 <div class="under-top-row px-4">
-    <div class="grph-action-add" @onclick="Add">
-        <span>
-            <svg width="1em" height="1em" viewBox="0 0 24 24" fill="#00A8FF">
-                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
-            </svg>
-            Add
-        </span>
-    </div>
+    <AddAction Add="Add" />
 </div>
 
 <div class="content px-4">
@@ -26,28 +20,28 @@
     else
     {
         <Paper Class="grph-paper">
-            <Table Size="@Skclusive.Core.Component.Size.Small">
-                <TableHead Class="grph-table-head">
-                    <Skclusive.Material.Table.TableRow class="grph-table-row">
-                        <TableCell>Name</TableCell>
-                        <TableCell>Address</TableCell>
-                        <TableCell></TableCell>
-                    </Skclusive.Material.Table.TableRow>
-                </TableHead>
-                <TableBody>
+            <table class="grp-table">
+                <thead class="grph-table-head">
+                    <tr class="grph-table-row">
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
                     @foreach (var affiliate in affiliates)
                     {
-                        <Skclusive.Material.Table.TableRow class="grph-table-row" OnClick="@(() => Details(affiliate))">
-                            <TableCell>@affiliate.Name</TableCell>
-                            <TableCell>@affiliate.Address</TableCell>
-                            <TableCell Class="grph-actions">
+                        <tr class="grph-table-row">
+                            <td @onclick="@(() => Details(affiliate))">@affiliate.Name</td>
+                            <td @onclick="@(() => Details(affiliate))">@affiliate.Address</td>
+                            <td class="grph-actions">
                                 <span class="oi oi-pencil" @onclick="@(() => Edit(affiliate))"></span>
                                 <span class="oi oi-trash" @onclick="@(() => Delete(affiliate))"></span>
-                            </TableCell>
-                        </Skclusive.Material.Table.TableRow>
+                            </td>
+                        </tr>
                     }
-                </TableBody>
-            </Table>
+                </tbody>
+            </table>
         </Paper>
     }
 </div>
@@ -109,7 +103,7 @@
 
         parameters.Add(nameof(affiliate.Id), affiliate.Id);
 
-        var deleteModal = Modal.Show<DeleteAffiliateModal>("Confirm delete of " + affiliate.Name, parameters, modalOptions);
+        var deleteModal = Modal.Show<DeleteAffiliateModal>("Confirm action", parameters, modalOptions);
 
         var result = await deleteModal.Result;
 

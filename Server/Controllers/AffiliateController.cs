@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using DentistryManagement.Server.Mappers;
 using DentistryManagement.Server.Services;
 using DentistryManagement.Shared.ViewModels.Addresses;
 using DentistryManagement.Shared.ViewModels.Affiliates;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DentistryManagement.Server.Controllers
@@ -41,10 +38,10 @@ namespace DentistryManagement.Server.Controllers
             return AffiliateMapper.DTOtoAffiliateVM(affiliate);
         }
 
-        [HttpGet("{affiliateId}/address/{id}")]
-        public ActionResult<AddressViewModel> GetAffiliateAddress(int affiliateId, int id)
+        [HttpGet("{affiliateId}/address")]
+        public ActionResult<AddressViewModel> GetAffiliateAddress(int affiliateId)
         {
-            var affiliateAddress = _service.GetAffiliateAddress(id, affiliateId);
+            var affiliateAddress = _service.GetAffiliateAddress(affiliateId);
 
             if (affiliateAddress is null)
             {
@@ -106,19 +103,9 @@ namespace DentistryManagement.Server.Controllers
         [HttpPut("{affiliateId}/address/{id}")]
         public ActionResult UpdateAffiliiateAddress(int affiliateId, int id, UpdateAddressViewModel updateAddressViewModel)
         {
-            if (id != updateAddressViewModel.Id)
+            if (id != updateAddressViewModel.Id || affiliateId != updateAddressViewModel.AffiliateId)
             {
                 return BadRequest();
-            }
-
-            if (affiliateId != updateAddressViewModel.AffiliateId)
-            {
-                return BadRequest();
-            }
-
-            if (!_service.AffiliateAddressExist(id, affiliateId))
-            {
-                return NotFound();
             }
 
             var addressDTO = AddressMapper.UpdateAddressVMToDTO(updateAddressViewModel);
