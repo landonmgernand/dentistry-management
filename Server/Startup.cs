@@ -58,6 +58,7 @@ namespace DentistryManagement.Server
     
             services.AddScoped<UserService, UserService>();
             services.AddScoped<AffiliateService, AffiliateService>();
+            services.AddScoped<RoleService, RoleService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

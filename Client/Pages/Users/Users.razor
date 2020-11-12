@@ -30,24 +30,26 @@
                         <th>Last Name</th>
                         <th>Email</th>
                         <th>Phone Number</th>
-                        <th>Admin</th>
+                        <th>Role</th>
+                        <th>Affiliate</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var user in users)
                     {
-                        <tr class="grph-table-row">
-                            <td>@user.FirstName</td>
-                            <td>@user.LastName</td>
-                            <td>@user.Email</td>
-                            <td>@user.PhoneNumber</td>
-                            <td>@(user.IsAdmin ? "Yes" : "No")</td>
-                            <td class="grph-actions">
-                                <span class="oi oi-pencil" @onclick="@(() => Edit(user))"></span>
-                                <span class="oi oi-trash" @onclick="@(() => Delete(user))"></span>
-                            </td>
-                        </tr>
+                    <tr class="grph-table-row">
+                        <td>@user.FirstName</td>
+                        <td>@user.LastName</td>
+                        <td>@user.Email</td>
+                        <td>@user.PhoneNumber</td>
+                        <td>@user.Role</td>
+                        <td>@user.Affiliate</td>
+                        <td class="grph-actions">
+                            <span class="oi oi-pencil" @onclick="@(() => Edit(user))"></span>
+                            <span class="oi oi-trash" @onclick="@(() => Delete(user))"></span>
+                        </td>
+                    </tr>
                     }
                 </tbody>
             </table>

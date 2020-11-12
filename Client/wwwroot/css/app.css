@@ -154,6 +154,15 @@ app {
     background-color: rgba(0, 0, 0, 0.04);
 }
 
+.mdc-menu {
+    z-index: 103 !important;
+}
+
+.mdc-select {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
 @media (max-width: 767.98px) {
     .main .top-row:not(.auth) {
         display: none;

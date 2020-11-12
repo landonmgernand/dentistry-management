@@ -15,25 +15,29 @@ namespace DentistryManagement.Server.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly UserService _service;
+        private readonly UserService _userService;
+        private readonly RoleService _roleService;
+        private readonly AffiliateService _affiliateService;
 
-        public UserController(UserService service)
+        public UserController(UserService userService, RoleService roleService, AffiliateService affiliateService)
         {
-            _service = service;
+            _userService = userService;
+            _roleService = roleService;
+            _affiliateService = affiliateService;
         }
 
         [Authorize(Roles = "Admin")]
         [HttpGet]
         public ActionResult<IEnumerable<UserViewModel>> GetUsers()
         {
-            return _service.GetAll().Select(x => UserMapper.DTOtoUserViewModel(x)).ToArray();
+            return _userService.GetAll().Select(x => UserMapper.DTOtoUserViewModel(x)).ToArray();
         }
 
         [Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
         public ActionResult<UserViewModel> GetUser(string id)
         {
-            var user = _service.Get(id);
+            var user = _userService.Get(id);
 
             if (user == null)
             {
@@ -47,7 +51,7 @@ namespace DentistryManagement.Server.Controllers
         [HttpGet("email/{email}")]
         public ActionResult<UserViewModel> GetUserByEmail(string email)
         {
-            var user = _service.GetByUsername(email);
+            var user = _userService.GetByUsername(email);
 
             if (user == null)
             {
@@ -61,7 +65,15 @@ namespace DentistryManagement.Server.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateUser([FromBody] CreateUserViewModel createUserViewModel)
         {
-            if (_service.GetByUsername(createUserViewModel.Email) != null)
+            if (
+                !_roleService.Exist(createUserViewModel.RoleId) ||
+                (createUserViewModel.AffiliateId != 0 && !_affiliateService.Exist(createUserViewModel.AffiliateId))
+                )
+            {
+                return NotFound();
+            }
+
+            if (_userService.GetByUsername(createUserViewModel.Email) != null)
             {
                 ModelState.AddModelError(nameof(createUserViewModel.Email), "This email is already taken");
                 return BadRequest(ModelState);
@@ -75,7 +87,7 @@ namespace DentistryManagement.Server.Controllers
 
             var userDTO = UserMapper.AddUserViewModelToDTO(createUserViewModel);
 
-            await _service.CreateUser(userDTO);
+            await _userService.CreateUser(userDTO);
 
             return Ok(ModelState);
         }
@@ -89,14 +101,17 @@ namespace DentistryManagement.Server.Controllers
                 return BadRequest();
             }
 
-            if (!_service.Exist(id))
+            if (
+                !_userService.Exist(id) || !_roleService.Exist(updateUserViewModel.RoleId) ||
+                (updateUserViewModel.AffiliateId != 0 && !_affiliateService.Exist(updateUserViewModel.AffiliateId))
+                )
             {
                 return NotFound();
             }
 
             var userDTO = UserMapper.UpdateUserViewModelToDTO(updateUserViewModel);
 
-            await _service.UpdateUser(userDTO);
+            await _userService.UpdateUser(userDTO);
 
             return NoContent();
         }
@@ -105,12 +120,12 @@ namespace DentistryManagement.Server.Controllers
         [HttpPut("password/{id}")]
         public async Task<IActionResult> UpdatePassword(string id, PasswordUserViewModel passwordUserViewModel)
         {
-            if (!_service.Exist(id))
+            if (!_userService.Exist(id))
             {
                 return NotFound();
             }
 
-            if (!await _service.CheckPassword(passwordUserViewModel.Id, passwordUserViewModel.CurrentPassword))
+            if (!await _userService.CheckPassword(passwordUserViewModel.Id, passwordUserViewModel.CurrentPassword))
             {
                 ModelState.AddModelError(nameof(passwordUserViewModel.CurrentPassword), "The password you provided is wrong");
                 return BadRequest(ModelState);
@@ -124,7 +139,7 @@ namespace DentistryManagement.Server.Controllers
 
             var userDTO = UserMapper.PasswordUserViewModelToDTO(passwordUserViewModel);
 
-            await _service.UpdatePassword(userDTO);
+            await _userService.UpdatePassword(userDTO);
 
             return NoContent();
         }
@@ -133,12 +148,12 @@ namespace DentistryManagement.Server.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
-            if (!_service.Exist(id))
+            if (!_userService.Exist(id))
             {
                 return NotFound();
             }
 
-            await _service.DeleteUser(id);
+            await _userService.DeleteUser(id);
 
             return NoContent();
         }
