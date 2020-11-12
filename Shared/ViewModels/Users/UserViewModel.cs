@@ -12,6 +12,12 @@
 
         public string PhoneNumber { get; set; }
 
-        public bool IsAdmin { get; set; }
+        public int AffiliateId { get; set; }
+
+        public string Affiliate { get; set; }
+
+        public string RoleId { get; set; }
+
+        public string Role { get; set; }
     }
 }

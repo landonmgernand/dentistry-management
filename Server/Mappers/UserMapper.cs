@@ -17,7 +17,8 @@ namespace DentistryManagement.Server.Mappers
                 LastName = addUserViewModel.LastName,
                 Password = addUserViewModel.Password,
                 PhoneNumber = addUserViewModel.PhoneNumber,
-                IsAdmin = addUserViewModel.IsAdmin
+                AffiliateId = addUserViewModel.AffiliateId,
+                RoleId = addUserViewModel.RoleId
             };
         }
 
@@ -29,7 +30,8 @@ namespace DentistryManagement.Server.Mappers
                 FirstName = updateUserViewModel.FirstName,
                 LastName = updateUserViewModel.LastName,
                 PhoneNumber = updateUserViewModel.PhoneNumber,
-                IsAdmin = updateUserViewModel.IsAdmin
+                AffiliateId = updateUserViewModel.AffiliateId,
+                RoleId = updateUserViewModel.RoleId
             };
         }
 
@@ -53,7 +55,8 @@ namespace DentistryManagement.Server.Mappers
                 FirstName = applicationUser.FirstName,
                 LastName = applicationUser.LastName,
                 PhoneNumber = applicationUser.PhoneNumber,
-                IsAdmin = !(applicationUser.UserRoles.FirstOrDefault(x => x.Role.Name.Equals("Admin")) is null)
+                AffiliateDTO = applicationUser.Affiliate is null ? null : AffiliateMapper.AffiliateToDTO(applicationUser.Affiliate),
+                RoleDTO = applicationUser.UserRoles.Count == 0 ? null : RoleMapper.UserRoleToDTO(applicationUser.UserRoles.First())
             };
         }
 
@@ -67,7 +70,7 @@ namespace DentistryManagement.Server.Mappers
                 LastName = userDTO.LastName,
                 PhoneNumber = userDTO.PhoneNumber,
                 EmailConfirmed = true,
-                UserRoles = new List<ApplicationUserRole>()
+                UserRoles = new List<ApplicationUserRole>(),
             };
         }
 
@@ -80,7 +83,10 @@ namespace DentistryManagement.Server.Mappers
                 LastName = userDTO.LastName,
                 Email = userDTO.Email,
                 PhoneNumber = userDTO.PhoneNumber,
-                IsAdmin = userDTO.IsAdmin
+                AffiliateId = userDTO.AffiliateDTO is null ? 0 : userDTO.AffiliateDTO.Id,
+                Affiliate = userDTO.AffiliateDTO?.Name,
+                RoleId = userDTO.RoleDTO?.Id,
+                Role = userDTO.RoleDTO?.Name
             };
         }
     }

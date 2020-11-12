@@ -4,7 +4,6 @@
 @attribute [Authorize]
 @inject HttpClient Http
 
-@page "/settings"
 @page "/settings/{Email}"
 
 <div class="under-top-row px-4"></div>
@@ -24,13 +23,13 @@
     [CascadingParameter]
     protected MainLayout navigationSet { get; set; }
 
+    [Parameter]
+    public string Email { get; set; }
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
         navigationSet.resetNavigationPanelWithoutState();
         navigationSet.addNavigationItem("Settings");
     }
-
-    [Parameter]
-    public string Email { get; set; }
 }

@@ -124,6 +124,7 @@ app {
 .validation-message {
     color: #b71c1c !important;
     font-size: 0.6428571428571428rem !important;
+    height: 30px;
 }
 
 #blazor-error-ui {
@@ -151,6 +152,15 @@ app {
 
 .mdc-list > a:hover {
     background-color: rgba(0, 0, 0, 0.04);
+}
+
+.mdc-menu {
+    z-index: 103 !important;
+}
+
+.mdc-select {
+    width: 100%;
+    margin-bottom: 10px;
 }
 
 @media (max-width: 767.98px) {

@@ -3,6 +3,8 @@
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using System.Net.Http.Json
 @using Microsoft.Extensions.Logging
+@using DentistryManagement.Shared.ViewModels.Roles
+@using DentistryManagement.Shared.ViewModels.Affiliates
 
 @inject ILogger<Users> Logger
 @inject IModalService Modal
@@ -35,7 +37,28 @@
 
         <div class="row">
             <div class="col">
-                <MatCheckbox Class="grph-checkbox" @bind-Value="UpdateUserViewModel.IsAdmin" Label="Admin"></MatCheckbox>
+                <MatSelect Label="Role" Outlined="true" @bind-Value="UpdateUserViewModel.RoleId">
+                    @if (roles != null)
+                    {
+                        @foreach (var role in roles)
+                        {
+                            <MatOption Value="@role.Id">@role.Name</MatOption>
+                        }
+                    }
+                </MatSelect>
+                <ValidationMessage For="@(() => UpdateUserViewModel.RoleId)" />
+            </div>
+            <div class="col">
+                <MatSelect Label="Affiliate" Outlined="true" @bind-Value="UpdateUserViewModel.AffiliateId">
+                    @if (affiliates != null)
+                    {
+                        @foreach (var affiliate in affiliates)
+                        {
+                            <MatOption Value="@affiliate.Id">@affiliate.Name</MatOption>
+                        }
+                    }
+                </MatSelect>
+                <ValidationMessage For="@(() => UpdateUserViewModel.AffiliateId)" />
             </div>
         </div>
 
@@ -51,18 +74,29 @@
 @code {
     [CascadingParameter]
     BlazoredModalInstance BlazoredModal { get; set; }
+
     [Parameter]
     public string Id { get; set; }
+
     private bool disabled;
+
     private string message;
+
     private string messageStyles = "display:none";
+
     private UpdateUserViewModel UpdateUserViewModel = new UpdateUserViewModel();
+
+    private List<RoleViewModel> roles;
+
+    private List<AffiliateViewModel> affiliates;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
             UpdateUserViewModel = await Http.GetFromJsonAsync<UpdateUserViewModel>("api/User/" + Id);
+            roles = await Http.GetFromJsonAsync<List<RoleViewModel>>("api/Role");
+            affiliates = await Http.GetFromJsonAsync<List<AffiliateViewModel>>("api/Affiliate");
         }
         catch (AccessTokenNotAvailableException exception)
         {

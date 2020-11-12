@@ -24,6 +24,8 @@ namespace DentistryManagement.Server.Data
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<ApplicationRole> ApplicationRole { get; set; }
         public DbSet<ApplicationUserRole> ApplicationUserRole { get; set; }
+        public DbSet<Affiliate> Affiliate { get; set; }
+        public DbSet<Address> Address { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -44,6 +46,15 @@ namespace DentistryManagement.Server.Data
             {
                 b.HasOne(ur => ur.Role).WithMany(r => r.UserRoles).HasForeignKey(ur => ur.RoleId);
                 b.HasOne(ur => ur.User).WithMany(r => r.UserRoles).HasForeignKey(ur => ur.UserId);
+            });
+
+            #endregion
+
+            #region Affiliate
+
+            builder.Entity<Affiliate>(b => {
+                b.HasMany(u => u.Users).WithOne(a => a.Affiliate);
+                b.HasOne(a => a.Address).WithOne(a => a.Affiliate).HasForeignKey<Address>(a => a.AffiliateId);
             });
 
             #endregion

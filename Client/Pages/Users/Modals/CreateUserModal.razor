@@ -5,6 +5,8 @@
 @using System.Net
 @using System.Net.Http.Json
 @using Microsoft.Extensions.Logging
+@using DentistryManagement.Shared.ViewModels.Roles
+@using DentistryManagement.Shared.ViewModels.Affiliates
 
 @inject ILogger<Users> Logger
 @inject HttpClient Http
@@ -34,7 +36,7 @@
                 <ValidationMessage For="@(() => AddUserViewModel.Email)" />
             </div>
             <div class="col">
-                <MatTextField @bind-Value="AddUserViewModel.Password" Label="Password" Outlined="true"></MatTextField>
+                <MatTextField @bind-Value="AddUserViewModel.Password" Label="Password" Type="Password" Outlined="true"></MatTextField>
                 <ValidationMessage For="@(() => AddUserViewModel.Password)" />
             </div>
         </div>
@@ -48,7 +50,28 @@
 
         <div class="row">
             <div class="col">
-                <MatCheckbox Class="grph-checkbox" @bind-Value="AddUserViewModel.IsAdmin" Label="Admin"></MatCheckbox>
+                <MatSelect Label="Role" Outlined="true" @bind-Value="AddUserViewModel.RoleId">
+                    @if (roles != null)
+                    {
+                        @foreach (var role in roles)
+                        {
+                            <MatOption Value="@role.Id">@role.Name</MatOption>
+                        }
+                    }
+                </MatSelect>
+                <ValidationMessage For="@(() => AddUserViewModel.RoleId)" />
+            </div>
+            <div class="col">
+                <MatSelect Label="Affiliate" Outlined="true" @bind-Value="AddUserViewModel.AffiliateId">
+                    @if (affiliates != null)
+                    {
+                        @foreach (var affiliate in affiliates)
+                        {
+                            <MatOption Value="@affiliate.Id">@affiliate.Name</MatOption>
+                        }
+                    }
+                </MatSelect>
+                <ValidationMessage For="@(() => AddUserViewModel.AffiliateId)" />
             </div>
         </div>
 
@@ -72,15 +95,23 @@
 
     private CreateUserViewModel AddUserViewModel = new CreateUserViewModel();
 
+    private List<RoleViewModel> roles;
+
+    private List<AffiliateViewModel> affiliates;
+
     private CustomValidator customValidator;
 
-    private string Email { set; get; }
-
-    private void HandleEmail(ChangeEventArgs arg)
+    protected override async Task OnInitializedAsync()
     {
-        Email = arg.Value?.ToString();
-        AddUserViewModel.Email = Email;
-        StateHasChanged();
+        try
+        {
+            roles = await Http.GetFromJsonAsync<List<RoleViewModel>>("api/Role");
+            affiliates = await Http.GetFromJsonAsync<List<AffiliateViewModel>>("api/Affiliate");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
     }
 
     private async Task HandleValidSubmit()
