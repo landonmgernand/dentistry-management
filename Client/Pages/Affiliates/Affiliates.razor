@@ -1,12 +1,16 @@
 ﻿@page "/affiliates"
+
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using DentistryManagement.Shared.ViewModels.Affiliates
 @using DentistryManagement.Client.Pages.Affiliates.Modals
 @using DentistryManagement.Client.Components
+@using Microsoft.AspNetCore.Authorization
 
 @inject HttpClient Http
 @inject IModalService Modal
 @inject NavigationManager Navigation
+
+@attribute [Authorize(Roles = "Admin")]
 
 <div class="under-top-row px-4">
     <AddAction Add="Add" />
@@ -19,7 +23,7 @@
     }
     else
     {
-        <Paper Class="grph-paper">
+        <div class="grph-paper">
             <table class="grp-table">
                 <thead class="grph-table-head">
                     <tr class="grph-table-row">
@@ -42,7 +46,7 @@
                     }
                 </tbody>
             </table>
-        </Paper>
+        </div>
     }
 </div>
 

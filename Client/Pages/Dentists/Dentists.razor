@@ -1,22 +1,24 @@
-﻿@page "/users"
+﻿@page "/dentists"
 
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
-@using DentistryManagement.Shared.ViewModels.Users;
-@using DentistryManagement.Client.Pages.Users.Modals;
+@using DentistryManagement.Shared.ViewModels.Dentists;
+@using DentistryManagement.Client.Pages.Dentists.Modals;
 @using DentistryManagement.Client.Components;
 @using Microsoft.AspNetCore.Authorization
 
 @inject HttpClient Http
 @inject IModalService Modal
 
-@attribute [Authorize(Roles = "Admin")]
+@attribute [Authorize]
 
 <div class="under-top-row px-4">
-    <AddAction Add="Add" />
+    <AuthorizeView Roles="Admin, Manager">
+        <AddAction Add="Add" />
+    </AuthorizeView>    
 </div>
 
 <div class="content px-4">
-    @if (users == null)
+    @if (dentists == null)
     {
         <div class="loader">Loading...</div>
     }
@@ -30,26 +32,24 @@
                         <th>Last Name</th>
                         <th>Email</th>
                         <th>Phone Number</th>
-                        <th>Role</th>
-                        <th>Affiliate</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var user in users)
+                    @foreach (var dentist in dentists)
                     {
-                    <tr class="grph-table-row">
-                        <td>@user.FirstName</td>
-                        <td>@user.LastName</td>
-                        <td>@user.Email</td>
-                        <td>@user.PhoneNumber</td>
-                        <td>@user.Role</td>
-                        <td>@user.Affiliate</td>
-                        <td class="grph-actions">
-                            <span class="oi oi-pencil" @onclick="@(() => Edit(user))"></span>
-                            <span class="oi oi-trash" @onclick="@(() => Delete(user))"></span>
-                        </td>
-                    </tr>
+                        <tr class="grph-table-row">
+                            <td>@dentist.FirstName</td>
+                            <td>@dentist.LastName</td>
+                            <td>@dentist.Email</td>
+                            <td>@dentist.PhoneNumber</td>
+                            <td class="grph-actions">
+                                <AuthorizeView Roles="Admin, Manager">
+                                    <span class="oi oi-pencil" @onclick="@(() => Edit(dentist))"></span>
+                                    <span class="oi oi-trash" @onclick="@(() => Delete(dentist))"></span>
+                                </AuthorizeView>
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>
@@ -61,7 +61,7 @@
     [CascadingParameter]
     protected MainLayout navigationSet { get; set; }
 
-    private List<UserViewModel> users;
+    private List<DentistViewModel> dentists;
 
     private ModalOptions modalOptions = new ModalOptions() { DisableBackgroundCancel = true };
 
@@ -69,9 +69,9 @@
     {
         try
         {
-            users = await Http.GetFromJsonAsync<List<UserViewModel>>("api/User");
+            dentists = await Http.GetFromJsonAsync<List<DentistViewModel>>("api/dentist");
             navigationSet.resetNavigationPanelWithoutState();
-            navigationSet.addNavigationItem("Users");
+            navigationSet.addNavigationItem("Dentists");
         }
         catch (AccessTokenNotAvailableException exception)
         {
@@ -82,7 +82,7 @@
 
     private async Task Add()
     {
-        var addModal = Modal.Show<CreateUserModal>("Create User", modalOptions);
+        var addModal = Modal.Show<CreateDentistModal>("Create Dentist", modalOptions);
 
         var result = await addModal.Result;
 
@@ -92,13 +92,13 @@
         }
     }
 
-    private async Task Edit(UserViewModel userViewModel)
+    private async Task Edit(DentistViewModel dentistView)
     {
         var parameters = new ModalParameters();
 
-        parameters.Add(nameof(UpdateUserModal.Id), userViewModel.Id);
+        parameters.Add(nameof(DentistViewModel.Id), dentistView.Id);
 
-        var updateModal = Modal.Show<UpdateUserModal>("Details of " + userViewModel.Email, parameters, modalOptions);
+        var updateModal = Modal.Show<UpdateDentistModal>("Details of " + dentistView.Email, parameters, modalOptions);
 
         var result = await updateModal.Result;
 
@@ -108,19 +108,19 @@
         }
     }
 
-    private async Task Delete(UserViewModel userViewModel)
+    private async Task Delete(DentistViewModel dentistView)
     {
         var parameters = new ModalParameters();
 
-        parameters.Add(nameof(UpdateUserModal.Id), userViewModel.Id);
+        parameters.Add(nameof(DentistViewModel.Id), dentistView.Id);
 
-        var deleteModal = Modal.Show<DeleteUserModal>("Confirm action", parameters, modalOptions);
+        var deleteModal = Modal.Show<DeleteDentistModal>("Confirm action", parameters, modalOptions);
 
         var result = await deleteModal.Result;
 
         if (!result.Cancelled)
         {
-            users.RemoveAll(x => x.Id == userViewModel.Id);
+            dentists.RemoveAll(x => x.Id == dentistView.Id);
         }
     }
 }

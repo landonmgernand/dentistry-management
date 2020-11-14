@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Syncfusion.Blazor;
 using Blazored.Modal;
-using Microsoft.Extensions.Configuration;
 
 namespace DentistryManagement.Client
 {

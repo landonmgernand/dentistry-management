@@ -163,6 +163,14 @@ app {
     margin-bottom: 10px;
 }
 
+.blazored-modal-container {
+    z-index: 101;
+}
+
+.material-icons {
+    width: 2rem;
+}
+
 @media (max-width: 767.98px) {
     .main .top-row:not(.auth) {
         display: none;

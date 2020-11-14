@@ -4,10 +4,12 @@ using DentistryManagement.Server.Mappers;
 using DentistryManagement.Server.Services;
 using DentistryManagement.Shared.ViewModels.Addresses;
 using DentistryManagement.Shared.ViewModels.Affiliates;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DentistryManagement.Server.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class AffiliateController : ControllerBase
@@ -52,7 +54,7 @@ namespace DentistryManagement.Server.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateAffiliate([FromBody] CreateAffiliateViewModel createAffiliateViewModel)
+        public IActionResult CreateAffiliate([FromBody] CreateAffiliateViewModel createAffiliateViewModel)
         {
             var affiliateDTO = AffiliateMapper.CreateAffiliateVMToDTO(createAffiliateViewModel);
             _service.Create(affiliateDTO);
@@ -61,7 +63,7 @@ namespace DentistryManagement.Server.Controllers
         }
 
         [HttpPost("{affiliateId}/address")]
-        public ActionResult CreateAffiliateAddress(int affiliateId, [FromBody] CreateAddressViewModel createAddressViewModel)
+        public IActionResult CreateAffiliateAddress(int affiliateId, [FromBody] CreateAddressViewModel createAddressViewModel)
         {
             if (affiliateId != createAddressViewModel.AffiliateId)
             {
@@ -82,7 +84,7 @@ namespace DentistryManagement.Server.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult UpdateAffiliate(int id, UpdateAffiliateViewModel updateAffiliateViewModel)
+        public IActionResult UpdateAffiliate(int id, UpdateAffiliateViewModel updateAffiliateViewModel)
         {
             if (id != updateAffiliateViewModel.Id)
             {
@@ -101,7 +103,7 @@ namespace DentistryManagement.Server.Controllers
         }
 
         [HttpPut("{affiliateId}/address/{id}")]
-        public ActionResult UpdateAffiliiateAddress(int affiliateId, int id, UpdateAddressViewModel updateAddressViewModel)
+        public IActionResult UpdateAffiliiateAddress(int affiliateId, int id, UpdateAddressViewModel updateAddressViewModel)
         {
             if (id != updateAddressViewModel.Id || affiliateId != updateAddressViewModel.AffiliateId)
             {
@@ -115,7 +117,7 @@ namespace DentistryManagement.Server.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult DeleteAffiliate(int id)
+        public IActionResult DeleteAffiliate(int id)
         {
             if (!_service.Exist(id))
             {

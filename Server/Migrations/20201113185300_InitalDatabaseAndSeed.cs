@@ -4,10 +4,23 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DentistryManagement.Server.Migrations
 {
-    public partial class InitialDatabaseAndSeed : Migration
+    public partial class InitalDatabaseAndSeed : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Affiliate",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Affiliate", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -21,33 +34,6 @@ namespace DentistryManagement.Server.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUsers",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false),
-                    UserName = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
-                    Email = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(nullable: false),
-                    PasswordHash = table.Column<string>(nullable: true),
-                    SecurityStamp = table.Column<string>(nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
-                    PhoneNumber = table.Column<string>(nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
-                    LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false),
-                    FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -82,6 +68,64 @@ namespace DentistryManagement.Server.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PersistedGrants", x => x.Key);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Address",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Address1 = table.Column<string>(maxLength: 100, nullable: false),
+                    Address2 = table.Column<string>(maxLength: 100, nullable: true),
+                    PostalCode = table.Column<string>(maxLength: 20, nullable: false),
+                    City = table.Column<string>(maxLength: 50, nullable: false),
+                    Country = table.Column<string>(maxLength: 50, nullable: false),
+                    AffiliateId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Address", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Address_Affiliate_AffiliateId",
+                        column: x => x.AffiliateId,
+                        principalTable: "Affiliate",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    UserName = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
+                    Email = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(nullable: false),
+                    PasswordHash = table.Column<string>(nullable: true),
+                    SecurityStamp = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    PhoneNumber = table.Column<string>(nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
+                    LockoutEnabled = table.Column<bool>(nullable: false),
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    AffiliateId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_Affiliate_AffiliateId",
+                        column: x => x.AffiliateId,
+                        principalTable: "Affiliate",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -198,24 +242,35 @@ namespace DentistryManagement.Server.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Discriminator", "Name", "NormalizedName" },
-                values: new object[] { "2301D884-221A-4E7D-B509-0113DCC043E1", "e4315321-db50-4cc2-b500-b94d0af455fa", "ApplicationRole", "Admin", "Admin" });
+                table: "Affiliate",
+                columns: new[] { "Id", "Name" },
+                values: new object[] { 1, "Graphene" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Discriminator", "Name", "NormalizedName" },
-                values: new object[] { "83617646-4e9d-47e3-a089-cfe4691b9e71", "2e4db6d6-1efb-4224-abf9-4377b7326a71", "ApplicationRole", "User", "User" });
+                values: new object[,]
+                {
+                    { "2301D884-221A-4E7D-B509-0113DCC043E1", "557e6212-cddb-4987-abbd-cc1c7946b1de", "ApplicationRole", "Admin", "Admin" },
+                    { "7ba975a2-a3ba-45eb-91db-f2d421e1a842", "95c596db-5751-46e0-8aec-01ee24a8926e", "ApplicationRole", "Manager", "Manager" },
+                    { "f6d682ad-03dc-47a8-b7af-4b9b0cbe8204", "a3ac2256-8487-4e77-8580-e734bd9deb9f", "ApplicationRole", "Dentist", "Dentist" }
+                });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "B22698B8-42A2-4115-9631-1C2D1E2AC5F7", 0, "26e8501f-9b54-4596-94f1-41fbe02526e9", "admin@graphene.com", true, "Graphene", "Graphene", false, null, "admin@graphene.com", "admin@graphene.com", "AQAAAAEAACcQAAAAEAnSuqtmDRykjJZmfhYhFgQ88AbX1WfFA3h/APmAXdOgsCGFEbJ7UoWxpo88EC0icA==", null, false, "f86b1443-a993-4fec-9690-7b13a6cf537f", false, "admin@graphene.com" });
+                columns: new[] { "Id", "AccessFailedCount", "AffiliateId", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { "B22698B8-42A2-4115-9631-1C2D1E2AC5F7", 0, 1, "fb23e7d5-539b-4ced-9b2a-160fed87cf80", "admin@graphene.com", true, "Graphene", "Graphene", false, null, "admin@graphene.com", "admin@graphene.com", "AQAAAAEAACcQAAAAEFdbxTlfANEkkKWQ9+XUVsWGV3uc0AAunxX8Wwc58bedWuzo5eNAQSWdc3AqQZjtiA==", null, false, "15f41590-cf77-4db5-b3d3-f15708340c57", false, "admin@graphene.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "UserId", "RoleId", "Discriminator" },
                 values: new object[] { "B22698B8-42A2-4115-9631-1C2D1E2AC5F7", "2301D884-221A-4E7D-B509-0113DCC043E1", "ApplicationUserRole" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Address_AffiliateId",
+                table: "Address",
+                column: "AffiliateId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -242,6 +297,11 @@ namespace DentistryManagement.Server.Migrations
                 name: "IX_AspNetUserRoles_RoleId",
                 table: "AspNetUserRoles",
                 column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_AffiliateId",
+                table: "AspNetUsers",
+                column: "AffiliateId");
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
@@ -279,6 +339,9 @@ namespace DentistryManagement.Server.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Address");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
             migrationBuilder.DropTable(
@@ -304,6 +367,9 @@ namespace DentistryManagement.Server.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Affiliate");
         }
     }
 }

@@ -11,13 +11,13 @@
 @inject ILogger<Affiliate> Logger
 @inject IModalService Modal
 
-<Paper Class="grph-paper">
+<div class="grph-paper">
     <EditForm Model="@addressView">
         <DataAnnotationsValidator />
         <CustomValidator @ref="customValidator" />
         @if (affiliateView.Address == null)
         {
-            <div class="grph-text" hidden="@HideCreateAddress">
+            <div class="grph-text" hidden="@hideCreateAddress">
                 <div class="grph-text-wrapper">
                     <p>There is no address attached to @affiliateView.Name's Affiliate</p>
                     <span class="btn btn-primary grph-primary" @onclick="Add">Create Affiliate Address</span>
@@ -88,14 +88,11 @@
             </li>
         </FormPanel>
     </EditForm>
-</Paper>
+</div>
 
 @code {
     [Parameter]
     public string AffiliateId { get; set; }
-
-    [Parameter]
-    public bool HideCreateAddress { get; set; }
 
     private UpdateAddressViewModel addressView = new UpdateAddressViewModel();
 
@@ -110,6 +107,8 @@
     private string message;
 
     private string messageStyles = "display:none";
+
+    private bool hideCreateAddress = true;
 
     private string InputStyle
     {
@@ -127,7 +126,10 @@
             if (affiliateView.Address != null)
             {
                 addressView = await Http.GetFromJsonAsync<UpdateAddressViewModel>("api/Affiliate/" + AffiliateId + "/Address");
-                HideCreateAddress = true;
+
+            } else
+            {
+                hideCreateAddress = false;
             }
         }
         catch (AccessTokenNotAvailableException exception)
@@ -191,8 +193,6 @@
 
     private async Task Add()
     {
-        HideCreateAddress = true;
-
         var parameters = new ModalParameters();
 
         parameters.Add(nameof(affiliateView.Id), affiliateView.Id);
@@ -204,9 +204,6 @@
         if (!result.Cancelled)
         {
             await OnInitializedAsync();
-        } else
-        {
-            HideCreateAddress = false;
         }
     }
 }

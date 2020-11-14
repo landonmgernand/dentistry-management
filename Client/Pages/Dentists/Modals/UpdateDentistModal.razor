@@ -1,0 +1,95 @@
+﻿@using DentistryManagement.Shared.ViewModels.Dentists;
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using System.Net.Http.Json
+@using Microsoft.Extensions.Logging
+@using DentistryManagement.Shared.ViewModels.Affiliates
+
+@inject ILogger<Dentists> Logger
+@inject IModalService Modal
+@inject HttpClient Http
+
+<div class="grph-modal-form">
+    <EditForm Model="@dentistViewModel" OnValidSubmit="@HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <p class="validation-message" style="@messageStyles">
+            @message
+        </p>
+
+        <div class="row">
+            <div class="col">
+                <MatTextField @bind-Value="dentistViewModel.FirstName" Label="First Name" Outlined="true"></MatTextField>
+                <ValidationMessage For="@(() => dentistViewModel.FirstName)" />
+            </div>
+            <div class="col">
+                <MatTextField @bind-Value="dentistViewModel.LastName" Label="Last Name" Outlined="true"></MatTextField>
+                <ValidationMessage For="@(() => dentistViewModel.LastName)" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <MatTextField @bind-Value="dentistViewModel.PhoneNumber" Label="Phone Number" Outlined="true"></MatTextField>
+                <ValidationMessage For="@(() => dentistViewModel.PhoneNumber)" />
+            </div>
+        </div>
+
+        <br />
+
+        <div class="input-group grph-button-actions">
+            <button class="btn btn-primary grph-cancel" @onclick="BlazoredModal.Cancel">Cancel</button>
+            <button class="btn btn-primary grph-primary" disabled="@disabled">Update User</button>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    [CascadingParameter]
+    BlazoredModalInstance BlazoredModal { get; set; }
+
+    [Parameter]
+    public string Id { get; set; }
+
+    private bool disabled;
+
+    private string message;
+
+    private string messageStyles = "display:none";
+
+    private UpdateDentistViewModel dentistViewModel = new UpdateDentistViewModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            dentistViewModel = await Http.GetFromJsonAsync<UpdateDentistViewModel>("api/Dentist/" + Id);
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            var response = await Http.PutAsJsonAsync("api/Dentist/" + Id, dentistViewModel);
+
+            if (response.IsSuccessStatusCode)
+            {
+                await BlazoredModal.Close(ModalResult.Ok(response));
+            }
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError("Form processing error: {Message}", exception.Message);
+            disabled = true;
+            messageStyles = "display:block";
+            message = "There was an error processing the form.";
+        }
+    }
+}

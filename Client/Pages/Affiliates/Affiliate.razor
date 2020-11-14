@@ -1,13 +1,17 @@
-﻿@using DentistryManagement.Client.Pages.Affiliates.Components
+﻿@page "/affiliates/{Id}"
+
+@using DentistryManagement.Client.Pages.Affiliates.Components
 @using DentistryManagement.Client.Pages.Affiliates.Modals
 @using DentistryManagement.Client.Components
+@using Microsoft.AspNetCore.Authorization
 
-@page "/affiliates/{Id}"
 @inject IModalService Modal
 @inject NavigationManager Navigation
 
+@attribute [Authorize(Roles = "Admin")]
+
 <div class="under-top-row px-4">
-    <DeleteAction Delete="Delete"/>
+    <DeleteAction Delete="Delete" />
 </div>
 
 <div class="content px-4">
@@ -16,7 +20,7 @@
             <Details Id="@Id" />
         </div>
         <div class="col">
-            <Address AffiliateId="@Id" HideCreateAddress="@HideCreateAddress" />
+            <Address AffiliateId="@Id"/>
         </div>
     </div>
 </div>
@@ -30,8 +34,6 @@
 
     private ModalOptions modalOptions = new ModalOptions() { DisableBackgroundCancel = true };
 
-    private bool HideCreateAddress = false;
-
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -40,8 +42,6 @@
 
     private async Task Delete()
     {
-        HideCreateAddress = true;
-        
         var parameters = new ModalParameters();
 
         parameters.Add(nameof(Id), int.Parse(Id));
@@ -53,9 +53,6 @@
         if (!result.Cancelled)
         {
             Navigation.NavigateTo("/affiliates");
-        } else
-        {
-            HideCreateAddress = false;
         }
     }
 }

@@ -19,7 +19,8 @@ namespace DentistryManagement.Server.Data.DatabaseSeeders
                 LastName = "Graphene",
                 Email = "admin@graphene.com",
                 NormalizedEmail = "admin@graphene.com",
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                AffiliateId = 1
             };
 
             PasswordHasher<ApplicationUser> passwordHasher = new PasswordHasher<ApplicationUser>();

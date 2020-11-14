@@ -8,7 +8,7 @@
 @inject HttpClient Http
 @inject ILogger<Affiliate> Logger
 
-<Paper Class="grph-paper">
+<div class="grph-paper">
     <EditForm Model="@affiliateViewModel">
         <DataAnnotationsValidator />
         <CustomValidator @ref="customValidator" />
@@ -32,7 +32,7 @@
             </li>
         </FormPanel>
     </EditForm>
-</Paper>
+</div>
 
 @code {
     [Parameter]

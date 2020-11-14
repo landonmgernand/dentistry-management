@@ -17,6 +17,8 @@ using DentistryManagement.Server.Services;
 using DentistryManagement.Shared;
 using AutoMapper;
 using System.IdentityModel.Tokens.Jwt;
+using DentistryManagement.Server.Helpers;
+using Microsoft.AspNetCore.Http;
 
 namespace DentistryManagement.Server
 {
@@ -59,6 +61,8 @@ namespace DentistryManagement.Server
             services.AddScoped<UserService, UserService>();
             services.AddScoped<AffiliateService, AffiliateService>();
             services.AddScoped<RoleService, RoleService>();
+            services.AddScoped<DentistService, DentistService>();
+            services.AddSingleton<UserProvider, UserProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
