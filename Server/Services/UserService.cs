@@ -76,7 +76,7 @@ namespace DentistryManagement.Server.Services
         {
             var applicationUser = UserMapper.DTOtoApplicationUser(userDTO);
           
-            await _userManager.CreateAsync(applicationUser, userDTO.Password);
+            var adsa = await _userManager.CreateAsync(applicationUser, userDTO.Password);
             
             var role = _context.ApplicationRole.Find(userDTO.RoleId);
 
@@ -86,11 +86,8 @@ namespace DentistryManagement.Server.Services
                 Role = role,
             });
 
-            if (userDTO.AffiliateId != 0)
-            {
-                var affiliate = _context.Affiliate.Find(userDTO.AffiliateId);
-                applicationUser.Affiliate = affiliate;
-            }
+            var affiliate = _context.Affiliate.Find(userDTO.AffiliateId);
+            applicationUser.Affiliate = affiliate;
 
             _context.SaveChanges();
         }

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DentistryManagement.Shared.ViewModels.Users
+namespace DentistryManagement.Shared.ViewModels.Dentists
 {
-    public class CreateUserViewModel
+    public class CreateDentistViewModel
     {
         [Required]
         [EmailAddress]
@@ -29,13 +29,5 @@ namespace DentistryManagement.Shared.ViewModels.Users
         [RegularExpression("^(?!0+$)(\\+\\d{1,3}[- ]?)?(?!0+$)\\d{10,15}$", ErrorMessage = "Please enter a valid phone number.")]
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
-
-        [Range(1, int.MaxValue, ErrorMessage = "The Affiliate field is required")]
-        [Display(Name = "Affiliate")]
-        public int AffiliateId { get; set; }
-
-        [Required]
-        [Display(Name = "Role")]
-        public string RoleId { get; set; }
     }
 }

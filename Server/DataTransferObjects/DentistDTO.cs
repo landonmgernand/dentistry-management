@@ -1,6 +1,6 @@
 ﻿namespace DentistryManagement.Server.DataTransferObjects
 {
-    public class UserDTO
+    public class DentistDTO
     {
         public string Id { get; set; }
 
@@ -19,9 +19,5 @@
         public int AffiliateId { get; set; }
 
         public AffiliateDTO AffiliateDTO { get; set; }
-
-        public string RoleId { get; set; }
-
-        public RoleDTO RoleDTO { get; set; }
     }
 }

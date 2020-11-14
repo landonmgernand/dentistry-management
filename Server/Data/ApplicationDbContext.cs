@@ -60,6 +60,7 @@ namespace DentistryManagement.Server.Data
             #endregion
 
             RoleSeeder.Seed(builder);
+            AffiliateSeeder.Seed(builder);
             UserSeeder.Seed(builder);
             UserRoleSeed.Seed(builder);
         }

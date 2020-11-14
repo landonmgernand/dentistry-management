@@ -71,6 +71,7 @@ namespace DentistryManagement.Server.Mappers
                 PhoneNumber = userDTO.PhoneNumber,
                 EmailConfirmed = true,
                 UserRoles = new List<ApplicationUserRole>(),
+                AffiliateId = userDTO.AffiliateId,
             };
         }
 

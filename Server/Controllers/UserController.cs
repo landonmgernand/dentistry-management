@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace DentistryManagement.Server.Controllers
 {
-    [Authorize(Roles = "Admin, User")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -47,7 +47,6 @@ namespace DentistryManagement.Server.Controllers
             return UserMapper.DTOtoUserViewModel(user);
         }
 
-        [Authorize(Roles = "Admin, User")]
         [HttpGet("email/{email}")]
         public ActionResult<UserViewModel> GetUserByEmail(string email)
         {
@@ -63,12 +62,9 @@ namespace DentistryManagement.Server.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<ActionResult> CreateUser([FromBody] CreateUserViewModel createUserViewModel)
+        public async Task<IActionResult> CreateUser([FromBody] CreateUserViewModel createUserViewModel)
         {
-            if (
-                !_roleService.Exist(createUserViewModel.RoleId) ||
-                (createUserViewModel.AffiliateId != 0 && !_affiliateService.Exist(createUserViewModel.AffiliateId))
-                )
+            if (!_roleService.Exist(createUserViewModel.RoleId) || !_affiliateService.Exist(createUserViewModel.AffiliateId))
             {
                 return NotFound();
             }
@@ -92,7 +88,6 @@ namespace DentistryManagement.Server.Controllers
             return Ok(ModelState);
         }
 
-        [Authorize(Roles = "Admin, User")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(string id, UpdateUserViewModel updateUserViewModel)
         {
@@ -102,8 +97,9 @@ namespace DentistryManagement.Server.Controllers
             }
 
             if (
-                !_userService.Exist(id) || !_roleService.Exist(updateUserViewModel.RoleId) ||
-                (updateUserViewModel.AffiliateId != 0 && !_affiliateService.Exist(updateUserViewModel.AffiliateId))
+                !_userService.Exist(id) || 
+                !_roleService.Exist(updateUserViewModel.RoleId) ||
+                !_affiliateService.Exist(updateUserViewModel.AffiliateId)
                 )
             {
                 return NotFound();
@@ -116,7 +112,6 @@ namespace DentistryManagement.Server.Controllers
             return NoContent();
         }
 
-        [Authorize(Roles = "Admin, User")]
         [HttpPut("password/{id}")]
         public async Task<IActionResult> UpdatePassword(string id, PasswordUserViewModel passwordUserViewModel)
         {
