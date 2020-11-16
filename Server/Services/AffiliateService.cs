@@ -53,6 +53,11 @@ namespace DentistryManagement.Server.Services
         {
             var affiliate = _context.Affiliate.Include(a => a.Address).SingleOrDefault(a => a.Id.Equals(id));
 
+            if (affiliate is null)
+            {
+                return null;
+            }
+
             return AffiliateMapper.AffiliateToDTO(affiliate);
         }
 

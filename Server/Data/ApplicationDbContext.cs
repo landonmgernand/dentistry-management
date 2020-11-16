@@ -21,12 +21,6 @@ namespace DentistryManagement.Server.Data
         {
         }
 
-        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
-        public DbSet<ApplicationRole> ApplicationRole { get; set; }
-        public DbSet<ApplicationUserRole> ApplicationUserRole { get; set; }
-        public DbSet<Affiliate> Affiliate { get; set; }
-        public DbSet<Address> Address { get; set; }
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -64,5 +58,12 @@ namespace DentistryManagement.Server.Data
             UserSeeder.Seed(builder);
             UserRoleSeed.Seed(builder);
         }
+
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<ApplicationRole> ApplicationRole { get; set; }
+        public DbSet<ApplicationUserRole> ApplicationUserRole { get; set; }
+        public DbSet<Affiliate> Affiliate { get; set; }
+        public DbSet<Address> Address { get; set; }
+        public DbSet<Patient> Patient { get; set; }
     }
 }

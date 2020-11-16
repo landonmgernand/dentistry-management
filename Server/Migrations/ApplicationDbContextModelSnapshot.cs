@@ -161,7 +161,7 @@ namespace DentistryManagement.Server.Migrations
                             Id = "B22698B8-42A2-4115-9631-1C2D1E2AC5F7",
                             AccessFailedCount = 0,
                             AffiliateId = 1,
-                            ConcurrencyStamp = "fb23e7d5-539b-4ced-9b2a-160fed87cf80",
+                            ConcurrencyStamp = "6013cb00-3064-408d-8e2b-2cdf39134806",
                             Email = "admin@graphene.com",
                             EmailConfirmed = true,
                             FirstName = "Graphene",
@@ -169,12 +169,46 @@ namespace DentistryManagement.Server.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "admin@graphene.com",
                             NormalizedUserName = "admin@graphene.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEFdbxTlfANEkkKWQ9+XUVsWGV3uc0AAunxX8Wwc58bedWuzo5eNAQSWdc3AqQZjtiA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBmiU622Ibbp0Q8LQBebe06UD/gpp4LGhIOOcrGsC4ejK/wlomCZ+o3UKydrpVbWfg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "15f41590-cf77-4db5-b3d3-f15708340c57",
+                            SecurityStamp = "1c398534-a968-45fe-be94-0f4181ea5565",
                             TwoFactorEnabled = false,
                             UserName = "admin@graphene.com"
                         });
+                });
+
+            modelBuilder.Entity("DentistryManagement.Server.Models.Patient", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Patient");
                 });
 
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.DeviceFlowCodes", b =>
@@ -413,21 +447,21 @@ namespace DentistryManagement.Server.Migrations
                         new
                         {
                             Id = "2301D884-221A-4E7D-B509-0113DCC043E1",
-                            ConcurrencyStamp = "557e6212-cddb-4987-abbd-cc1c7946b1de",
+                            ConcurrencyStamp = "0c885991-5eba-40de-aef7-667b8af255b4",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         },
                         new
                         {
-                            Id = "7ba975a2-a3ba-45eb-91db-f2d421e1a842",
-                            ConcurrencyStamp = "95c596db-5751-46e0-8aec-01ee24a8926e",
+                            Id = "06723487-d9d9-43fe-b0a7-e3d703335859",
+                            ConcurrencyStamp = "8fad9ec2-abd4-45f0-8f44-5e65ad436e3d",
                             Name = "Manager",
                             NormalizedName = "Manager"
                         },
                         new
                         {
-                            Id = "f6d682ad-03dc-47a8-b7af-4b9b0cbe8204",
-                            ConcurrencyStamp = "a3ac2256-8487-4e77-8580-e734bd9deb9f",
+                            Id = "f0911e63-219e-4591-a2a1-2121d6896109",
+                            ConcurrencyStamp = "4df3dfe5-c50b-448d-8ad8-eb8760b59e3b",
                             Name = "Dentist",
                             NormalizedName = "Dentist"
                         });

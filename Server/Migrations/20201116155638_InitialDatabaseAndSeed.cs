@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DentistryManagement.Server.Migrations
 {
-    public partial class InitalDatabaseAndSeed : Migration
+    public partial class InitialDatabaseAndSeed : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -51,6 +51,23 @@ namespace DentistryManagement.Server.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DeviceCodes", x => x.UserCode);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Patient",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    FirstName = table.Column<string>(maxLength: 100, nullable: false),
+                    LastName = table.Column<string>(maxLength: 100, nullable: false),
+                    DateOfBirth = table.Column<DateTime>(nullable: false),
+                    Email = table.Column<string>(maxLength: 100, nullable: false),
+                    PhoneNumber = table.Column<string>(maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Patient", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -251,15 +268,15 @@ namespace DentistryManagement.Server.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Discriminator", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "2301D884-221A-4E7D-B509-0113DCC043E1", "557e6212-cddb-4987-abbd-cc1c7946b1de", "ApplicationRole", "Admin", "Admin" },
-                    { "7ba975a2-a3ba-45eb-91db-f2d421e1a842", "95c596db-5751-46e0-8aec-01ee24a8926e", "ApplicationRole", "Manager", "Manager" },
-                    { "f6d682ad-03dc-47a8-b7af-4b9b0cbe8204", "a3ac2256-8487-4e77-8580-e734bd9deb9f", "ApplicationRole", "Dentist", "Dentist" }
+                    { "2301D884-221A-4E7D-B509-0113DCC043E1", "0c885991-5eba-40de-aef7-667b8af255b4", "ApplicationRole", "Admin", "Admin" },
+                    { "06723487-d9d9-43fe-b0a7-e3d703335859", "8fad9ec2-abd4-45f0-8f44-5e65ad436e3d", "ApplicationRole", "Manager", "Manager" },
+                    { "f0911e63-219e-4591-a2a1-2121d6896109", "4df3dfe5-c50b-448d-8ad8-eb8760b59e3b", "ApplicationRole", "Dentist", "Dentist" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "AffiliateId", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "B22698B8-42A2-4115-9631-1C2D1E2AC5F7", 0, 1, "fb23e7d5-539b-4ced-9b2a-160fed87cf80", "admin@graphene.com", true, "Graphene", "Graphene", false, null, "admin@graphene.com", "admin@graphene.com", "AQAAAAEAACcQAAAAEFdbxTlfANEkkKWQ9+XUVsWGV3uc0AAunxX8Wwc58bedWuzo5eNAQSWdc3AqQZjtiA==", null, false, "15f41590-cf77-4db5-b3d3-f15708340c57", false, "admin@graphene.com" });
+                values: new object[] { "B22698B8-42A2-4115-9631-1C2D1E2AC5F7", 0, 1, "6013cb00-3064-408d-8e2b-2cdf39134806", "admin@graphene.com", true, "Graphene", "Graphene", false, null, "admin@graphene.com", "admin@graphene.com", "AQAAAAEAACcQAAAAEBmiU622Ibbp0Q8LQBebe06UD/gpp4LGhIOOcrGsC4ejK/wlomCZ+o3UKydrpVbWfg==", null, false, "1c398534-a968-45fe-be94-0f4181ea5565", false, "admin@graphene.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -358,6 +375,9 @@ namespace DentistryManagement.Server.Migrations
 
             migrationBuilder.DropTable(
                 name: "DeviceCodes");
+
+            migrationBuilder.DropTable(
+                name: "Patient");
 
             migrationBuilder.DropTable(
                 name: "PersistedGrants");
