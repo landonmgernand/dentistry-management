@@ -19,6 +19,7 @@ using AutoMapper;
 using System.IdentityModel.Tokens.Jwt;
 using DentistryManagement.Server.Helpers;
 using Microsoft.AspNetCore.Http;
+using DentistryManagement.Server.DataTransferObjects;
 
 namespace DentistryManagement.Server
 {
@@ -58,11 +59,11 @@ namespace DentistryManagement.Server
             services.AddControllersWithViews();
             services.AddRazorPages();
     
-            services.AddScoped<UserService, UserService>();
-            services.AddScoped<AffiliateService, AffiliateService>();
-            services.AddScoped<RoleService, RoleService>();
-            services.AddScoped<DentistService, DentistService>();
-            services.AddSingleton<UserProvider, UserProvider>();
+            services.AddScoped<IUserService<UserDTO>, UserService>();
+            services.AddScoped<IAffiliateService<AffiliateDTO, AddressDTO>,AffiliateService>();
+            services.AddScoped<IRoleService<RoleDTO>, RoleService>();
+            services.AddScoped<IDentistService<DentistDTO>, DentistService>();
+            services.AddScoped<UserProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

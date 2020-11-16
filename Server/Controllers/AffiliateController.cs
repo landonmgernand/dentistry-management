@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DentistryManagement.Server.DataTransferObjects;
 using DentistryManagement.Server.Mappers;
 using DentistryManagement.Server.Services;
 using DentistryManagement.Shared.ViewModels.Addresses;
@@ -14,9 +15,9 @@ namespace DentistryManagement.Server.Controllers
     [ApiController]
     public class AffiliateController : ControllerBase
     {
-        private readonly AffiliateService _service;
+        private readonly IAffiliateService<AffiliateDTO, AddressDTO> _service;
 
-        public AffiliateController(AffiliateService service)
+        public AffiliateController(IAffiliateService<AffiliateDTO, AddressDTO> service)
         {
             _service = service;
         }

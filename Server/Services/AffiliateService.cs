@@ -2,14 +2,12 @@
 using DentistryManagement.Server.DataTransferObjects;
 using DentistryManagement.Server.Mappers;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DentistryManagement.Server.Services
 {
-    public class AffiliateService : IService<AffiliateDTO>, IAffiliateAddressService<AddressDTO>
+    public class AffiliateService : IAffiliateService<AffiliateDTO, AddressDTO>
     {
         private readonly ApplicationDbContext _context;
 

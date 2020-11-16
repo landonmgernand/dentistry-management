@@ -7,6 +7,7 @@ using DentistryManagement.Shared.ViewModels.Users;
 using DentistryManagement.Server.Mappers;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
+using DentistryManagement.Server.DataTransferObjects;
 
 namespace DentistryManagement.Server.Controllers
 {
@@ -15,11 +16,15 @@ namespace DentistryManagement.Server.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly UserService _userService;
-        private readonly RoleService _roleService;
-        private readonly AffiliateService _affiliateService;
+        private readonly IUserService<UserDTO> _userService;
+        private readonly IRoleService<RoleDTO> _roleService;
+        private readonly IAffiliateService<AffiliateDTO, AddressDTO> _affiliateService;
 
-        public UserController(UserService userService, RoleService roleService, AffiliateService affiliateService)
+        public UserController(
+            IUserService<UserDTO> userService,
+            IRoleService<RoleDTO> roleService,
+            IAffiliateService<AffiliateDTO, AddressDTO> affiliateService
+            )
         {
             _userService = userService;
             _roleService = roleService;

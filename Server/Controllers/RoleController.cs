@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DentistryManagement.Server.DataTransferObjects;
 using DentistryManagement.Server.Mappers;
 using DentistryManagement.Server.Services;
 using DentistryManagement.Shared.ViewModels.Roles;
@@ -11,9 +12,9 @@ namespace DentistryManagement.Server.Controllers
     [ApiController]
     public class RoleController : ControllerBase
     {
-        private readonly RoleService _service;
+        private readonly IRoleService<RoleDTO> _service;
 
-        public RoleController(RoleService service)
+        public RoleController(IRoleService<RoleDTO> service)
         {
             _service = service;
         }
