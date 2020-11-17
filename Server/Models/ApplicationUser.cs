@@ -16,6 +16,5 @@ namespace DentistryManagement.Server.Models
         public int AffiliateId { get; set; }
 
         public Affiliate Affiliate { get; set; }
-
     }
 }

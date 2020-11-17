@@ -25,5 +25,7 @@ namespace DentistryManagement.Server.Models
         [Required]
         [MaxLength(100)]
         public string PhoneNumber { get; set; }
+
+        public MedicalChart MedicalChart { get; set; }
     }
 }

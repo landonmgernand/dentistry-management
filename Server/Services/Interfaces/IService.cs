@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DentistryManagement.Server.Services
+namespace DentistryManagement.Server.Services.Interfaces
 {
     public interface IService<T>
     {

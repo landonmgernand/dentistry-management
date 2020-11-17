@@ -1,6 +1,6 @@
 ﻿namespace DentistryManagement.Server.Helpers
 {
-    public interface IUserProvider
+    public interface IUserProviderService
     {
         public string GetUserId();
     }

@@ -2,7 +2,7 @@
 using System.Linq;
 using DentistryManagement.Server.DataTransferObjects;
 using DentistryManagement.Server.Mappers;
-using DentistryManagement.Server.Services;
+using DentistryManagement.Server.Services.Interfaces;
 using DentistryManagement.Shared.ViewModels.Addresses;
 using DentistryManagement.Shared.ViewModels.Affiliates;
 using Microsoft.AspNetCore.Authorization;

@@ -9,6 +9,7 @@ using System;
 using DentistryManagement.Server.DataTransferObjects;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore;
+using DentistryManagement.Server.Services.Interfaces;
 
 namespace DentistryManagement.Server.Services
 {

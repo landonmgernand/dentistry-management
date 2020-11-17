@@ -53,6 +53,24 @@ namespace DentistryManagement.Server.Data
 
             #endregion
 
+            #region Patient
+
+            builder.Entity<Patient>(b =>
+            {
+                b.HasOne(p => p.MedicalChart).WithOne(mc => mc.Patient).HasForeignKey<MedicalChart>(mc => mc.PatientId);
+            });
+
+            #endregion
+
+            #region MedicalChart
+
+            builder.Entity<MedicalChart>(b =>
+            {
+                b.HasMany(t => t.Teeth).WithOne(mc => mc.MedicalChart);
+            });
+
+            #endregion
+
             RoleSeeder.Seed(builder);
             AffiliateSeeder.Seed(builder);
             UserSeeder.Seed(builder);
@@ -65,5 +83,7 @@ namespace DentistryManagement.Server.Data
         public DbSet<Affiliate> Affiliate { get; set; }
         public DbSet<Address> Address { get; set; }
         public DbSet<Patient> Patient { get; set; }
+        public DbSet<MedicalChart> MedicalChart { get; set; }
+        public DbSet<Teeth> Teeth { get; set; }
     }
 }

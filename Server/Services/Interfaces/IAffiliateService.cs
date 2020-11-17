@@ -1,4 +1,4 @@
-﻿namespace DentistryManagement.Server.Services
+﻿namespace DentistryManagement.Server.Services.Interfaces
 {
     public interface IAffiliateService<T, R> : IService<T>
     {

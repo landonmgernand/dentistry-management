@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using DentistryManagement.Server.Services;
+using DentistryManagement.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using DentistryManagement.Server.Helpers;
 using DentistryManagement.Shared.ViewModels.Users;

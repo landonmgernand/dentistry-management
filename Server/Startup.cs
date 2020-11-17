@@ -1,11 +1,6 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,12 +8,10 @@ using Microsoft.Extensions.Hosting;
 using System.Linq;
 using DentistryManagement.Server.Data;
 using DentistryManagement.Server.Models;
+using DentistryManagement.Server.Services.Interfaces;
 using DentistryManagement.Server.Services;
-using DentistryManagement.Shared;
-using AutoMapper;
 using System.IdentityModel.Tokens.Jwt;
 using DentistryManagement.Server.Helpers;
-using Microsoft.AspNetCore.Http;
 using DentistryManagement.Server.DataTransferObjects;
 
 namespace DentistryManagement.Server
@@ -58,13 +51,15 @@ namespace DentistryManagement.Server
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.Configure<TeethSettingsDTO>(Configuration.GetSection("TeethSettings"));
     
             services.AddScoped<IUserService<UserDTO>, UserService>();
             services.AddScoped<IAffiliateService<AffiliateDTO, AddressDTO>,AffiliateService>();
             services.AddScoped<IRoleService<RoleDTO>, RoleService>();
             services.AddScoped<IDentistService<DentistDTO>, DentistService>();
             services.AddScoped<IPatientService<PatientDTO>, PatientService>();
-            services.AddScoped<UserProvider>();
+            services.AddScoped<UserProviderService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -100,6 +95,7 @@ namespace DentistryManagement.Server
                 endpoints.MapFallbackToFile("index.html");
                 endpoints.MapFallbackToFile("/settings/{email?}", "index.html");
                 endpoints.MapFallbackToFile("/affiliates/{id?}", "index.html");
+                endpoints.MapFallbackToFile("/patients/{id?}", "index.html");
             });
         }
     }

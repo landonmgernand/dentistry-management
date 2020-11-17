@@ -3,11 +3,11 @@ using System.Security.Claims;
 
 namespace DentistryManagement.Server.Helpers
 {
-    public class UserProvider : IUserProvider
+    public class UserProviderService : IUserProviderService
     {
         private readonly IHttpContextAccessor _httpContext;
 
-        public UserProvider(IHttpContextAccessor httpContext)
+        public UserProviderService(IHttpContextAccessor httpContext)
         {
             _httpContext = httpContext;
         }
