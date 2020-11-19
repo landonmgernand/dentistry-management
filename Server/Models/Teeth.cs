@@ -10,12 +10,12 @@ namespace DentistryManagement.Server.Models
         [MaxLength(150)]
         public string Url { get; set; }
 
-        [Required]
-        [MaxLength(100)]
-        public string Category { get; set; }
-
         public int MedicalChartId { get; set; }
 
         public MedicalChart MedicalChart { get; set; }
+
+        public int ToothCategoryId { get; set; }
+
+        public ToothCategory ToothCategory { get; set; }
     }
 }

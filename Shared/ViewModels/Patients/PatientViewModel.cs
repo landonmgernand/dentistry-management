@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DentistryManagement.Shared.ViewModels.MedicalChart;
+using System;
 
 namespace DentistryManagement.Shared.ViewModels.Patients
 {
@@ -15,5 +16,9 @@ namespace DentistryManagement.Shared.ViewModels.Patients
         public string Email { get; set; }
 
         public string PhoneNumber { get; set; }
+
+        public bool MedicalChartOpen { get; set; }
+
+        public MedicalChartViewModel  MedicalChart { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using DentistryManagement.Server.DataTransferObjects;
 using DentistryManagement.Server.Mappers;
 using DentistryManagement.Server.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -37,7 +38,7 @@ namespace DentistryManagement.Server.Services
 
         public PatientDTO Get(int id)
         {
-            var patient = _context.Patient.SingleOrDefault(p => p.Id.Equals(id));
+            var patient = _context.Patient.Include(p => p.MedicalChart).SingleOrDefault(p => p.Id.Equals(id));
 
             if (patient is null)
             {

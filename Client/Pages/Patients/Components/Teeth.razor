@@ -1,0 +1,25 @@
+﻿@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+
+<table class="teeth">
+    <tbody>
+        <tr>
+        </tr>
+    </tbody>
+</table>
+
+@code {
+    [Parameter]
+    public int MedicalChartId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            //patient = await Http.GetFromJsonAsync<PatientViewModel>("api/Patient/" + Id);
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+}

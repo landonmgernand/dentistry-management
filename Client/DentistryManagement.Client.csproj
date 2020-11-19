@@ -20,8 +20,4 @@
     <ProjectReference Include="..\Shared\DentistryManagement.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Pages\Patients\Components\" />
-  </ItemGroup>
-
 </Project>

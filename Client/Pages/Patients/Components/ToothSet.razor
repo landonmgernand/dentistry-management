@@ -1,0 +1,34 @@
+﻿@using DentistryManagement.Client.Pages.Patients.Components.Interfaces
+
+<CascadingValue Value=this>
+    @ChildContent
+</CascadingValue>
+
+<div>
+    @ActiveTooth?.ToothId
+    <h3>Test</h3>
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    public ITooth ActiveTooth { get; private set; }
+
+    public void AddTooth(ITooth tooth)
+    {
+        if (ActiveTooth == null)
+        {
+            SetActiveTooth(tooth);
+        }
+    }
+
+    public void SetActiveTooth(ITooth tooth)
+    {
+        if (ActiveTooth != tooth)
+        {
+            ActiveTooth = tooth;
+            StateHasChanged();
+        }
+    }
+}

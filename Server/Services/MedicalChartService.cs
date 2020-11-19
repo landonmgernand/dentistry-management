@@ -4,6 +4,7 @@ using DentistryManagement.Server.Mappers;
 using DentistryManagement.Server.Models;
 using DentistryManagement.Server.Services.Interfaces;
 using Microsoft.Extensions.Options;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DentistryManagement.Server.Services
@@ -27,14 +28,16 @@ namespace DentistryManagement.Server.Services
             {
                 Patient = patient
             };
+            medicalChart.Teeth = new List<Teeth>();
 
             foreach (ToothSettingsDTO toothSettings in teeth.Teeth)
             {
-                Teeth tooth = new Teeth() { Url = toothSettings.Url, Category = toothSettings.Category };
+                Teeth tooth = new Teeth() { Url = toothSettings.Url, ToothCategoryId = toothSettings.Category };
                 medicalChart.Teeth.Add(tooth);
             }
 
             _context.MedicalChart.Add(medicalChart);
+            _context.SaveChanges();
         }
 
         public bool Exist(int id)

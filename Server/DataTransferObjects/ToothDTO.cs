@@ -1,8 +1,9 @@
 ﻿namespace DentistryManagement.Server.DataTransferObjects
 {
-    public class ToothSettingsDTO
+    public class ToothDTO
     {
+        public int Id { get; set; }
+
         public string Url { get; set; }
-        public int Category { get; set; }
     }
 }

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DentistryManagement.Shared.ViewModels.MedicalChart
 {
-    class MedicalChartViewModel
+    public class MedicalChartViewModel
     {
         public int Id { get; set; }
     }

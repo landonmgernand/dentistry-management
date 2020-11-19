@@ -453,3 +453,12 @@
 .grph-icons {
     width: 2rem;
 }
+
+.grph-chart-open-holder {
+    height: 600px;
+    position: relative;
+}
+
+.grph-tooth-active {
+    background: black;
+}

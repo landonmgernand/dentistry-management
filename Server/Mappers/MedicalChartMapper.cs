@@ -1,5 +1,6 @@
 ﻿using DentistryManagement.Server.DataTransferObjects;
 using DentistryManagement.Server.Models;
+using DentistryManagement.Shared.ViewModels.MedicalChart;
 
 namespace DentistryManagement.Server.Mappers
 {
@@ -10,6 +11,14 @@ namespace DentistryManagement.Server.Mappers
             return new MedicalChartDTO
             {
                 Id = medicalChart.Id,
+            };
+        }
+
+        public static MedicalChartViewModel DTOtoMedicalChartVM(MedicalChartDTO medicalChartDTO)
+        {
+            return new MedicalChartViewModel
+            {
+                Id = medicalChartDTO.Id
             };
         }
     }

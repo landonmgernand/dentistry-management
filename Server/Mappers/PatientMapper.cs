@@ -41,6 +41,7 @@ namespace DentistryManagement.Server.Mappers
                 DateOfBirth = patient.DateOfBirth,
                 Email = patient.Email,
                 PhoneNumber = patient.PhoneNumber,
+                MedicalChartDTO = patient.MedicalChart is null ? null : MedicalChartMapper.MedicalChartToDTO(patient.MedicalChart)
             };
         }
 
@@ -66,6 +67,8 @@ namespace DentistryManagement.Server.Mappers
                 DateOfBirth = patientDTO.DateOfBirth,
                 Email = patientDTO.Email,
                 PhoneNumber = patientDTO.PhoneNumber,
+                MedicalChartOpen = patientDTO.MedicalChartDTO != null,
+                MedicalChart = patientDTO.MedicalChartDTO is null ? null : MedicalChartMapper.DTOtoMedicalChartVM(patientDTO.MedicalChartDTO)
             };
         }
     }
