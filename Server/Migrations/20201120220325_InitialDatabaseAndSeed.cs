@@ -167,6 +167,25 @@ namespace DentistryManagement.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MedicalChart",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    PatientId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MedicalChart", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MedicalChart_Patient_PatientId",
+                        column: x => x.PatientId,
+                        principalTable: "Patient",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
@@ -258,6 +277,28 @@ namespace DentistryManagement.Server.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Teeth",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Url = table.Column<string>(maxLength: 150, nullable: false),
+                    Category = table.Column<string>(maxLength: 100, nullable: false),
+                    Order = table.Column<int>(nullable: false),
+                    MedicalChartId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Teeth", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Teeth_MedicalChart_MedicalChartId",
+                        column: x => x.MedicalChartId,
+                        principalTable: "MedicalChart",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "Affiliate",
                 columns: new[] { "Id", "Name" },
@@ -268,15 +309,15 @@ namespace DentistryManagement.Server.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Discriminator", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "2301D884-221A-4E7D-B509-0113DCC043E1", "0c885991-5eba-40de-aef7-667b8af255b4", "ApplicationRole", "Admin", "Admin" },
-                    { "06723487-d9d9-43fe-b0a7-e3d703335859", "8fad9ec2-abd4-45f0-8f44-5e65ad436e3d", "ApplicationRole", "Manager", "Manager" },
-                    { "f0911e63-219e-4591-a2a1-2121d6896109", "4df3dfe5-c50b-448d-8ad8-eb8760b59e3b", "ApplicationRole", "Dentist", "Dentist" }
+                    { "2301D884-221A-4E7D-B509-0113DCC043E1", "5dea361f-28c6-4710-b6a0-f5314674ef6a", "ApplicationRole", "Admin", "Admin" },
+                    { "e5b6c947-e1f6-4a68-aa70-67af45a1edc1", "0c711d5b-febb-4ece-92f8-d81ac2edb9d6", "ApplicationRole", "Manager", "Manager" },
+                    { "112c7e20-58f8-4c6f-a7c3-02daca7bee4c", "2d97a7d2-68f8-499b-ba88-8223a6092877", "ApplicationRole", "Dentist", "Dentist" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "AffiliateId", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "B22698B8-42A2-4115-9631-1C2D1E2AC5F7", 0, 1, "6013cb00-3064-408d-8e2b-2cdf39134806", "admin@graphene.com", true, "Graphene", "Graphene", false, null, "admin@graphene.com", "admin@graphene.com", "AQAAAAEAACcQAAAAEBmiU622Ibbp0Q8LQBebe06UD/gpp4LGhIOOcrGsC4ejK/wlomCZ+o3UKydrpVbWfg==", null, false, "1c398534-a968-45fe-be94-0f4181ea5565", false, "admin@graphene.com" });
+                values: new object[] { "B22698B8-42A2-4115-9631-1C2D1E2AC5F7", 0, 1, "389469ff-9ffe-4817-b0c4-feea4cbab7f3", "admin@graphene.com", true, "Graphene", "Graphene", false, null, "admin@graphene.com", "admin@graphene.com", "AQAAAAEAACcQAAAAEExTjxiIMcu5scJI/2MNov2aoV/SZjxxVYLhZTQyBZ5UG/CsV/BJdNMfUR1oMCwb3w==", null, false, "b4849950-3943-4081-8814-83388e954a84", false, "admin@graphene.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -343,6 +384,12 @@ namespace DentistryManagement.Server.Migrations
                 column: "Expiration");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MedicalChart_PatientId",
+                table: "MedicalChart",
+                column: "PatientId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_Expiration",
                 table: "PersistedGrants",
                 column: "Expiration");
@@ -351,6 +398,11 @@ namespace DentistryManagement.Server.Migrations
                 name: "IX_PersistedGrants_SubjectId_ClientId_Type",
                 table: "PersistedGrants",
                 columns: new[] { "SubjectId", "ClientId", "Type" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Teeth_MedicalChartId",
+                table: "Teeth",
+                column: "MedicalChartId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -377,10 +429,10 @@ namespace DentistryManagement.Server.Migrations
                 name: "DeviceCodes");
 
             migrationBuilder.DropTable(
-                name: "Patient");
+                name: "PersistedGrants");
 
             migrationBuilder.DropTable(
-                name: "PersistedGrants");
+                name: "Teeth");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -389,7 +441,13 @@ namespace DentistryManagement.Server.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
+                name: "MedicalChart");
+
+            migrationBuilder.DropTable(
                 name: "Affiliate");
+
+            migrationBuilder.DropTable(
+                name: "Patient");
         }
     }
 }

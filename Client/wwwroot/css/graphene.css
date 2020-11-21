@@ -462,3 +462,12 @@
 .grph-tooth-active {
     background: black;
 }
+
+.grph-teeth-table {
+    margin: auto;
+}
+
+.grph-teeth-tr > img:hover {
+    background: black;
+    cursor: pointer;
+}

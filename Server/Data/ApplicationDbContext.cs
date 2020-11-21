@@ -71,20 +71,10 @@ namespace DentistryManagement.Server.Data
 
             #endregion
 
-            #region ToothCategory
-
-            builder.Entity<ToothCategory>(b =>
-            {
-                b.HasMany(t => t.Teeth).WithOne(tc => tc.ToothCategory);
-            });
-
-            #endregion
-
             RoleSeeder.Seed(builder);
             AffiliateSeeder.Seed(builder);
             UserSeeder.Seed(builder);
             UserRoleSeed.Seed(builder);
-            ToothCategorySeed.Seed(builder);
         }
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }

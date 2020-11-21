@@ -3,6 +3,9 @@
     public class ToothSettingsDTO
     {
         public string Url { get; set; }
-        public int Category { get; set; }
+
+        public string Category { get; set; }
+
+        public int Order { get; set; }
     }
 }

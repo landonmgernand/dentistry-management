@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace DentistryManagement.Server.Services
 {
-    public class MedicalChartService : IMedicalChartService<MedicalChartDTO>
+    public class MedicalChartService : IMedicalChartService
     {
         private readonly ApplicationDbContext _context;
         private readonly IOptions<TeethSettingsDTO> _settings;
@@ -32,7 +32,7 @@ namespace DentistryManagement.Server.Services
 
             foreach (ToothSettingsDTO toothSettings in teeth.Teeth)
             {
-                Teeth tooth = new Teeth() { Url = toothSettings.Url, ToothCategoryId = toothSettings.Category };
+                Teeth tooth = new Teeth() { Url = toothSettings.Url, Category = toothSettings.Category, Order = toothSettings.Order };
                 medicalChart.Teeth.Add(tooth);
             }
 
@@ -55,6 +55,17 @@ namespace DentistryManagement.Server.Services
             }
 
             return MedicalChartMapper.MedicalChartToDTO(medicalChart);
+        }
+
+        public TeethCategoryDTO GetTeeth(int id)
+        {
+            var teethDTO = _context.Teeth
+                .Where(t => t.MedicalChartId.Equals(id))
+                .OrderBy(t => t.Order)
+                .Select(t => TeethMapper.TeethToDTO(t))
+                .ToList();
+
+            return TeethMapper.TeethToTeethCategoryDTO(teethDTO);
         }
     }
 }

@@ -6,6 +6,7 @@ using DentistryManagement.Server.DataTransferObjects;
 using DentistryManagement.Server.Mappers;
 using DentistryManagement.Server.Services.Interfaces;
 using DentistryManagement.Shared.ViewModels.MedicalChart;
+using DentistryManagement.Shared.ViewModels.Teeth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,10 +16,10 @@ namespace DentistryManagement.Server.Controllers
     [ApiController]
     public class MedicalChartController : ControllerBase
     {
-        private readonly IMedicalChartService<MedicalChartDTO> _medicalChartService;
+        private readonly IMedicalChartService _medicalChartService;
         private readonly IPatientService<PatientDTO> _patientService;
 
-        public MedicalChartController(IMedicalChartService<MedicalChartDTO> medicalChartService, IPatientService<PatientDTO> patientService)
+        public MedicalChartController(IMedicalChartService medicalChartService, IPatientService<PatientDTO> patientService)
         {
             _medicalChartService = medicalChartService;
             _patientService = patientService;
@@ -48,6 +49,19 @@ namespace DentistryManagement.Server.Controllers
             _medicalChartService.Create(openMedical.PatientId);
 
             return Ok(ModelState);
+        }
+
+        [HttpGet("{medicalChartId}/teeth")]
+        public ActionResult<TeethCategoryViewModel> GetTeeth(int medicalChartId)
+        {
+            if (!_medicalChartService.Exist(medicalChartId))
+            {
+                return NotFound();
+            }
+
+            var medicalChart = _medicalChartService.GetTeeth(medicalChartId);
+
+            return TeethMapper.TeethCategoryDTOtoVM(medicalChart);
         }
     }
 }

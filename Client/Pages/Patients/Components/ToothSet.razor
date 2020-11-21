@@ -1,12 +1,17 @@
 ﻿@using DentistryManagement.Client.Pages.Patients.Components.Interfaces
+@using DentistryManagement.Client.Components
 
-<CascadingValue Value=this>
-    @ChildContent
-</CascadingValue>
+<div class="grph-paper">
+    <Panel Title="Teeth">
+        <CascadingValue Value=this>
+            @ChildContent
+        </CascadingValue>
 
-<div>
-    @ActiveTooth?.ToothId
-    <h3>Test</h3>
+        <div>
+            @ActiveTooth?.ToothId
+            <h3>Test</h3>
+        </div>
+    </Panel>
 </div>
 
 @code {

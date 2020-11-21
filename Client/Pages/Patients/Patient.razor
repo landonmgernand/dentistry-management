@@ -3,6 +3,7 @@
 @using DentistryManagement.Shared.ViewModels.Patients
 @using DentistryManagement.Shared.ViewModels.MedicalChart
 @using DentistryManagement.Client.Pages.Patients.Components
+@using DentistryManagement.Client.Components
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using Microsoft.Extensions.Logging
@@ -33,10 +34,13 @@
     }
     else
     {
-        <div class="grph-paper">
-            <ToothSet>
-                <Teeth MedicalChartId="patient.MedicalChart.Id"  />
-            </ToothSet>
+        <div class="row">
+            <div class="col">
+                <ToothSet>
+                    <Teeth MedicalChartId="patient.MedicalChart.Id" />
+                </ToothSet>
+            </div>
+            <div class="col"></div>
         </div>
     }
 </div>
