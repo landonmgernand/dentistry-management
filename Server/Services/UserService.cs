@@ -87,7 +87,7 @@ namespace DentistryManagement.Server.Services
                 Role = role,
             });
 
-            var affiliate = _context.Affiliate.Find(userDTO.AffiliateId);
+            var affiliate = _context.Affiliates.Find(userDTO.AffiliateId);
             applicationUser.Affiliate = affiliate;
 
             _context.SaveChanges();
@@ -115,7 +115,7 @@ namespace DentistryManagement.Server.Services
 
             if (userDTO.AffiliateId != 0)
             {
-                var affiliate = _context.Affiliate.Find(userDTO.AffiliateId);
+                var affiliate = _context.Affiliates.Find(userDTO.AffiliateId);
                 applicationUser.Affiliate = affiliate;
             }
 

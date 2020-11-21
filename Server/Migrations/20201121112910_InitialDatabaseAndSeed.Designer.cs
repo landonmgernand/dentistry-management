@@ -3,14 +3,16 @@ using System;
 using DentistryManagement.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DentistryManagement.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201121112910_InitialDatabaseAndSeed")]
+    partial class InitialDatabaseAndSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -161,7 +163,7 @@ namespace DentistryManagement.Server.Migrations
                             Id = "B22698B8-42A2-4115-9631-1C2D1E2AC5F7",
                             AccessFailedCount = 0,
                             AffiliateId = 1,
-                            ConcurrencyStamp = "fe04cde3-d19e-48d7-bc61-dbe98edad1ef",
+                            ConcurrencyStamp = "7481e0fd-716b-4e3c-a60a-3877fcec1e9d",
                             Email = "admin@graphene.com",
                             EmailConfirmed = true,
                             FirstName = "Graphene",
@@ -169,32 +171,12 @@ namespace DentistryManagement.Server.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "admin@graphene.com",
                             NormalizedUserName = "admin@graphene.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAENKYcbrooQ2OJdSgGdwkN+cinz5FQ8r4JXSXaYSuCeDZA7pBI8p5cVFyzy64SKxx+w==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEFEDAoe6rJMK4cUkFQMDNPrqYf+ETyWf+QSI9im1bgH736JKIzuLUckBgOR+lTJWhw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f8f6f446-e221-4494-9db0-b9dd89554675",
+                            SecurityStamp = "5a30b192-7037-4aef-8efa-e8b31561c287",
                             TwoFactorEnabled = false,
                             UserName = "admin@graphene.com"
                         });
-                });
-
-            modelBuilder.Entity("DentistryManagement.Server.Models.Disease", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Diseases");
                 });
 
             modelBuilder.Entity("DentistryManagement.Server.Models.MedicalChart", b =>
@@ -275,21 +257,6 @@ namespace DentistryManagement.Server.Migrations
                     b.HasIndex("MedicalChartId");
 
                     b.ToTable("Teeth");
-                });
-
-            modelBuilder.Entity("DentistryManagement.Server.Models.ToothDisease", b =>
-                {
-                    b.Property<int>("DiseaseId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ToothId")
-                        .HasColumnType("int");
-
-                    b.HasKey("DiseaseId", "ToothId");
-
-                    b.HasIndex("ToothId");
-
-                    b.ToTable("ToothDiseases");
                 });
 
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.DeviceFlowCodes", b =>
@@ -528,21 +495,21 @@ namespace DentistryManagement.Server.Migrations
                         new
                         {
                             Id = "2301D884-221A-4E7D-B509-0113DCC043E1",
-                            ConcurrencyStamp = "9f0f765c-ca5f-4752-8ffb-558542412661",
+                            ConcurrencyStamp = "5ce7d067-62a2-4fdc-ac55-6b777855cfbc",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         },
                         new
                         {
-                            Id = "7c3260f6-b694-4a63-88ca-053e0825994b",
-                            ConcurrencyStamp = "f928d335-d008-495f-8ba1-c2b3187de5b1",
+                            Id = "301c660b-5adc-45d6-b817-6b739258bb1b",
+                            ConcurrencyStamp = "dd6547b6-9f5a-4777-a92e-5aa2e2592378",
                             Name = "Manager",
                             NormalizedName = "Manager"
                         },
                         new
                         {
-                            Id = "25f06114-e8d5-4987-bd01-91e6884d9924",
-                            ConcurrencyStamp = "1eaf73a6-219a-415e-9f72-de64234d20cd",
+                            Id = "1158e2c5-9800-4634-b1c6-f2ab8fe73139",
+                            ConcurrencyStamp = "cbf7e8ef-9b85-4922-978c-ff52c78c117a",
                             Name = "Dentist",
                             NormalizedName = "Dentist"
                         });
@@ -594,21 +561,6 @@ namespace DentistryManagement.Server.Migrations
                     b.HasOne("DentistryManagement.Server.Models.MedicalChart", "MedicalChart")
                         .WithMany("Teeth")
                         .HasForeignKey("MedicalChartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DentistryManagement.Server.Models.ToothDisease", b =>
-                {
-                    b.HasOne("DentistryManagement.Server.Models.Disease", "Disease")
-                        .WithMany("ToothDiseases")
-                        .HasForeignKey("DiseaseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DentistryManagement.Server.Models.Tooth", "Tooth")
-                        .WithMany("ToothDiseases")
-                        .HasForeignKey("ToothId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

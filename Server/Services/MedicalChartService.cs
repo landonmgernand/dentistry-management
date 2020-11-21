@@ -22,32 +22,32 @@ namespace DentistryManagement.Server.Services
 
         public void Create(int patientId)
         {
-            var patient = _context.Patient.Find(patientId);
+            var patient = _context.Patients.Find(patientId);
             TeethSettingsDTO teeth = _settings.Value;
             var medicalChart = new MedicalChart
             {
                 Patient = patient
             };
-            medicalChart.Teeth = new List<Teeth>();
+            medicalChart.Teeth = new List<Tooth>();
 
             foreach (ToothSettingsDTO toothSettings in teeth.Teeth)
             {
-                Teeth tooth = new Teeth() { Url = toothSettings.Url, Category = toothSettings.Category, Order = toothSettings.Order };
+                Tooth tooth = new Tooth() { Url = toothSettings.Url, Category = toothSettings.Category, Order = toothSettings.Order };
                 medicalChart.Teeth.Add(tooth);
             }
 
-            _context.MedicalChart.Add(medicalChart);
+            _context.MedicalCharts.Add(medicalChart);
             _context.SaveChanges();
         }
 
         public bool Exist(int id)
         {
-            return _context.MedicalChart.Any(x => x.Id.Equals(id));
+            return _context.MedicalCharts.Any(x => x.Id.Equals(id));
         }
 
         public MedicalChartDTO Get(int id)
         {
-            var medicalChart = _context.MedicalChart.SingleOrDefault(mc => mc.Id.Equals(id));
+            var medicalChart = _context.MedicalCharts.SingleOrDefault(mc => mc.Id.Equals(id));
 
             if (medicalChart is null)
             {
@@ -62,10 +62,10 @@ namespace DentistryManagement.Server.Services
             var teethDTO = _context.Teeth
                 .Where(t => t.MedicalChartId.Equals(id))
                 .OrderBy(t => t.Order)
-                .Select(t => TeethMapper.TeethToDTO(t))
+                .Select(t => ToothMapper.ToothToDTO(t))
                 .ToList();
 
-            return TeethMapper.TeethToTeethCategoryDTO(teethDTO);
+            return ToothMapper.TeethToTeethCategoryDTO(teethDTO);
         }
     }
 }

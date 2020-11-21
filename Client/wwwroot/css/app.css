@@ -99,7 +99,12 @@ app {
 
             .sidebar .nav-item a.active {
                 color: #FAB522;
+                fill: #FAB522;
             }
+
+                .sidebar .nav-item a.active > svg {
+                    fill: #FAB522;
+                }
 
             .sidebar .nav-item a:hover {
                 background-color: rgba(0, 0, 0, 0.04);

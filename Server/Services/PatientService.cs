@@ -20,25 +20,25 @@ namespace DentistryManagement.Server.Services
         public void Create(PatientDTO item)
         {
             var patient = PatientMapper.DTOtoPatient(item);
-            _context.Patient.Add(patient);
+            _context.Patients.Add(patient);
             _context.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            var patient = _context.Patient.Find(id);
-            _context.Patient.Remove(patient);
+            var patient = _context.Patients.Find(id);
+            _context.Patients.Remove(patient);
             _context.SaveChanges();
         }
 
         public bool Exist(int id)
         {
-            return _context.Patient.Any(x => x.Id.Equals(id));
+            return _context.Patients.Any(x => x.Id.Equals(id));
         }
 
         public PatientDTO Get(int id)
         {
-            var patient = _context.Patient.Include(p => p.MedicalChart).SingleOrDefault(p => p.Id.Equals(id));
+            var patient = _context.Patients.Include(p => p.MedicalChart).SingleOrDefault(p => p.Id.Equals(id));
 
             if (patient is null)
             {
@@ -50,7 +50,7 @@ namespace DentistryManagement.Server.Services
 
         public List<PatientDTO> GetAll()
         {
-            var patients = _context.Patient
+            var patients = _context.Patients
                 .Select(p => PatientMapper.PatientToDTO(p))
                 .ToList();
 
@@ -59,7 +59,7 @@ namespace DentistryManagement.Server.Services
 
         public void Update(PatientDTO item)
         {
-            var patient = _context.Patient.SingleOrDefault(a => a.Id.Equals(item.Id));
+            var patient = _context.Patients.SingleOrDefault(a => a.Id.Equals(item.Id));
             patient.FirstName = item.FirstName;
             patient.LastName = item.LastName;
             patient.DateOfBirth = item.DateOfBirth;

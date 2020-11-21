@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace DentistryManagement.Server.Models
 {
-    public class Teeth
+    public class Tooth
     {
         public int Id { get; set; }
 
@@ -19,5 +20,7 @@ namespace DentistryManagement.Server.Models
         public int MedicalChartId { get; set; }
 
         public MedicalChart MedicalChart { get; set; }
+
+        public ICollection<ToothDisease> ToothDiseases { get; set; }
     }
 }

@@ -60,6 +60,7 @@ namespace DentistryManagement.Server
             services.AddScoped<IDentistService<DentistDTO>, DentistService>();
             services.AddScoped<IPatientService<PatientDTO>, PatientService>();
             services.AddScoped<IMedicalChartService, MedicalChartService>();
+            services.AddScoped<IDiseaseService<DiseaseDTO>, DiseaseService>();
             services.AddScoped<UserProviderService>();
         }
 

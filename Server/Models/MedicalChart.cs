@@ -10,6 +10,6 @@ namespace DentistryManagement.Server.Models
 
         public Patient Patient { get; set; }
 
-        public ICollection<Teeth> Teeth { get; set; }
+        public ICollection<Tooth> Teeth { get; set; }
     }
 }

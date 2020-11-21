@@ -6,15 +6,15 @@ using System.Linq;
 
 namespace DentistryManagement.Server.Mappers
 {
-    public class TeethMapper
+    public class ToothMapper
     {
-        public static ToothDTO TeethToDTO(Teeth teeth)
+        public static ToothDTO ToothToDTO(Tooth tooth)
         {
             return new ToothDTO
             {
-                Id = teeth.Id,
-                Url = teeth.Url,
-                Category = teeth.Category
+                Id = tooth.Id,
+                Url = tooth.Url,
+                Category = tooth.Category
             };
         }
 
@@ -27,14 +27,14 @@ namespace DentistryManagement.Server.Mappers
             };
         }
 
-        public static TeethCategoryDTO TeethToTeethCategoryDTO(List<ToothDTO> toothDTOs)
+        public static TeethCategoryDTO TeethToTeethCategoryDTO(List<ToothDTO> teethDTO)
         {
             return new TeethCategoryDTO
             {
-                UpperRight = toothDTOs.Where(t => t.Category.Equals("UpperRight")).ToList(),
-                UpperLeft = toothDTOs.Where(t => t.Category.Equals("UpperLeft")).ToList(),
-                LowerRight = toothDTOs.Where(t => t.Category.Equals("LowerRight")).ToList(),
-                LowerLeft = toothDTOs.Where(t => t.Category.Equals("LowerLeft")).ToList(),
+                UpperRight = teethDTO.Where(t => t.Category.Equals("UpperRight")).ToList(),
+                UpperLeft = teethDTO.Where(t => t.Category.Equals("UpperLeft")).ToList(),
+                LowerRight = teethDTO.Where(t => t.Category.Equals("LowerRight")).ToList(),
+                LowerLeft = teethDTO.Where(t => t.Category.Equals("LowerLeft")).ToList(),
             };
         }
 

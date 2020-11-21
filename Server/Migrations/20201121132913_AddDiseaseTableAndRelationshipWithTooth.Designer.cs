@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DentistryManagement.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201120220325_InitialDatabaseAndSeed")]
-    partial class InitialDatabaseAndSeed
+    [Migration("20201121132913_AddDiseaseTableAndRelationshipWithTooth")]
+    partial class AddDiseaseTableAndRelationshipWithTooth
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -57,7 +57,7 @@ namespace DentistryManagement.Server.Migrations
                     b.HasIndex("AffiliateId")
                         .IsUnique();
 
-                    b.ToTable("Address");
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("DentistryManagement.Server.Models.Affiliate", b =>
@@ -73,7 +73,7 @@ namespace DentistryManagement.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Affiliate");
+                    b.ToTable("Affiliates");
 
                     b.HasData(
                         new
@@ -163,7 +163,7 @@ namespace DentistryManagement.Server.Migrations
                             Id = "B22698B8-42A2-4115-9631-1C2D1E2AC5F7",
                             AccessFailedCount = 0,
                             AffiliateId = 1,
-                            ConcurrencyStamp = "389469ff-9ffe-4817-b0c4-feea4cbab7f3",
+                            ConcurrencyStamp = "fe04cde3-d19e-48d7-bc61-dbe98edad1ef",
                             Email = "admin@graphene.com",
                             EmailConfirmed = true,
                             FirstName = "Graphene",
@@ -171,12 +171,32 @@ namespace DentistryManagement.Server.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "admin@graphene.com",
                             NormalizedUserName = "admin@graphene.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEExTjxiIMcu5scJI/2MNov2aoV/SZjxxVYLhZTQyBZ5UG/CsV/BJdNMfUR1oMCwb3w==",
+                            PasswordHash = "AQAAAAEAACcQAAAAENKYcbrooQ2OJdSgGdwkN+cinz5FQ8r4JXSXaYSuCeDZA7pBI8p5cVFyzy64SKxx+w==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b4849950-3943-4081-8814-83388e954a84",
+                            SecurityStamp = "f8f6f446-e221-4494-9db0-b9dd89554675",
                             TwoFactorEnabled = false,
                             UserName = "admin@graphene.com"
                         });
+                });
+
+            modelBuilder.Entity("DentistryManagement.Server.Models.Disease", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Diseases");
                 });
 
             modelBuilder.Entity("DentistryManagement.Server.Models.MedicalChart", b =>
@@ -193,7 +213,7 @@ namespace DentistryManagement.Server.Migrations
                     b.HasIndex("PatientId")
                         .IsUnique();
 
-                    b.ToTable("MedicalChart");
+                    b.ToTable("MedicalCharts");
                 });
 
             modelBuilder.Entity("DentistryManagement.Server.Models.Patient", b =>
@@ -227,10 +247,10 @@ namespace DentistryManagement.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Patient");
+                    b.ToTable("Patients");
                 });
 
-            modelBuilder.Entity("DentistryManagement.Server.Models.Teeth", b =>
+            modelBuilder.Entity("DentistryManagement.Server.Models.Tooth", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -257,6 +277,21 @@ namespace DentistryManagement.Server.Migrations
                     b.HasIndex("MedicalChartId");
 
                     b.ToTable("Teeth");
+                });
+
+            modelBuilder.Entity("DentistryManagement.Server.Models.ToothDisease", b =>
+                {
+                    b.Property<int>("DiseaseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ToothId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DiseaseId", "ToothId");
+
+                    b.HasIndex("ToothId");
+
+                    b.ToTable("ToothDiseases");
                 });
 
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.DeviceFlowCodes", b =>
@@ -495,21 +530,21 @@ namespace DentistryManagement.Server.Migrations
                         new
                         {
                             Id = "2301D884-221A-4E7D-B509-0113DCC043E1",
-                            ConcurrencyStamp = "5dea361f-28c6-4710-b6a0-f5314674ef6a",
+                            ConcurrencyStamp = "9f0f765c-ca5f-4752-8ffb-558542412661",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         },
                         new
                         {
-                            Id = "e5b6c947-e1f6-4a68-aa70-67af45a1edc1",
-                            ConcurrencyStamp = "0c711d5b-febb-4ece-92f8-d81ac2edb9d6",
+                            Id = "7c3260f6-b694-4a63-88ca-053e0825994b",
+                            ConcurrencyStamp = "f928d335-d008-495f-8ba1-c2b3187de5b1",
                             Name = "Manager",
                             NormalizedName = "Manager"
                         },
                         new
                         {
-                            Id = "112c7e20-58f8-4c6f-a7c3-02daca7bee4c",
-                            ConcurrencyStamp = "2d97a7d2-68f8-499b-ba88-8223a6092877",
+                            Id = "25f06114-e8d5-4987-bd01-91e6884d9924",
+                            ConcurrencyStamp = "1eaf73a6-219a-415e-9f72-de64234d20cd",
                             Name = "Dentist",
                             NormalizedName = "Dentist"
                         });
@@ -556,11 +591,26 @@ namespace DentistryManagement.Server.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DentistryManagement.Server.Models.Teeth", b =>
+            modelBuilder.Entity("DentistryManagement.Server.Models.Tooth", b =>
                 {
                     b.HasOne("DentistryManagement.Server.Models.MedicalChart", "MedicalChart")
                         .WithMany("Teeth")
                         .HasForeignKey("MedicalChartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DentistryManagement.Server.Models.ToothDisease", b =>
+                {
+                    b.HasOne("DentistryManagement.Server.Models.Disease", "Disease")
+                        .WithMany("ToothDiseases")
+                        .HasForeignKey("DiseaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DentistryManagement.Server.Models.Tooth", "Tooth")
+                        .WithMany("ToothDiseases")
+                        .HasForeignKey("ToothId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

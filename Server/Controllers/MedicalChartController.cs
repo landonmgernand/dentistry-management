@@ -61,7 +61,7 @@ namespace DentistryManagement.Server.Controllers
 
             var medicalChart = _medicalChartService.GetTeeth(medicalChartId);
 
-            return TeethMapper.TeethCategoryDTOtoVM(medicalChart);
+            return ToothMapper.TeethCategoryDTOtoVM(medicalChart);
         }
     }
 }

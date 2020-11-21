@@ -1,0 +1,117 @@
+﻿@page "/diseases"
+
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using DentistryManagement.Shared.ViewModels.Diseases
+@using DentistryManagement.Client.Pages.Diseases.Modals
+@using DentistryManagement.Client.Components
+@using Microsoft.AspNetCore.Authorization
+
+@inject HttpClient Http
+@inject IModalService Modal
+@inject NavigationManager Navigation
+
+<div class="under-top-row px-4">
+    <AddAction Add="Add" />
+</div>
+
+<div class="content px-4">
+    @if (diseases == null)
+    {
+        <div class="loader">Loading...</div>
+    }
+    else
+    {
+        <div class="grph-paper">
+            <table class="grp-table">
+                <thead class="grph-table-head">
+                    <tr class="grph-table-row">
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var disease in diseases)
+                    {
+                        <tr class="grph-table-row">
+                            <td>@disease.Name</td>
+                            <td>@disease.Description</td>
+                            <td class="grph-actions">
+                                <span class="oi oi-pencil" @onclick="@(() => Edit(disease))"></span>
+                                <span class="oi oi-trash" @onclick="@(() => Delete(disease))"></span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+
+@code {
+    [CascadingParameter]
+    protected MainLayout navigationSet { get; set; }
+
+    private ModalOptions modalOptions = new ModalOptions() { DisableBackgroundCancel = true };
+
+    private List<DiseaseViewModel> diseases;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            diseases = await Http.GetFromJsonAsync<List<DiseaseViewModel>>("api/disease");
+            navigationSet.resetNavigationPanelWithoutState();
+            navigationSet.addNavigationItem("Diseases");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+
+    private async Task Add()
+    {
+        var addModal = Modal.Show<CreateDiseaseModal>("Create Disease", modalOptions);
+
+        var result = await addModal.Result;
+
+        if (!result.Cancelled)
+        {
+            await OnInitializedAsync();
+        }
+    }
+
+    private async Task Edit(DiseaseViewModel disease)
+    {
+        var parameters = new ModalParameters();
+
+        parameters.Add(nameof(disease.Id), disease.Id);
+
+        var updateModal = Modal.Show<UpdateDiseaseModal>("Details of " + disease.Name, parameters, modalOptions);
+
+        var result = await updateModal.Result;
+
+        if (!result.Cancelled)
+        {
+            await OnInitializedAsync();
+        }
+    }
+
+    private async Task Delete(DiseaseViewModel disease)
+    {
+        var parameters = new ModalParameters();
+
+        parameters.Add(nameof(disease.Id), disease.Id);
+
+        var deleteModal = Modal.Show<DeleteDiseaseModal>("Confirm action", parameters, modalOptions);
+
+        var result = await deleteModal.Result;
+
+        if (!result.Cancelled)
+        {
+            diseases.RemoveAll(x => x.Id == disease.Id);
+        }
+    }
+}

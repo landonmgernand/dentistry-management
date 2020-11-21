@@ -47,7 +47,7 @@ namespace DentistryManagement.Server.Services
                 .Select(u => u.AffiliateId)
                 .Single();
 
-            var affiliate = _context.Affiliate.Find(affiliateId);
+            var affiliate = _context.Affiliates.Find(affiliateId);
             dentist.Affiliate = affiliate;
 
             _context.SaveChanges();
