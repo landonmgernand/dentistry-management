@@ -9,7 +9,7 @@
             <AuthorizeView Roles="Admin">
                 <li class="nav-item px-3">
                     <NavLink class="nav-link" href="affiliates">
-                        <MatIcon Icon="@MatIconNames.Domain"></MatIcon> Affiliates
+                        <MatIcon Class="grph-icons" Icon="@MatIconNames.Domain"></MatIcon> Affiliates
                     </NavLink>
                 </li>
                 <li class="nav-item px-3">
@@ -20,7 +20,17 @@
             </AuthorizeView>
             <li class="nav-item px-3">
                 <NavLink class="nav-link" href="dentists">
-                    <MatIcon Icon="@MatIconNames.Local_hospital"></MatIcon>Dentists
+                    <MatIcon Class="grph-icons" Icon="@MatIconNames.Local_hospital"></MatIcon> Dentists
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="patients">
+                    <MatIcon Class="grph-icons" Icon="@MatIconNames.Contacts"></MatIcon> Patients
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="diseases">
+                    <DentistryManagement.Client.Icons.Disease Class="grph-icons"/> Diseases
                 </NavLink>
             </li>
         </ul>

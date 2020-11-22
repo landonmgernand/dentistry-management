@@ -1,0 +1,52 @@
+﻿@using DentistryManagement.Shared.ViewModels.Teeth
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+
+@inject HttpClient Http
+
+@if (teethCategories != null)
+{
+    <table class="grph-teeth-table">
+        <tbody>
+            <tr class="grph-teeth-tr">
+                @foreach (var tooth in teethCategories.UpperRight)
+                {
+                    <Tooth Url="@("images/teeth/" + tooth.Url)" ToothId="@tooth.Id"></Tooth>
+                }
+                @foreach (var tooth in teethCategories.UpperLeft)
+                {
+                    <Tooth Url="@("images/teeth/" + tooth.Url)" ToothId="@tooth.Id"></Tooth>
+                }
+            </tr>
+            <tr class="grph-teeth-tr">
+                @foreach (var tooth in teethCategories.LowerRight)
+                {
+                    <Tooth Url="@("images/teeth/" + tooth.Url)" ToothId="@tooth.Id"></Tooth>
+                }
+                @foreach (var tooth in teethCategories.LowerLeft)
+                {
+                    <Tooth Url="@("images/teeth/" + tooth.Url)" ToothId="@tooth.Id"></Tooth>
+                }
+            </tr>
+        </tbody>
+    </table>
+
+}
+
+@code {
+    [Parameter]
+    public int MedicalChartId { get; set; }
+
+    private TeethCategoryViewModel teethCategories;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            teethCategories = await Http.GetFromJsonAsync<TeethCategoryViewModel>("api/MedicalChart/" + MedicalChartId + "/Teeth");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+}

@@ -9,6 +9,7 @@ using System;
 using DentistryManagement.Server.DataTransferObjects;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore;
+using DentistryManagement.Server.Services.Interfaces;
 
 namespace DentistryManagement.Server.Services
 {
@@ -86,7 +87,7 @@ namespace DentistryManagement.Server.Services
                 Role = role,
             });
 
-            var affiliate = _context.Affiliate.Find(userDTO.AffiliateId);
+            var affiliate = _context.Affiliates.Find(userDTO.AffiliateId);
             applicationUser.Affiliate = affiliate;
 
             _context.SaveChanges();
@@ -114,7 +115,7 @@ namespace DentistryManagement.Server.Services
 
             if (userDTO.AffiliateId != 0)
             {
-                var affiliate = _context.Affiliate.Find(userDTO.AffiliateId);
+                var affiliate = _context.Affiliates.Find(userDTO.AffiliateId);
                 applicationUser.Affiliate = affiliate;
             }
 

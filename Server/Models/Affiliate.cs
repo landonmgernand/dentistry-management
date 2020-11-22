@@ -11,7 +11,6 @@ namespace DentistryManagement.Server.Models
         [MaxLength(100)]
         public string Name { get; set; }
 
-        [Required]
         public Address Address { get; set; }
 
         public ICollection<ApplicationUser> Users { get; set; }

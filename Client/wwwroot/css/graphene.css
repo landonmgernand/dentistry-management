@@ -449,3 +449,31 @@
 .grph-checkbox > label {
     margin-bottom: 0px;
 }
+
+.grph-icons {
+    width: 2rem;
+    fill: #d7d7d7;
+}
+
+.grph-chart-open-holder {
+    height: 600px;
+    position: relative;
+}
+
+.grph-tooth-active {
+    background: black;
+}
+
+.grph-teeth-table {
+    margin: auto;
+}
+
+.grph-teeth-tr > img:hover {
+    background: black;
+    cursor: pointer;
+}
+
+.grph-textarea {
+    width: 500px;
+    height: 100px;
+}

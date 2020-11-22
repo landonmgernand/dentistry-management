@@ -1,0 +1,31 @@
+﻿@using DentistryManagement.Client.Pages.Patients.Components.Interfaces
+
+@implements ITooth;
+
+<img src="@Url" @onclick="ActiveTooth" class="@ToothCssClass" ToothId="@ToothId" />
+
+@code {
+    [CascadingParameter]
+    public ToothSet ContainerToothSet { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public int ToothId { get; set; }
+
+    [Parameter]
+    public string Url { get; set; }
+
+    private string ToothCssClass => ContainerToothSet.ActiveTooth == this ? "grph-tooth-active" : null;
+
+    protected override void OnInitialized()
+    {
+        ContainerToothSet.AddTooth(this);
+    }
+
+    private void ActiveTooth()
+    {
+        ContainerToothSet.SetActiveTooth(this);
+    }
+}

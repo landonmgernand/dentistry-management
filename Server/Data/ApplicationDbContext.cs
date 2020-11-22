@@ -2,14 +2,8 @@
 using DentistryManagement.Server.Models;
 using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 
 namespace DentistryManagement.Server.Data
 {
@@ -20,12 +14,6 @@ namespace DentistryManagement.Server.Data
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
         }
-
-        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
-        public DbSet<ApplicationRole> ApplicationRole { get; set; }
-        public DbSet<ApplicationUserRole> ApplicationUserRole { get; set; }
-        public DbSet<Affiliate> Affiliate { get; set; }
-        public DbSet<Address> Address { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -59,10 +47,53 @@ namespace DentistryManagement.Server.Data
 
             #endregion
 
+            #region Patient
+
+            builder.Entity<Patient>(b =>
+            {
+                b.HasOne(p => p.MedicalChart).WithOne(mc => mc.Patient).HasForeignKey<MedicalChart>(mc => mc.PatientId);
+            });
+
+            #endregion
+
+            #region MedicalChart
+
+            builder.Entity<MedicalChart>(b =>
+            {
+                b.HasMany(t => t.Teeth).WithOne(mc => mc.MedicalChart);
+            });
+
+            #endregion
+
+            #region ToothDisease
+
+            builder.Entity<ToothDisease>().HasKey(td => new { td.DiseaseId, td.ToothId });
+
+            builder.Entity<ToothDisease>().HasOne(td => td.Disease).WithMany(d => d.ToothDiseases).HasForeignKey(td => td.DiseaseId);
+
+            builder.Entity<ToothDisease>().HasOne(td => td.Tooth).WithMany(d => d.ToothDiseases).HasForeignKey(td => td.ToothId);
+
+            #endregion
+
+            #region Seeds
+
             RoleSeeder.Seed(builder);
             AffiliateSeeder.Seed(builder);
             UserSeeder.Seed(builder);
             UserRoleSeed.Seed(builder);
+
+            #endregion
         }
+
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<ApplicationRole> ApplicationRole { get; set; }
+        public DbSet<ApplicationUserRole> ApplicationUserRole { get; set; }
+        public DbSet<Affiliate> Affiliates { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+        public DbSet<Patient> Patients { get; set; }
+        public DbSet<MedicalChart> MedicalCharts { get; set; }
+        public DbSet<Tooth> Teeth { get; set; }
+        public DbSet<Disease> Diseases { get; set; }
+        public DbSet<ToothDisease> ToothDiseases { get; set; }
     }
 }

@@ -7,15 +7,16 @@ using System.Linq;
 using DentistryManagement.Server.Helpers;
 using Microsoft.EntityFrameworkCore;
 using DentistryManagement.Server.Mappers;
+using DentistryManagement.Server.Services.Interfaces;
 
 namespace DentistryManagement.Server.Services
 {
     public class DentistService : IDentistService<DentistDTO>
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserProvider _userProvider;
+        private readonly UserProviderService _userProvider;
 
-        public DentistService(ApplicationDbContext context, UserProvider userProvider)
+        public DentistService(ApplicationDbContext context, UserProviderService userProvider)
         {
             _context = context;
             _userProvider = userProvider;
@@ -46,7 +47,7 @@ namespace DentistryManagement.Server.Services
                 .Select(u => u.AffiliateId)
                 .Single();
 
-            var affiliate = _context.Affiliate.Find(affiliateId);
+            var affiliate = _context.Affiliates.Find(affiliateId);
             dentist.Affiliate = affiliate;
 
             _context.SaveChanges();

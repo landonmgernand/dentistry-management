@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DentistryManagement.Server.DataTransferObjects;
 using DentistryManagement.Server.Helpers;
 using DentistryManagement.Server.Mappers;
-using DentistryManagement.Server.Services;
+using DentistryManagement.Server.Services.Interfaces;
 using DentistryManagement.Shared.ViewModels.Dentists;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,9 +15,9 @@ namespace DentistryManagement.Server.Controllers
     [ApiController]
     public class DentistController : ControllerBase
     {
-        private readonly DentistService _service;
+        private readonly IDentistService<DentistDTO> _service;
 
-        public DentistController(DentistService service)
+        public DentistController(IDentistService<DentistDTO> service)
         {
             _service = service;
         }
