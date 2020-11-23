@@ -68,7 +68,6 @@
         {
             patient = await Http.GetFromJsonAsync<PatientViewModel>("api/Patient/" + Id);
             openMedicalChart.PatientId = patient.Id;
-            navigationSet.resetNavigationPanelWithoutState();
             navigationSet.addNavigationItem("Patient Chart");
         }
         catch (AccessTokenNotAvailableException exception)

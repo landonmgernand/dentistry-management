@@ -10,21 +10,21 @@
             <tr class="grph-teeth-tr">
                 @foreach (var tooth in teethCategories.UpperRight)
                 {
-                    <Tooth Url="@("images/teeth/" + tooth.Url)" ToothId="@tooth.Id"></Tooth>
+                    <Tooth Url="@("images/teeth/" + tooth.Url)" ToothId="@tooth.Id" HasDiseases="@tooth.HasDiseases"/>
                 }
                 @foreach (var tooth in teethCategories.UpperLeft)
                 {
-                    <Tooth Url="@("images/teeth/" + tooth.Url)" ToothId="@tooth.Id"></Tooth>
+                    <Tooth Url="@("images/teeth/" + tooth.Url)" ToothId="@tooth.Id" HasDiseases="@tooth.HasDiseases"/>
                 }
             </tr>
             <tr class="grph-teeth-tr">
                 @foreach (var tooth in teethCategories.LowerRight)
                 {
-                    <Tooth Url="@("images/teeth/" + tooth.Url)" ToothId="@tooth.Id"></Tooth>
+                    <Tooth Url="@("images/teeth/" + tooth.Url)" ToothId="@tooth.Id" HasDiseases="@tooth.HasDiseases"/>
                 }
                 @foreach (var tooth in teethCategories.LowerLeft)
                 {
-                    <Tooth Url="@("images/teeth/" + tooth.Url)" ToothId="@tooth.Id"></Tooth>
+                    <Tooth Url="@("images/teeth/" + tooth.Url)" ToothId="@tooth.Id" HasDiseases="@tooth.HasDiseases"/>
                 }
             </tr>
         </tbody>

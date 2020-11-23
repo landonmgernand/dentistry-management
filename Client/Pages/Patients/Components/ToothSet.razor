@@ -1,5 +1,9 @@
 ﻿@using DentistryManagement.Client.Pages.Patients.Components.Interfaces
 @using DentistryManagement.Client.Components
+@using DentistryManagement.Shared.ViewModels.Teeth 
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+
+@inject HttpClient Http
 
 <div class="grph-paper">
     <Panel Title="Teeth">
@@ -7,10 +11,20 @@
             @ChildContent
         </CascadingValue>
 
-        <div>
-            @ActiveTooth?.ToothId
-            <h3>Test</h3>
-        </div>
+        <div class="grph-diseases">
+            @if (diseases != null)
+            {
+                @foreach (var disease in diseases)
+                {
+                    <MatCheckbox
+                                 Label="@disease.Name" 
+                                 Value="@disease.Active" 
+                                 ValueChanged="@((bool value) => ToggleDisease(disease, value))"
+                                 ValueExpression="@(() => disease.Active)">
+                    </MatCheckbox>
+                }
+            }
+        </div>      
     </Panel>
 </div>
 
@@ -18,22 +32,75 @@
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
-    public ITooth ActiveTooth { get; private set; }
+    public ITooth ActiveTooth { get; set; }
 
-    public void AddTooth(ITooth tooth)
+    private List<ToothDiseaseViewModel> diseases;
+
+    private CreateToothDiseasesViewModel selectedDiseases = new CreateToothDiseasesViewModel();
+
+    protected override async Task OnInitializedAsync()
     {
-        if (ActiveTooth == null)
+        try
         {
-            SetActiveTooth(tooth);
+            diseases = await Http.GetFromJsonAsync<List<ToothDiseaseViewModel>>("api/disease");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
         }
     }
 
-    public void SetActiveTooth(ITooth tooth)
+    public async Task AddTooth(ITooth tooth)
+    {
+        if (ActiveTooth == null)
+        {
+            await SetActiveTooth(tooth);
+        }
+    }
+
+    public async Task SetActiveTooth(ITooth tooth)
     {
         if (ActiveTooth != tooth)
         {
             ActiveTooth = tooth;
+            selectedDiseases.ToothId = ActiveTooth.ToothId;
+            try
+            {
+                selectedDiseases.ToothDiseases = await Http.GetFromJsonAsync<List<ToothDiseaseViewModel>>("api/tooth/" + ActiveTooth.ToothId + "/diseases");
+                foreach(var disease in diseases)
+                {
+                    disease.Active = false;
+                    if (selectedDiseases.ToothDiseases.Any(sd => sd.Id.Equals(disease.Id)))
+                    {
+                        disease.Active = true;
+                    }
+                }
+
+            }
+            catch (AccessTokenNotAvailableException exception)
+            {
+                exception.Redirect();
+            }
             StateHasChanged();
         }
+    }
+
+    private async Task ToggleDisease(ToothDiseaseViewModel disease, bool value)
+    {
+        disease.Active = value;
+
+        if (value)
+        {
+            selectedDiseases.ToothDiseases.Add(disease);
+            ActiveTooth.HasActiveDiseases = true;
+        } else
+        {
+            selectedDiseases.ToothDiseases.Remove(selectedDiseases.ToothDiseases.Find(sd => sd.Id.Equals(disease.Id)));
+            ActiveTooth.HasActiveDiseases = false;
+        }
+
+        var response = await Http.PostAsJsonAsync("api/tooth/" + ActiveTooth.ToothId + "/diseases", selectedDiseases);
+
+        StateHasChanged();
     }
 }

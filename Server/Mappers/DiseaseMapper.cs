@@ -1,6 +1,7 @@
 ﻿using DentistryManagement.Server.DataTransferObjects;
 using DentistryManagement.Server.Models;
 using DentistryManagement.Shared.ViewModels.Diseases;
+using DentistryManagement.Shared.ViewModels.Teeth;
 
 namespace DentistryManagement.Server.Mappers
 {
@@ -22,6 +23,15 @@ namespace DentistryManagement.Server.Mappers
                 Id = updateDisease.Id,
                 Name = updateDisease.Name,
                 Description = updateDisease.Description
+            };
+        }
+
+        public static DiseaseDTO DiseaseVMtoDTO(ToothDiseaseViewModel toothDiseaseView)
+        {
+            return new DiseaseDTO
+            {
+                Id = toothDiseaseView.Id,
+                Name = toothDiseaseView.Name
             };
         }
 

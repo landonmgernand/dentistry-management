@@ -469,11 +469,24 @@
 }
 
 .grph-teeth-tr > img:hover {
-    background: black;
+    background: #193C6B;
     cursor: pointer;
 }
 
 .grph-textarea {
     width: 500px;
     height: 100px;
+}
+
+.grph-diseases {
+    margin: auto;
+    max-width: 600px;
+}
+
+.grph-tooth-active {
+    background-color: #193C6B !important;
+}
+
+.grph-tooth-diseases {
+    background-color: #e0e0e0;
 }

@@ -54,13 +54,14 @@ namespace DentistryManagement.Server
 
             services.Configure<TeethSettingsDTO>(Configuration.GetSection("TeethSettings"));
     
-            services.AddScoped<IUserService<UserDTO>, UserService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAffiliateService<AffiliateDTO, AddressDTO>,AffiliateService>();
-            services.AddScoped<IRoleService<RoleDTO>, RoleService>();
-            services.AddScoped<IDentistService<DentistDTO>, DentistService>();
+            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IDentistService, DentistService>();
             services.AddScoped<IPatientService<PatientDTO>, PatientService>();
             services.AddScoped<IMedicalChartService, MedicalChartService>();
             services.AddScoped<IDiseaseService<DiseaseDTO>, DiseaseService>();
+            services.AddScoped<IToothService, ToothService>();
             services.AddScoped<UserProviderService>();
         }
 

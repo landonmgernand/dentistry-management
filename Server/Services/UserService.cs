@@ -13,7 +13,7 @@ using DentistryManagement.Server.Services.Interfaces;
 
 namespace DentistryManagement.Server.Services
 {
-    public class UserService : IUserService<UserDTO>
+    public class UserService : IUserService
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;

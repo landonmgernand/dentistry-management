@@ -172,6 +172,10 @@ app {
     z-index: 101;
 }
 
+.mdc-form-field > label {
+    margin-bottom: -2px;
+}
+
 @media (max-width: 767.98px) {
     .main .top-row:not(.auth) {
         display: none;
