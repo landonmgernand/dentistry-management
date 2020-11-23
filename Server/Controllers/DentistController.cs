@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DentistryManagement.Server.DataTransferObjects;
 using DentistryManagement.Server.Helpers;
 using DentistryManagement.Server.Mappers;
 using DentistryManagement.Server.Services.Interfaces;
@@ -15,9 +14,9 @@ namespace DentistryManagement.Server.Controllers
     [ApiController]
     public class DentistController : ControllerBase
     {
-        private readonly IDentistService<DentistDTO> _service;
+        private readonly IDentistService _service;
 
-        public DentistController(IDentistService<DentistDTO> service)
+        public DentistController(IDentistService service)
         {
             _service = service;
         }
@@ -66,7 +65,7 @@ namespace DentistryManagement.Server.Controllers
 
         [Authorize(Roles = "Admin, Manager")]
         [HttpPut("{id}")]
-        public IActionResult UpdateDentist(string id, UpdateDentistViewModel updateDentistViewModel)
+        public IActionResult UpdateDentist(string id, [FromBody] UpdateDentistViewModel updateDentistViewModel)
         {
             if (id != updateDentistViewModel.Id)
             {

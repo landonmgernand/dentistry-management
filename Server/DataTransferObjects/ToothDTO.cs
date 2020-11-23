@@ -7,5 +7,7 @@
         public string Url { get; set; }
 
         public string Category { get; set; }
+
+        public bool HasDiseases { get; set; }
     }
 }

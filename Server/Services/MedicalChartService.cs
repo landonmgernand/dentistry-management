@@ -3,6 +3,7 @@ using DentistryManagement.Server.DataTransferObjects;
 using DentistryManagement.Server.Mappers;
 using DentistryManagement.Server.Models;
 using DentistryManagement.Server.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,6 +62,7 @@ namespace DentistryManagement.Server.Services
         {
             var teethDTO = _context.Teeth
                 .Where(t => t.MedicalChartId.Equals(id))
+                .Include(t => t.ToothDiseases)
                 .OrderBy(t => t.Order)
                 .Select(t => ToothMapper.ToothToDTO(t))
                 .ToList();

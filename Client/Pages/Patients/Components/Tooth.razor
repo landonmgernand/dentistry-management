@@ -1,8 +1,8 @@
 ﻿@using DentistryManagement.Client.Pages.Patients.Components.Interfaces
 
-@implements ITooth;
+@implements ITooth
 
-<img src="@Url" @onclick="ActiveTooth" class="@ToothCssClass" ToothId="@ToothId" />
+<img src="@Url" @onclick="ActiveTooth" class="@(ToothHasDiseasesCss + ToothCssClass)" ToothId="@ToothId" />
 
 @code {
     [CascadingParameter]
@@ -17,15 +17,23 @@
     [Parameter]
     public string Url { get; set; }
 
+    [Parameter]
+    public bool HasDiseases { get; set; }
+
+    [Parameter]
+    public bool HasActiveDiseases { get; set; }
+
     private string ToothCssClass => ContainerToothSet.ActiveTooth == this ? "grph-tooth-active" : null;
 
-    protected override void OnInitialized()
+    private string ToothHasDiseasesCss => ( HasDiseases || HasActiveDiseases ) ? "grph-tooth-diseases " : null;
+
+    protected override async Task OnInitializedAsync()
     {
-        ContainerToothSet.AddTooth(this);
+        await ContainerToothSet.AddTooth(this);
     }
 
-    private void ActiveTooth()
+    private async Task ActiveTooth()
     {
-        ContainerToothSet.SetActiveTooth(this);
+        await ContainerToothSet.SetActiveTooth(this);
     }
 }

@@ -16,13 +16,13 @@ namespace DentistryManagement.Server.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IUserService<UserDTO> _userService;
-        private readonly IRoleService<RoleDTO> _roleService;
+        private readonly IUserService _userService;
+        private readonly IRoleService _roleService;
         private readonly IAffiliateService<AffiliateDTO, AddressDTO> _affiliateService;
 
         public UserController(
-            IUserService<UserDTO> userService,
-            IRoleService<RoleDTO> roleService,
+            IUserService userService,
+            IRoleService roleService,
             IAffiliateService<AffiliateDTO, AddressDTO> affiliateService
             )
         {
@@ -94,7 +94,7 @@ namespace DentistryManagement.Server.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(string id, UpdateUserViewModel updateUserViewModel)
+        public async Task<IActionResult> UpdateUser(string id, [FromBody] UpdateUserViewModel updateUserViewModel)
         {
             if (id != updateUserViewModel.Id)
             {
@@ -118,7 +118,7 @@ namespace DentistryManagement.Server.Controllers
         }
 
         [HttpPut("password/{id}")]
-        public async Task<IActionResult> UpdatePassword(string id, PasswordUserViewModel passwordUserViewModel)
+        public async Task<IActionResult> UpdatePassword(string id, [FromBody] PasswordUserViewModel passwordUserViewModel)
         {
             if (!_userService.Exist(id))
             {

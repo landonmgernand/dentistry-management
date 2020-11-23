@@ -7,5 +7,9 @@ namespace DentistryManagement.Client.Pages.Patients.Components.Interfaces
         RenderFragment ChildContent { get; }
 
         public int ToothId { get; }
+
+        public bool HasDiseases { get; set; }
+
+        public bool HasActiveDiseases { get; set; }
     }
 }

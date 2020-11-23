@@ -12,9 +12,9 @@ namespace DentistryManagement.Server.Controllers
     [ApiController]
     public class RoleController : ControllerBase
     {
-        private readonly IRoleService<RoleDTO> _service;
+        private readonly IRoleService _service;
 
-        public RoleController(IRoleService<RoleDTO> service)
+        public RoleController(IRoleService service)
         {
             _service = service;
         }

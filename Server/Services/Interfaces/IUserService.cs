@@ -1,19 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using DentistryManagement.Server.DataTransferObjects;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DentistryManagement.Server.Services.Interfaces
 {
-    public interface IUserService<T>
+    public interface IUserService
     {
-        public List<T> GetAll();
-        public T Get(string id);
-        public T GetByUsername(string username);
-        public Task CreateUser(T item);
-        public Task UpdateUser(T item);
-        public Task UpdatePassword(T item);
+        public List<UserDTO> GetAll();
+        public UserDTO Get(string id);
+        public UserDTO GetByUsername(string username);
+        public Task CreateUser(UserDTO userDTO);
+        public Task UpdateUser(UserDTO userDTO);
+        public Task UpdatePassword(UserDTO userDTO);
         public Task DeleteUser(string id);
         public bool Exist(string id);
         public Task<bool> CheckPassword(string id, string password);

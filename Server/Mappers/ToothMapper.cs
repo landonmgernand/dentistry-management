@@ -14,7 +14,8 @@ namespace DentistryManagement.Server.Mappers
             {
                 Id = tooth.Id,
                 Url = tooth.Url,
-                Category = tooth.Category
+                Category = tooth.Category,
+                HasDiseases = tooth.ToothDiseases.Count > 0
             };
         }
 
@@ -23,7 +24,8 @@ namespace DentistryManagement.Server.Mappers
             return new ToothViewModel
             {
                 Id = toothDTO.Id,
-                Url = toothDTO.Url
+                Url = toothDTO.Url,
+                HasDiseases = toothDTO.HasDiseases
             };
         }
 
@@ -46,6 +48,15 @@ namespace DentistryManagement.Server.Mappers
                 UpperLeft = teethCategoryDTO.UpperLeft.Select(ur => ToothDTOtoVM(ur)).ToList(),
                 LowerRight = teethCategoryDTO.LowerRight.Select(ur => ToothDTOtoVM(ur)).ToList(),
                 LowerLeft = teethCategoryDTO.LowerLeft.Select(ur => ToothDTOtoVM(ur)).ToList(),
+            };
+        }
+
+        public static ToothDiseasesDTO CreateToothDiseasesVMToDTO(CreateToothDiseasesViewModel toothDiseases)
+        {
+            return new ToothDiseasesDTO
+            {
+                ToothId = toothDiseases.ToothId,
+                Diseases = toothDiseases.ToothDiseases.Select(d => DiseaseMapper.DiseaseVMtoDTO(d)).ToList(),
             };
         }
     }

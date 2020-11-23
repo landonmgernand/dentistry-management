@@ -11,7 +11,7 @@ using DentistryManagement.Server.Services.Interfaces;
 
 namespace DentistryManagement.Server.Services
 {
-    public class DentistService : IDentistService<DentistDTO>
+    public class DentistService : IDentistService
     {
         private readonly ApplicationDbContext _context;
         private readonly UserProviderService _userProvider;

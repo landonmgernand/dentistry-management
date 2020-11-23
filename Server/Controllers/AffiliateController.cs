@@ -85,7 +85,7 @@ namespace DentistryManagement.Server.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateAffiliate(int id, UpdateAffiliateViewModel updateAffiliateViewModel)
+        public IActionResult UpdateAffiliate(int id, [FromBody] UpdateAffiliateViewModel updateAffiliateViewModel)
         {
             if (id != updateAffiliateViewModel.Id)
             {
@@ -104,7 +104,7 @@ namespace DentistryManagement.Server.Controllers
         }
 
         [HttpPut("{affiliateId}/address/{id}")]
-        public IActionResult UpdateAffiliiateAddress(int affiliateId, int id, UpdateAddressViewModel updateAddressViewModel)
+        public IActionResult UpdateAffiliiateAddress(int affiliateId, int id, [FromBody] UpdateAddressViewModel updateAddressViewModel)
         {
             if (id != updateAddressViewModel.Id || affiliateId != updateAddressViewModel.AffiliateId)
             {

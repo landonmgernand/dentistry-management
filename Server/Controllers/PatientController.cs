@@ -50,7 +50,7 @@ namespace DentistryManagement.Server.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdatePatient(int id, UpdatePatientViewModel updatePatientViewModel)
+        public IActionResult UpdatePatient(int id, [FromBody] UpdatePatientViewModel updatePatientViewModel)
         {
             if (id != updatePatientViewModel.Id)
             {

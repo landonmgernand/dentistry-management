@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace DentistryManagement.Server.Services
 {
-    public class RoleService : IRoleService<RoleDTO>
+    public class RoleService : IRoleService
     {
         private readonly ApplicationDbContext _context;
 
