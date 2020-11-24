@@ -8,7 +8,7 @@ namespace DentistryManagement.Client.Pages.Patients.Components.Interfaces
 
         public int ToothId { get; }
 
-        public bool HasDiseases { get; set; }
+        public bool HasDiseases { get; }
 
         public bool HasActiveDiseases { get; set; }
     }
