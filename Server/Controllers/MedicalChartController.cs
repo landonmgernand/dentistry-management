@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using DentistryManagement.Server.DataTransferObjects;
 using DentistryManagement.Server.Mappers;
 using DentistryManagement.Server.Services.Interfaces;
+using DentistryManagement.Shared.ViewModels.Allergies;
 using DentistryManagement.Shared.ViewModels.MedicalChart;
 using DentistryManagement.Shared.ViewModels.Teeth;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DentistryManagement.Server.Controllers
@@ -62,6 +60,17 @@ namespace DentistryManagement.Server.Controllers
             var medicalChart = _medicalChartService.GetTeeth(medicalChartId);
 
             return ToothMapper.TeethCategoryDTOtoVM(medicalChart);
+        }
+
+        [HttpGet("{medicalChartId}/allergies")]
+        public ActionResult<IEnumerable<AllergyViewModel>> GetAllergies(int medicalChartId)
+        {
+            if (!_medicalChartService.Exist(medicalChartId))
+            {
+                return NotFound();
+            }
+
+            return _medicalChartService.GetAllergies(medicalChartId).Select(a => AllergyMapper.DTOtoAllergyVM(a)).ToList();
         }
     }
 }

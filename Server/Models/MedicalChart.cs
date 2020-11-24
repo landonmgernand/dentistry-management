@@ -11,5 +11,7 @@ namespace DentistryManagement.Server.Models
         public Patient Patient { get; set; }
 
         public ICollection<Tooth> Teeth { get; set; }
+
+        public ICollection<Allergy> Allergies { get; set; }
     }
 }

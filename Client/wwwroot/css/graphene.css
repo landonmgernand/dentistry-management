@@ -490,3 +490,8 @@
 .grph-tooth-diseases {
     background-color: #e0e0e0;
 }
+
+.grph-allergies {
+    margin: auto;
+    max-width: 600px;
+}
