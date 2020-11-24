@@ -58,16 +58,26 @@ namespace DentistryManagement.Server.Services
             return MedicalChartMapper.MedicalChartToDTO(medicalChart);
         }
 
-        public TeethCategoryDTO GetTeeth(int id)
+        public TeethCategoryDTO GetTeeth(int medicalChartId)
         {
             var teethDTO = _context.Teeth
-                .Where(t => t.MedicalChartId.Equals(id))
+                .Where(t => t.MedicalChartId.Equals(medicalChartId))
                 .Include(t => t.ToothDiseases)
                 .OrderBy(t => t.Order)
                 .Select(t => ToothMapper.ToothToDTO(t))
                 .ToList();
 
             return ToothMapper.TeethToTeethCategoryDTO(teethDTO);
+        }
+
+        public List<AllergyDTO> GetAllergies(int medicalChartId)
+        {
+            var allergiesDTO = _context.Allergies
+                .Where(a => a.MedicalChartId.Equals(medicalChartId))
+                .Select(a => AllergyMapper.AllergyToDTO(a))
+                .ToList();
+
+            return allergiesDTO;
         }
     }
 }

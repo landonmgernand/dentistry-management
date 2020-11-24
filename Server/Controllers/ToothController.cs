@@ -2,12 +2,9 @@
 using DentistryManagement.Server.Services.Interfaces;
 using DentistryManagement.Shared.ViewModels.Diseases;
 using DentistryManagement.Shared.ViewModels.Teeth;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DentistryManagement.Server.Controllers
 {
@@ -29,7 +26,7 @@ namespace DentistryManagement.Server.Controllers
         }
 
         [HttpPost("{toothId}/diseases")]
-        public IActionResult CreateAffiliate(int toothId, [FromBody] CreateToothDiseasesViewModel createToothDiseaseViewModel)
+        public IActionResult CreateToothDiseases(int toothId, [FromBody] CreateToothDiseasesViewModel createToothDiseaseViewModel)
         {
             if (toothId != createToothDiseaseViewModel.ToothId)
             {

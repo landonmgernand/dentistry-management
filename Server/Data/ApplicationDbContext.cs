@@ -61,6 +61,7 @@ namespace DentistryManagement.Server.Data
             builder.Entity<MedicalChart>(b =>
             {
                 b.HasMany(t => t.Teeth).WithOne(mc => mc.MedicalChart);
+                b.HasMany(t => t.Allergies).WithOne(mc => mc.MedicalChart);
             });
 
             #endregion
@@ -95,5 +96,6 @@ namespace DentistryManagement.Server.Data
         public DbSet<Tooth> Teeth { get; set; }
         public DbSet<Disease> Diseases { get; set; }
         public DbSet<ToothDisease> ToothDiseases { get; set; }
+        public DbSet<Allergy> Allergies { get; set; }
     }
 }
