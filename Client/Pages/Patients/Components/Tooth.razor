@@ -25,10 +25,11 @@
 
     private string ToothCssClass => ContainerToothSet.ActiveTooth == this ? "grph-tooth-active" : null;
 
-    private string ToothHasDiseasesCss => ( HasDiseases || HasActiveDiseases ) ? "grph-tooth-diseases " : null;
+    private string ToothHasDiseasesCss => HasActiveDiseases ? "grph-tooth-diseases " : null;
 
     protected override async Task OnInitializedAsync()
     {
+        HasActiveDiseases = HasDiseases;
         await ContainerToothSet.AddTooth(this);
     }
 
