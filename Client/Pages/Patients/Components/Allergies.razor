@@ -58,7 +58,7 @@
         {
             try
             {
-                var response = await Http.PostAsJsonAsync("api/allergy", allergyViewModel);
+                var response = await Http.PostAsJsonAsync("api/MedicalChart/" + MedicalChartId + "/Allergies", allergyViewModel);
                 allergyViewModel.Name = "";
                 await OnInitializedAsync();
             }
@@ -79,7 +79,7 @@
     {
         try
         {
-            var response = await Http.DeleteAsync("api/allergy/" + allergy.Id);
+            var response = await Http.DeleteAsync("api/MedicalChart/" + MedicalChartId + "/Allergies/" + allergy.Id);
             allergies.Remove(allergy);
         }
         catch (AccessTokenNotAvailableException exception)

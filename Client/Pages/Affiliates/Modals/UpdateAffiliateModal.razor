@@ -67,7 +67,7 @@
     private async Task HandleValidSubmit()
     {
         customValidator.ClearErrors();
-
+        disabled = true;
         try
         {
             var response = await Http.PutAsJsonAsync("api/Affiliate/" + Id, affiliateViewModel);
@@ -80,6 +80,7 @@
                 if (errors.Count > 0)
                 {
                     customValidator.DisplayErrors(errors);
+                    disabled = false;
                 }
             }
             else
@@ -94,7 +95,6 @@
         catch (Exception exception)
         {
             Logger.LogError("Form processing error: {Message}", exception.Message);
-            disabled = true;
             messageStyles = "display:block";
             message = "There was an error processing the form.";
         }

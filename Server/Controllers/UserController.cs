@@ -18,12 +18,12 @@ namespace DentistryManagement.Server.Controllers
     {
         private readonly IUserService _userService;
         private readonly IRoleService _roleService;
-        private readonly IAffiliateService<AffiliateDTO, AddressDTO> _affiliateService;
+        private readonly IAffiliateService<AffiliateDTO> _affiliateService;
 
         public UserController(
             IUserService userService,
             IRoleService roleService,
-            IAffiliateService<AffiliateDTO, AddressDTO> affiliateService
+            IAffiliateService<AffiliateDTO> affiliateService
             )
         {
             _userService = userService;

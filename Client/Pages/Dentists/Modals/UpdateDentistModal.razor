@@ -71,6 +71,7 @@
 
     private async Task HandleValidSubmit()
     {
+        disabled = true;
         try
         {
             var response = await Http.PutAsJsonAsync("api/Dentist/" + Id, dentistViewModel);
@@ -87,7 +88,6 @@
         catch (Exception exception)
         {
             Logger.LogError("Form processing error: {Message}", exception.Message);
-            disabled = true;
             messageStyles = "display:block";
             message = "There was an error processing the form.";
         }
