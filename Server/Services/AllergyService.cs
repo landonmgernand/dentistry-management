@@ -34,9 +34,9 @@ namespace DentistryManagement.Server.Services
             _context.SaveChanges();
         }
 
-        public bool Exist(int allergyId)
+        public bool Exist(int id, int medicalChartId)
         {
-            return _context.Allergies.Any(x => x.Id.Equals(allergyId));
+            return _context.Allergies.Any(a => a.Id.Equals(id) && a.MedicalChartId.Equals(medicalChartId));
         }
     }
 }

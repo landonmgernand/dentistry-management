@@ -15,23 +15,25 @@ namespace DentistryManagement.Server.Controllers
     [ApiController]
     public class AffiliateController : ControllerBase
     {
-        private readonly IAffiliateService<AffiliateDTO, AddressDTO> _service;
+        private readonly IAffiliateService<AffiliateDTO> _affiiliateService;
+        private readonly IAddressService _addressService;
 
-        public AffiliateController(IAffiliateService<AffiliateDTO, AddressDTO> service)
+        public AffiliateController(IAffiliateService<AffiliateDTO> affiliateService, IAddressService addressService)
         {
-            _service = service;
+            _affiiliateService = affiliateService;
+            _addressService = addressService;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<AffiliateViewModel>> GetAffiliates()
         {
-            return _service.GetAll().Select(a => AffiliateMapper.DTOtoAffiliateVM(a)).ToArray();
+            return _affiiliateService.GetAll().Select(a => AffiliateMapper.DTOtoAffiliateVM(a)).ToArray();
         }
 
         [HttpGet("{id}")]
         public ActionResult<AffiliateViewModel> GetAffiliate(int id)
         {
-            var affiliate = _service.Get(id);
+            var affiliate = _affiiliateService.Get(id);
 
             if (affiliate is null)
             {
@@ -44,7 +46,7 @@ namespace DentistryManagement.Server.Controllers
         [HttpGet("{affiliateId}/address")]
         public ActionResult<AddressViewModel> GetAffiliateAddress(int affiliateId)
         {
-            var affiliateAddress = _service.GetAffiliateAddress(affiliateId);
+            var affiliateAddress = _addressService.Get(affiliateId);
 
             if (affiliateAddress is null)
             {
@@ -58,28 +60,7 @@ namespace DentistryManagement.Server.Controllers
         public IActionResult CreateAffiliate([FromBody] CreateAffiliateViewModel createAffiliateViewModel)
         {
             var affiliateDTO = AffiliateMapper.CreateAffiliateVMToDTO(createAffiliateViewModel);
-            _service.Create(affiliateDTO);
-
-            return Ok(ModelState);
-        }
-
-        [HttpPost("{affiliateId}/address")]
-        public IActionResult CreateAffiliateAddress(int affiliateId, [FromBody] CreateAddressViewModel createAddressViewModel)
-        {
-            if (affiliateId != createAddressViewModel.AffiliateId)
-            {
-                return BadRequest();
-            }
-
-            var affiliate = _service.Get(createAddressViewModel.AffiliateId);
-
-            if (affiliate is null)
-            {
-                return NotFound();
-            }
-
-            var addressDTO = AddressMapper.CreateAddressVMToDTO(createAddressViewModel);
-            _service.CreateAffiliateAddress(addressDTO);
+            _affiiliateService.Create(affiliateDTO);
 
             return Ok(ModelState);
         }
@@ -92,27 +73,13 @@ namespace DentistryManagement.Server.Controllers
                 return BadRequest();
             }
 
-            if (!_service.Exist(id))
+            if (!_affiiliateService.Exist(id))
             {
                 return NotFound();
             }
 
             var affiliateDTO = AffiliateMapper.UpdateAffiliateVMToDTO(updateAffiliateViewModel);
-            _service.Update(affiliateDTO);
-
-            return NoContent();
-        }
-
-        [HttpPut("{affiliateId}/address/{id}")]
-        public IActionResult UpdateAffiliiateAddress(int affiliateId, int id, [FromBody] UpdateAddressViewModel updateAddressViewModel)
-        {
-            if (id != updateAddressViewModel.Id || affiliateId != updateAddressViewModel.AffiliateId)
-            {
-                return BadRequest();
-            }
-
-            var addressDTO = AddressMapper.UpdateAddressVMToDTO(updateAddressViewModel);
-            _service.UpdateAffiliateAddress(addressDTO);
+            _affiiliateService.Update(affiliateDTO);
 
             return NoContent();
         }
@@ -120,12 +87,50 @@ namespace DentistryManagement.Server.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteAffiliate(int id)
         {
-            if (!_service.Exist(id))
+            if (!_affiiliateService.Exist(id))
             {
                 return NotFound();
             }
 
-            _service.Delete(id);
+            _affiiliateService.Delete(id);
+
+            return NoContent();
+        }
+
+        [HttpPost("{affiliateId}/address")]
+        public IActionResult CreateAddress(int affiliateId, [FromBody] CreateAddressViewModel createAddressViewModel)
+        {
+            if (affiliateId != createAddressViewModel.AffiliateId)
+            {
+                return BadRequest();
+            }
+
+            if (!_affiiliateService.Exist(affiliateId))
+            {
+                return NotFound();
+            }
+
+            var addressDTO = AddressMapper.CreateAddressVMToDTO(createAddressViewModel);
+            _addressService.Create(addressDTO);
+
+            return Ok(ModelState);
+        }
+
+        [HttpPut("{affiliateId}/address/{id}")]
+        public IActionResult UpdateAddress(int affiliateId, int id, [FromBody] UpdateAddressViewModel updateAddressViewModel)
+        {
+            if (id != updateAddressViewModel.Id || affiliateId != updateAddressViewModel.AffiliateId)
+            {
+                return BadRequest();
+            }
+
+            if (!_addressService.Exist(id, affiliateId))
+            {
+                return NotFound();
+            }
+
+            var addressDTO = AddressMapper.UpdateAddressVMToDTO(updateAddressViewModel);
+            _addressService.Update(addressDTO);
 
             return NoContent();
         }

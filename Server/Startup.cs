@@ -55,7 +55,8 @@ namespace DentistryManagement.Server
             services.Configure<TeethSettingsDTO>(Configuration.GetSection("TeethSettings"));
     
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IAffiliateService<AffiliateDTO, AddressDTO>,AffiliateService>();
+            services.AddScoped<IAffiliateService<AffiliateDTO>,AffiliateService>();
+            services.AddScoped<IAddressService, AddressService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IDentistService, DentistService>();
             services.AddScoped<IPatientService<PatientDTO>, PatientService>();

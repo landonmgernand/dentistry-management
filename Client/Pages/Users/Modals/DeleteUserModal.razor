@@ -39,6 +39,7 @@
 
     private async Task Delete()
     {
+        disabled = true;
         try
         {
             var response = await Http.DeleteAsync("api/User/" + Id);
@@ -55,7 +56,6 @@
         catch (Exception exception)
         {
             Logger.LogError("Form processing error: {Message}", exception.Message);
-            disabled = true;
             messageStyles = "display:block";
             message = "There was an error processing the form.";
         }

@@ -16,11 +16,13 @@ namespace DentistryManagement.Server.Controllers
     {
         private readonly IMedicalChartService _medicalChartService;
         private readonly IPatientService<PatientDTO> _patientService;
+        private readonly IAllergyService _allergyService;
 
-        public MedicalChartController(IMedicalChartService medicalChartService, IPatientService<PatientDTO> patientService)
+        public MedicalChartController(IMedicalChartService medicalChartService, IPatientService<PatientDTO> patientService, IAllergyService allergyService)
         {
             _medicalChartService = medicalChartService;
             _patientService = patientService;
+            _allergyService = allergyService;
         }
 
     
@@ -71,6 +73,38 @@ namespace DentistryManagement.Server.Controllers
             }
 
             return _medicalChartService.GetAllergies(medicalChartId).Select(a => AllergyMapper.DTOtoAllergyVM(a)).ToList();
+        }
+
+        [HttpPost("{medicalChartId}/allergies")]
+        public IActionResult CreateAllergy(int medicalChartId, [FromBody] CreateAllergyViewModel createAllergy)
+        {
+            if (medicalChartId != createAllergy.MedicalChartId)
+            {
+                return BadRequest();
+            }
+
+            if (!_medicalChartService.Exist(medicalChartId))
+            {
+                return NotFound();
+            }
+
+            var allergyDTO = AllergyMapper.CreateAllergyVMToDTO(createAllergy);
+            _allergyService.Create(allergyDTO);
+
+            return Ok(ModelState);
+        }
+
+        [HttpDelete("{medicalChartId}/allergies/{id}")]
+        public IActionResult DeleteAllergy(int medicalChartId, int id)
+        {
+            if (!_allergyService.Exist(id, medicalChartId))
+            {
+                return NotFound();
+            }
+
+            _allergyService.Delete(id);
+
+            return NoContent();
         }
     }
 }
