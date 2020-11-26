@@ -6,3 +6,4 @@
 /shared/bin
 /.vs
 /server/DentistryManagement.Server.csproj.user
+/server/wwwroot/images/files

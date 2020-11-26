@@ -9,20 +9,18 @@
 @if (allergies != null)
 {
     <div class="grph-paper">
-        <Panel Title="Allergies">
-            <div class="grph-allergies">
-                <p class="validation-message" style="@messageStyles">
-                    @message
-                </p>
-                <MatChipSet>
-                    @foreach (var allergy in allergies)
-                    {
-                        <MatChip class="mt-1" Label=@allergy.Name TrailingIcon="clear" TrailingIconClick="@(() => Delete(allergy))"></MatChip>
-                    }
-                </MatChipSet>
+        <Panel Title="Allergies" Class="grph-content">
+            <p class="validation-message" style="@messageStyles">
+                @message
+            </p>
+            <MatChipSet>
+                @foreach (var allergy in allergies)
+                {
+                    <MatChip class="mt-1" Label=@allergy.Name TrailingIcon="clear" TrailingIconClick="@(() => Delete(allergy))"></MatChip>
+                }
+            </MatChipSet>
 
-                <MatTextField @bind-Value="@allergyViewModel.Name" Label="" FullWidth="true" OnKeyUp="Add"></MatTextField>
-            </div>
+            <MatTextField @bind-Value="@allergyViewModel.Name" Label="" FullWidth="true" OnKeyUp="Add"></MatTextField>          
         </Panel>
     </div>
 }

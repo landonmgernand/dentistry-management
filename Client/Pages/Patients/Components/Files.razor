@@ -1,0 +1,95 @@
+﻿@using DentistryManagement.Client.Components
+@using DentistryManagement.Client.Helpers
+@using DentistryManagement.Shared.ViewModels.Files 
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Extensions.Logging
+@using System.IO;
+@using System.Net
+
+@inject HttpClient Http
+@inject ILogger<Allergies> Logger
+
+<div class="grph-paper">
+    <Panel Title="Files" Class="grph-file-content">
+        <p class="validation-message" style="@messageStyles">
+            @message
+        </p>
+        @if (files != null)
+        {
+            <div class="grph-files">
+                @foreach (var file in files)
+                {
+                    <div class="grph-file">
+                        <img src="@("images/files/" + file.Path)">
+                        <div>
+                            <p>@file.UploadDT.ToString("dd/MM/yyyy")</p>
+                            <span class="oi oi-trash"></span>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        <div class="mat-file-upload mdc-ripple-surface mdc-ripple-upgraded">
+            <InputFile OnChange="HandleSelection" accept="image/*"></InputFile>
+            <div class="mat-file-upload-content">
+                <span>Drop Or Browse</span>
+            </div>
+        </div>
+    </Panel>
+</div>
+
+@code {
+    [Parameter]
+    public int MedicalChartId { get; set; }
+
+    private string message;
+
+    private string messageStyles = "display:none";
+
+    private List<FileViewModel> files;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            files = await Http.GetFromJsonAsync<List<FileViewModel>>("api/MedicalChart/" + MedicalChartId + "/files");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+
+    private async Task HandleSelection(IFileListEntry[] files)
+    {
+        var file = files.FirstOrDefault();
+
+        if (file != null && file.Type.StartsWith("image"))
+        {
+            var ms = new MemoryStream();
+            await file.Data.CopyToAsync(ms);
+            var content = new MultipartFormDataContent
+    {
+                {
+                    new ByteArrayContent(ms.GetBuffer()), "file", file.Name
+                }
+            };
+
+            try
+            {
+                var response = await Http.PostAsync("api/MedicalChart/" + MedicalChartId + "/Files", content);
+                await OnInitializedAsync();
+            }
+            catch (AccessTokenNotAvailableException exception)
+            {
+                exception.Redirect();
+            }
+            catch (Exception exception)
+            {
+                Logger.LogError("Form processing error: {Message}", exception.Message);
+                messageStyles = "display:block";
+                message = "There was an error processing the form.";
+            }
+        }
+    }
+}
