@@ -13,5 +13,7 @@ namespace DentistryManagement.Server.Models
         public ICollection<Tooth> Teeth { get; set; }
 
         public ICollection<Allergy> Allergies { get; set; }
+
+        public ICollection<File> Files { get; set; }
     }
 }

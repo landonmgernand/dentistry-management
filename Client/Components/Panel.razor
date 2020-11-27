@@ -4,7 +4,7 @@
 
     </div>
 </div>
-<div class="grph-content-root">
+<div class="@ContentStyle">
     @ChildContent
 </div>
 
@@ -14,4 +14,15 @@
 
     [Parameter]
     public string Title { get; set; }
+
+    [Parameter]
+    public string Class { get; set; }
+
+    private string ContentStyle
+    {
+        get
+        {
+            return "grph-content-root " + Class;
+        }
+    }
 }

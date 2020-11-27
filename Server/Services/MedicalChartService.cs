@@ -79,5 +79,15 @@ namespace DentistryManagement.Server.Services
 
             return allergiesDTO;
         }
+
+        public List<FileDTO> GetFiles(int medicalChartId)
+        {
+            var filesDTO = _context.Files
+                .Where(f => f.MedicalChartId.Equals(medicalChartId))
+                .Select(f => FileMapper.FileToFileDTO(f))
+                .ToList();
+
+            return filesDTO;
+        }
     }
 }

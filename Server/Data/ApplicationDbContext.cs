@@ -62,6 +62,7 @@ namespace DentistryManagement.Server.Data
             {
                 b.HasMany(t => t.Teeth).WithOne(mc => mc.MedicalChart);
                 b.HasMany(t => t.Allergies).WithOne(mc => mc.MedicalChart);
+                b.HasMany(t => t.Files).WithOne(mc => mc.MedicalChart);
             });
 
             #endregion
@@ -97,5 +98,6 @@ namespace DentistryManagement.Server.Data
         public DbSet<Disease> Diseases { get; set; }
         public DbSet<ToothDisease> ToothDiseases { get; set; }
         public DbSet<Allergy> Allergies { get; set; }
+        public DbSet<File> Files { get; set; }
     }
 }

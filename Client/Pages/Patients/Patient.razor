@@ -16,34 +16,51 @@
 </div>
 
 <div class="content px-4">
-    @if (!patient.MedicalChartOpen)
+    @if (patient == null)
     {
-        <div class="grph-paper">
-            <div class="grph-chart-open-holder">
-                <div class="grph-text">
-                    <div class="grph-text-wrapper">
-                        <p class="validation-message" style="@messageStyles">
-                            @message
-                        </p>
-                        <p>There is no open Medical Chart for @patient.FirstName @patient.LastName</p>
-                        <button class="btn btn-primary grph-primary" @onclick="Open" disabled="@disabled">Open Medical Chart</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div class="loader">Loading...</div>
     }
     else
     {
-        <div class="row">
-            <div class="col">
-                <ToothSet>
-                    <Teeth MedicalChartId="patient.MedicalChart.Id" />
-                </ToothSet>
+        @if (!patient.MedicalChartOpen)
+        {
+            <div class="grph-paper">
+                <div class="grph-chart-open-holder">
+                    <div class="grph-text">
+                        <div class="grph-text-wrapper">
+                            <p class="validation-message" style="@messageStyles">
+                                @message
+                            </p>
+                            <p>There is no open Medical Chart for @patient.FirstName @patient.LastName</p>
+                            <button class="btn btn-primary grph-primary" @onclick="Open" disabled="@disabled">Open Medical Chart</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col">
-                <Allergies MedicalChartId="patient.MedicalChart.Id" />
+        }
+        else
+        {
+            <div class="row">
+                <div class="col">
+                    <ToothSet>
+                        <Teeth MedicalChartId="patient.MedicalChart.Id" />
+                    </ToothSet>
+                </div>
+                <div class="col">
+                    <Allergies MedicalChartId="patient.MedicalChart.Id" />
+                </div>
             </div>
-        </div>
+
+            <br />
+
+            <div class="row">
+                <div class="col">
+                    <Files MedicalChartId="patient.MedicalChart.Id" />
+                </div>
+
+                <div class="col"></div>
+            </div>
+        }
     }
 </div>
 
@@ -54,7 +71,7 @@
     [Parameter]
     public string Id { get; set; }
 
-    private PatientViewModel patient = new PatientViewModel();
+    private PatientViewModel patient;
 
     private OpenMedicalChartViewModel openMedicalChart = new OpenMedicalChartViewModel();
 

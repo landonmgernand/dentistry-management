@@ -25,6 +25,7 @@ app {
     height: 3.5rem;
     display: flex;
     align-items: center;
+    z-index: 102;
 }
 
 .main {
@@ -169,7 +170,7 @@ app {
 }
 
 .blazored-modal-container {
-    z-index: 101;
+    z-index: 103;
 }
 
 .mdc-form-field > label {
