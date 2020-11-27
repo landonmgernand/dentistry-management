@@ -1,13 +1,13 @@
 ﻿@using DentistryManagement.Client.Components
-@using DentistryManagement.Client.Helpers
-@using DentistryManagement.Shared.ViewModels.Files 
+@using DentistryManagement.Client.Pages.Patients.Modals;
+@using DentistryManagement.Shared.ViewModels.Files
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using Microsoft.Extensions.Logging
 @using System.IO;
-@using System.Net
 
 @inject HttpClient Http
 @inject ILogger<Allergies> Logger
+@inject IModalService Modal
 
 <div class="grph-paper">
     <Panel Title="Files" Class="grph-file-content">
@@ -16,18 +16,24 @@
         </p>
         @if (files != null)
         {
-            <div class="grph-files">
-                @foreach (var file in files)
-                {
-                    <div class="grph-file">
-                        <img src="@("images/files/" + file.Path)">
-                        <div>
-                            <p>@file.UploadDT.ToString("dd/MM/yyyy")</p>
-                            <span class="oi oi-trash"></span>
-                        </div>
+    <div class="grph-files">
+
+        @foreach (var file in files)
+        {
+           
+            <div class="grph-thumbnail">
+                <div class="grph-thumbnail-container">
+                    <div class="grph-thumbnail-img"
+                         style="background-image: url(@("images/files/" + file.Path));"
+                         @onclick="@(() => View(file))">
                     </div>
-                }
+                    <div class="grph-thumbnail-content" @onclick="@(() => Delete(file))">
+                        <span class="oi oi-trash"></span>
+                    </div>
+                </div>
             </div>
+        }
+    </div>
         }
         <div class="mat-file-upload mdc-ripple-surface mdc-ripple-upgraded">
             <InputFile OnChange="HandleSelection" accept="image/*"></InputFile>
@@ -47,6 +53,8 @@
     private string messageStyles = "display:none";
 
     private List<FileViewModel> files;
+
+    private ModalOptions modalOptions = new ModalOptions() { DisableBackgroundCancel = true };
 
     protected override async Task OnInitializedAsync()
     {
@@ -69,7 +77,7 @@
             var ms = new MemoryStream();
             await file.Data.CopyToAsync(ms);
             var content = new MultipartFormDataContent
-    {
+{
                 {
                     new ByteArrayContent(ms.GetBuffer()), "file", file.Name
                 }
@@ -91,5 +99,31 @@
                 message = "There was an error processing the form.";
             }
         }
+    }
+
+    private async Task Delete(FileViewModel fileView)
+    {
+        var parameters = new ModalParameters();
+
+        parameters.Add(nameof(fileView.Id), fileView.Id);
+        parameters.Add(nameof(MedicalChartId), MedicalChartId);
+
+        var deleteModal = Modal.Show<DeleteFileModal>("Confirm action", parameters, modalOptions);
+
+        var result = await deleteModal.Result;
+
+        if (!result.Cancelled)
+        {
+            files.RemoveAll(x => x.Id == fileView.Id);
+        }
+    }
+
+    private void View(FileViewModel fileView)
+    {
+        var parameters = new ModalParameters();
+
+        parameters.Add(nameof(fileView.Path), fileView.Path);
+
+        Modal.Show<ViewFileModal>("File uploaded - " + fileView.UploadDT.ToString("dd/MM/yyyy"), parameters, modalOptions);
     }
 }

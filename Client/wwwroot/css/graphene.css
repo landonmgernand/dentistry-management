@@ -498,7 +498,7 @@
 
 .grph-file-content {
     margin: auto;
-    max-width: 645px;
+    max-width: 660px;
 }
 
 .grph-files {
@@ -508,40 +508,82 @@
     padding-bottom: 40px;
 }
 
-.grph-file {
-    width: 120px;
+.grph-thumbnail {
+    position: relative;
     height: 90px;
-    box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.1), 0px 2px 2px 0px rgba(0,0,0,0.07), 0px 1px 5px 0px rgba(0,0,0,0.05);
-    margin: 10px;
+    width: 90px;
+    border-radius: 6%;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.8);
+    overflow: hidden;
+    cursor: pointer;
+    -webkit-transition: box-shadow 0.35s ease;
+    transition: box-shadow 0.35s ease;
+    margin: 5px;
 }
 
-    .grph-file:hover {
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-        cursor:pointer;
+    .grph-thumbnail:hover {
+        box-shadow: 0 20px 15px -8px rgba(0, 0, 0, 0.8);
     }
 
-.grph-file > img {
-    width: 120px;
-    height: 68px;
-    object-fit: cover;
-}
-
-    .grph-file > div {
-        width: 100%;
-        display: flex;
-        flex-wrap: wrap;
-        box-sizing: border-box;
-        justify-content: space-between;
-        padding: 0px 8px;
-    }
-
-    .grph-file > div > span {
-        padding-top: 1px;
-    }
-
-        .grph-file > div > span:hover {
-            color: #848484;
-            cursor: pointer;
-            height: 20px;
+        .grph-thumbnail:hover .grph-thumbnail-img {
+            -webkit-transform: scale(1);
+            transform: scale(1);
         }
 
+        .grph-thumbnail:hover .grph-thumbnail-content {
+            -webkit-box-flex: 1;
+            flex-grow: 1;
+        }
+
+.grph-thumbnail-container {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.grph-thumbnail-img {
+    -webkit-box-flex: 4;
+    flex: 4 0 auto;
+    background-position: center;
+    background-size: cover;
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+    -webkit-transition: -webkit-transform 0.35s ease;
+    transition: -webkit-transform 0.35s ease;
+    transition: transform 0.35s ease;
+    transition: transform 0.35s ease, -webkit-transform 0.35s ease;
+}
+
+
+.grph-thumbnail-content {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-flex: 0;
+    flex: 0 0 0;
+    background-color: #193c6b;
+    overflow: hidden;
+    -webkit-transition: flex-grow 0.35s ease, -webkit-box-flex 0.35s ease;
+    transition: flex-grow 0.35s ease, -webkit-box-flex 0.35s ease;
+    transition: flex-grow 0.35s ease;
+}
+
+    .grph-thumbnail-content:hover {
+        background-color: rgba(25, 60, 107, 0.84);
+    }
+
+    .grph-thumbnail-content > span {
+        color: #ffffff;
+        font-size: 13px;
+        margin-bottom: 2px;
+    }

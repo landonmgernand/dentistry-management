@@ -48,5 +48,22 @@ namespace DentistryManagement.Server.Services
 
             _context.SaveChanges();
         }
+
+        public void Delete(int fileId)
+        {
+            var file = _context.Files.Find(fileId);
+            _context.Files.Remove(file);
+            _context.SaveChanges();
+            string path = Path.Combine(_environment.ContentRootPath, @"wwwroot\images\files\\" + file.Path);
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+        }
+
+        public bool Exist(int id, int medicalChartId)
+        {
+            return _context.Files.Any(f => f.Id.Equals(id) && f.MedicalChartId.Equals(medicalChartId));
+        }
     }
 }

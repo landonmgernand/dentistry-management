@@ -144,5 +144,18 @@ namespace DentistryManagement.Server.Controllers
  
             return Ok(ModelState);
         }
+
+        [HttpDelete("{medicalChartId}/files/{id}")]
+        public IActionResult DeleteDelete(int medicalChartId, int id)
+        {
+            if (!_fileService.Exist(id, medicalChartId))
+            {
+                return NotFound();
+            }
+
+            _fileService.Delete(id);
+
+            return NoContent();
+        }
     }
 }
