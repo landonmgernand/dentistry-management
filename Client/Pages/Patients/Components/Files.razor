@@ -86,7 +86,6 @@
             try
             {
                 var response = await Http.PostAsync("api/MedicalChart/" + MedicalChartId + "/Files", content);
-                await OnInitializedAsync();
             }
             catch (AccessTokenNotAvailableException exception)
             {
@@ -97,6 +96,10 @@
                 Logger.LogError("Form processing error: {Message}", exception.Message);
                 messageStyles = "display:block";
                 message = "There was an error processing the form.";
+            }
+            finally
+            {
+                await OnInitializedAsync();
             }
         }
     }

@@ -1,0 +1,57 @@
+﻿<div class="grph-profile">
+    <div class="grph-profile-header-root">
+        <div class="grph-profile-header-content">
+            <span class="grph-profile-title">
+                <span class="grph-profile-text">@Title</span>
+                <button class="btn btn-primary grph-form-edit" @onclick="Toggle" hidden="@EditMode"><span class="oi oi-pencil"></span> Edit</button>
+                <button class="btn btn-primary grph-form-cancel" hidden="@(!EditMode)" @onclick="Cancel"><span class="oi oi-circle-x"></span> Cancel</button>
+                <button class="btn btn-primary grph-form-save" hidden="@(!EditMode)" @onclick="Save"><span class="oi oi-hard-drive"></span> Save</button>
+            </span>
+        </div>
+    </div>
+    <div class="grph-profile-content">
+        <p class="validation-message" style="@MessageStyle">
+            @Message
+        </p>
+        @ChildContent
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> ChangeEditMode { get; set; }
+
+    [Parameter]
+    public EventCallback Save { get; set; }
+
+    [Parameter]
+    public EventCallback Cancel { get; set; }
+
+    [Parameter]
+    public string MessageStyle { get; set; }
+
+    [Parameter]
+    public string Message { get; set; }
+
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public bool EditMode { get; set; }
+
+    private bool editMode { get; set; }
+
+    protected override void OnInitialized()
+    {
+        editMode = EditMode;
+    }
+
+    private void Toggle()
+    {
+        editMode = !EditMode;
+        ChangeEditMode.InvokeAsync(editMode);
+    }
+}

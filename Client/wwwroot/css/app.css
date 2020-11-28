@@ -221,4 +221,7 @@ app {
         /* Never collapse the sidebar for wide screens */
         display: block;
     }
+    .mdc-linear-progress__bar-inner {
+        border-color: #193c6b;
+    }
 }

@@ -191,6 +191,11 @@
     padding: 40px;
 }
 
+    .grph-modal-form > img {
+        max-width: 1300px;
+        max-height: 770px;
+    }
+
 .grph-button {
     text-transform: none;
 }
@@ -510,14 +515,12 @@
 
 .grph-thumbnail {
     position: relative;
-    height: 90px;
-    width: 90px;
+    height: 70px;
+    width: 70px;
     border-radius: 6%;
     box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.8);
     overflow: hidden;
     cursor: pointer;
-    -webkit-transition: box-shadow 0.35s ease;
-    transition: box-shadow 0.35s ease;
     margin: 5px;
 }
 
@@ -555,10 +558,6 @@
     background-size: cover;
     -webkit-transform: scale(1.2);
     transform: scale(1.2);
-    -webkit-transition: -webkit-transform 0.35s ease;
-    transition: -webkit-transform 0.35s ease;
-    transition: transform 0.35s ease;
-    transition: transform 0.35s ease, -webkit-transform 0.35s ease;
 }
 
 
@@ -573,9 +572,6 @@
     flex: 0 0 0;
     background-color: #193c6b;
     overflow: hidden;
-    -webkit-transition: flex-grow 0.35s ease, -webkit-box-flex 0.35s ease;
-    transition: flex-grow 0.35s ease, -webkit-box-flex 0.35s ease;
-    transition: flex-grow 0.35s ease;
 }
 
     .grph-thumbnail-content:hover {
@@ -584,6 +580,63 @@
 
     .grph-thumbnail-content > span {
         color: #ffffff;
-        font-size: 13px;
+        font-size: 10px;
         margin-bottom: 2px;
     }
+
+.grph-profile-header-root {
+    display: flex;
+    padding: 16px;
+    align-items: center;
+}
+
+.grph-profile-header-content {
+    flex: 1 1 auto;
+}
+.grph-profile-title {
+    display: block;
+    font-size: 1.2857142857142856rem;
+    font-family: Ubuntu,sans-serif;
+    font-weight: 400;
+    line-height: 1.334;
+    margin: 0;
+}
+
+.grph-profile-text {
+    color: #193C6B;
+    font-size: 20px;
+    font-weight: 400;
+    margin-right: 24px;
+    vertical-align: middle;
+}
+
+.grph-profile-content {
+    padding-left: 5px;
+}
+
+.grph-profile {
+    padding: 20px;
+}
+
+.grph-ul {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    list-style: none;
+    vertical-align: top;
+    display: inline-block;
+    margin-right: 32px;
+}
+
+.grph-li {
+    width: 100%;
+    display: flex;
+    position: relative;
+    box-sizing: border-box;
+    text-align: left;
+    align-items: center;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    justify-content: flex-start;
+    text-decoration: none;
+}
