@@ -99,5 +99,6 @@ namespace DentistryManagement.Server.Data
         public DbSet<ToothDisease> ToothDiseases { get; set; }
         public DbSet<Allergy> Allergies { get; set; }
         public DbSet<File> Files { get; set; }
+        public DbSet<Treatment> Treatments { get; set; }
     }
 }

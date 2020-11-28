@@ -3,34 +3,39 @@
         <ul class="nav flex-column">
             <li class="nav-item px-3">
                 <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                    <span class="oi oi-home" aria-hidden="true"></span> Home
+                    <DentistryManagement.Client.Icons.Home Class="grph-icons" /> Home
                 </NavLink>
             </li>
             <AuthorizeView Roles="Admin">
                 <li class="nav-item px-3">
                     <NavLink class="nav-link" href="affiliates">
-                        <MatIcon Class="grph-icons" Icon="@MatIconNames.Domain"></MatIcon> Affiliates
+                        <DentistryManagement.Client.Icons.Affiliate Class="grph-icons" /> Affiliates
                     </NavLink>
                 </li>
                 <li class="nav-item px-3">
                     <NavLink class="nav-link" href="users">
-                        <span class="oi oi-person" aria-hidden="true"></span> Users
+                        <DentistryManagement.Client.Icons.Person Class="grph-icons" /> Users
                     </NavLink>
                 </li>
             </AuthorizeView>
             <li class="nav-item px-3">
                 <NavLink class="nav-link" href="dentists">
-                    <MatIcon Class="grph-icons" Icon="@MatIconNames.Local_hospital"></MatIcon> Dentists
+                    <DentistryManagement.Client.Icons.Doctor Class="grph-icons" /> Dentists
                 </NavLink>
             </li>
             <li class="nav-item px-3">
                 <NavLink class="nav-link" href="patients">
-                    <MatIcon Class="grph-icons" Icon="@MatIconNames.Contacts"></MatIcon> Patients
+                    <DentistryManagement.Client.Icons.Group Class="grph-icons" /> Patients
                 </NavLink>
             </li>
             <li class="nav-item px-3">
                 <NavLink class="nav-link" href="diseases">
-                    <DentistryManagement.Client.Icons.Disease Class="grph-icons"/> Diseases
+                    <DentistryManagement.Client.Icons.Disease Class="grph-icons" /> Diseases
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="treatments">
+                    <DentistryManagement.Client.Icons.Healing Class="grph-icons" /> Treatments
                 </NavLink>
             </li>
         </ul>
