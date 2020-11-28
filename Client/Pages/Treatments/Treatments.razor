@@ -1,0 +1,117 @@
+﻿@page "/treatments"
+
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using DentistryManagement.Shared.ViewModels.Treatments
+@using DentistryManagement.Client.Pages.Treatments.Modals
+@using DentistryManagement.Client.Components
+@using Microsoft.AspNetCore.Authorization
+
+@inject HttpClient Http
+@inject IModalService Modal
+@inject NavigationManager Navigation
+
+<div class="under-top-row px-4">
+    <AddAction Add="Add" />
+</div>
+
+<div class="content px-4">
+    @if (treatments == null)
+    {
+        <div class="loader">Loading...</div>
+    }
+    else
+    {
+        <div class="grph-paper">
+            <table class="grp-table">
+                <thead class="grph-table-head">
+                    <tr class="grph-table-row">
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var treatment in treatments)
+                    {
+                        <tr class="grph-table-row">
+                            <td>@treatment.Name</td>
+                            <td>@treatment.Price</td>
+                            <td class="grph-actions">
+                                <span class="oi oi-pencil" @onclick="@(() => Edit(treatment))"></span>
+                                <span class="oi oi-trash" @onclick="@(() => Delete(treatment))"></span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+
+@code {
+    [CascadingParameter]
+    protected MainLayout navigationSet { get; set; }
+
+    private ModalOptions modalOptions = new ModalOptions() { DisableBackgroundCancel = true };
+
+    private List<TreatmentViewModel> treatments;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            treatments = await Http.GetFromJsonAsync<List<TreatmentViewModel>>("api/treatment");
+            navigationSet.resetNavigationPanelWithoutState();
+            navigationSet.addNavigationItem("Treatments");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+
+    private async Task Add()
+    {
+        var addModal = Modal.Show<CreateTreatmentModal>("Create Treatment", modalOptions);
+
+        var result = await addModal.Result;
+
+        if (!result.Cancelled)
+        {
+            await OnInitializedAsync();
+        }
+    }
+
+    private async Task Edit(TreatmentViewModel treatment)
+    {
+        var parameters = new ModalParameters();
+
+        parameters.Add(nameof(treatment.Id), treatment.Id);
+
+        var updateModal = Modal.Show<UpdateTreatmentModal>("Details of " + treatment.Name, parameters, modalOptions);
+
+        var result = await updateModal.Result;
+
+        if (!result.Cancelled)
+        {
+            await OnInitializedAsync();
+        }
+    }
+
+    private async Task Delete(TreatmentViewModel treatment)
+    {
+        var parameters = new ModalParameters();
+
+        parameters.Add(nameof(treatment.Id), treatment.Id);
+
+        var deleteModal = Modal.Show<DeleteTreatmentModal>("Confirm action", parameters, modalOptions);
+
+        var result = await deleteModal.Result;
+
+        if (!result.Cancelled)
+        {
+            treatments.RemoveAll(x => x.Id == treatment.Id);
+        }
+    }
+}
