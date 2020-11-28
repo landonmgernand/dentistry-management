@@ -111,7 +111,7 @@
                     StateHasChanged();
                 }
                 var content = new MultipartFormDataContent
-            {
+                {
                     {
                         new ByteArrayContent(ms.GetBuffer()), "file", fileInfo.Name
                     }

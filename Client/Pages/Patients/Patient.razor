@@ -11,10 +11,6 @@
 @inject ILogger<Patient> Logger
 @inject HttpClient Http
 
-<div class="under-top-row px-4">
-
-</div>
-
 <div class="content px-4">
     @if (patient == null)
     {
@@ -22,6 +18,14 @@
     }
     else
     {
+        <div class="row">
+            <div class="col-7">
+                <Profile PatientId="patient.Id" />
+            </div>
+        </div>
+
+        <br />
+
         @if (!patient.MedicalChartOpen)
         {
             <div class="grph-paper">
@@ -87,7 +91,7 @@
         {
             patient = await Http.GetFromJsonAsync<PatientViewModel>("api/Patient/" + Id);
             openMedicalChart.PatientId = patient.Id;
-            navigationSet.addNavigationItem("Patient Chart");
+            navigationSet.addNavigationItem("Patient's Chart");
         }
         catch (AccessTokenNotAvailableException exception)
         {
