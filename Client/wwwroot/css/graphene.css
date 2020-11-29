@@ -640,3 +640,7 @@
     justify-content: flex-start;
     text-decoration: none;
 }
+
+.grph-span {
+    padding-right :10px;
+}

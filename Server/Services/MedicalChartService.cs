@@ -89,5 +89,18 @@ namespace DentistryManagement.Server.Services
 
             return filesDTO;
         }
+
+        public List<TreatmentHistoryDTO> GetTreatmentHistories(int medicalChartId)
+        {
+            var treatmentHistoryDTOS = _context.TreatmentHistories
+                .Include(th => th.User)
+                .Include(th => th.Treatment)
+                .Include(th => th.Affiliate)
+                .Where(f => f.MedicalChartId.Equals(medicalChartId))
+                .Select(th => TreatmentHistoryMapper.TreatmentHistoryToDTO(th))
+                .ToList();
+
+            return treatmentHistoryDTOS;
+        }
     }
 }

@@ -1,0 +1,66 @@
+﻿@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Extensions.Logging
+@using DentistryManagement.Client.Pages.Patients
+
+@inject HttpClient Http
+@inject ILogger<Patient> Logger
+
+<div class="grph-modal-form">
+    <p class="validation-message" style="@messageStyles">
+        @message
+    </p>
+
+    <p>
+        There may be something attached to this treatment history. <br>
+        They will automatically be detached as soon as you delete this treatment history.<br>
+        Are you sure you want to delete the treatment history?
+    </p>
+
+    <br />
+
+    <div class="input-group grph-button-actions">
+        <button class="btn btn-primary grph-cancel" @onclick="BlazoredModal.Cancel">Cancel</button>
+        <button class="btn btn-primary grph-primary" disabled="@disabled" @onclick="Delete">Confiirm</button>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter]
+    BlazoredModalInstance BlazoredModal { get; set; }
+
+    [Parameter]
+    public int Id { get; set; }
+
+    [Parameter]
+    public int MedicalChartId { get; set; }
+
+    private bool disabled;
+
+    private string message;
+
+    private string messageStyles = "display:none";
+
+    private async Task Delete()
+    {
+        disabled = true;
+        try
+        {
+            var response = await Http.DeleteAsync("api/MedicalChart/" + MedicalChartId + "/treatment-histories/" + Id);
+
+            if (response.IsSuccessStatusCode)
+            {
+                await BlazoredModal.Close(ModalResult.Ok(response));
+            }
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError("Form processing error: {Message}", exception.Message);
+            messageStyles = "display:block";
+            message = "There was an error processing the form.";
+        }
+    }
+}

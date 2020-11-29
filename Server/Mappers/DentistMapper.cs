@@ -67,6 +67,7 @@ namespace DentistryManagement.Server.Mappers
                 Id = dentistDTO.Id,
                 FirstName = dentistDTO.FirstName,
                 LastName = dentistDTO.LastName,
+                FullName = dentistDTO.FirstName + " " + dentistDTO.LastName,
                 Email = dentistDTO.Email,
                 PhoneNumber = dentistDTO.PhoneNumber,
                 Affiliate = dentistDTO.AffiliateDTO?.Name

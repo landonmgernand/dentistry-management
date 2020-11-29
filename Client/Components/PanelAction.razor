@@ -1,0 +1,34 @@
+﻿<div class="grph-header-root">
+    <div class="grph-header-content">
+        <span>@Title</span>
+    </div>
+</div>
+<div class="under-top-row px-4">
+    <AddAction Add="Add" />
+</div>
+
+<div class="@ContentStyle">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public string Class { get; set; }
+
+    [Parameter]
+    public EventCallback Add { get; set; }
+
+    private string ContentStyle
+    {
+        get
+        {
+            return "grph-content-root " + Class;
+        }
+    }
+}

@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DentistryManagement.Server.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DentistController : ControllerBase
@@ -31,6 +30,19 @@ namespace DentistryManagement.Server.Controllers
         public ActionResult<DentistViewModel> GetDentist(string id)
         {
             var dentist = _service.Get(id);
+
+            if (dentist == null)
+            {
+                return NotFound();
+            }
+
+            return DentistMapper.DTOtoDentistViewModel(dentist);
+        }
+
+        [HttpGet("current")]
+        public ActionResult<DentistViewModel> GetCurrentDentist()
+        {
+            var dentist = _service.GetCurrent();
 
             if (dentist == null)
             {

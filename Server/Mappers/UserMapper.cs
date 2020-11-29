@@ -82,6 +82,7 @@ namespace DentistryManagement.Server.Mappers
                 Id = userDTO.Id,
                 FirstName = userDTO.FirstName,
                 LastName = userDTO.LastName,
+                FullName = userDTO.FirstName + " " + userDTO.LastName,
                 Email = userDTO.Email,
                 PhoneNumber = userDTO.PhoneNumber,
                 AffiliateId = userDTO.AffiliateDTO is null ? 0 : userDTO.AffiliateDTO.Id,

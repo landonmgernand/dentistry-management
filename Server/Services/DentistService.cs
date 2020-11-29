@@ -118,6 +118,24 @@ namespace DentistryManagement.Server.Services
             return DentistMapper.ApplicationUserToDTO(applicationUser);
         }
 
+        public DentistDTO GetCurrent()
+        {
+            var userId = _userProvider.GetUserId();
+
+            var applicationUser = _context.ApplicationUsers
+                .Include(ur => ur.UserRoles)
+                .ThenInclude(r => r.Role)
+                .Include(a => a.Affiliate)
+                .SingleOrDefault(x => x.Id.Equals(userId));
+
+            if (applicationUser == null)
+            {
+                return null;
+            }
+
+            return DentistMapper.ApplicationUserToDTO(applicationUser);
+        }
+
         public void Update(DentistDTO userDTO)
         {
             var applicationUser = _context.ApplicationUsers

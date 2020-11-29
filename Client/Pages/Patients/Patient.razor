@@ -11,6 +11,10 @@
 @inject ILogger<Patient> Logger
 @inject HttpClient Http
 
+<div class="under-top-row px-4">
+    <AddAction Title="Add Treatment History" Add="Add" />
+</div>
+
 <div class="content px-4">
     @if (patient == null)
     {
@@ -51,7 +55,7 @@
                     </ToothSet>
                 </div>
                 <div class="col">
-                    <Allergies MedicalChartId="patient.MedicalChart.Id" />
+                    <Files MedicalChartId="patient.MedicalChart.Id" /> 
                 </div>
             </div>
 
@@ -59,10 +63,12 @@
 
             <div class="row">
                 <div class="col">
-                    <Files MedicalChartId="patient.MedicalChart.Id" />
+                    <Allergies MedicalChartId="patient.MedicalChart.Id" />
                 </div>
 
-                <div class="col"></div>
+                <div class="col">
+                    <TreatmentHistories MedicalChartId="patient.MedicalChart.Id" @ref="treatmentHistory" />
+                </div>
             </div>
         }
     }
@@ -84,6 +90,8 @@
     private string message;
 
     private string messageStyles = "display:none";
+
+    private TreatmentHistories treatmentHistory;
 
     protected override async Task OnInitializedAsync()
     {
@@ -116,6 +124,16 @@
             disabled = true;
             messageStyles = "display:block";
             message = "There was an error processing the form.";
+        }
+    }
+
+    private async Task Add()
+    {
+        var result = await treatmentHistory.OpenModal();
+
+        if (!result.Cancelled)
+        {
+            await treatmentHistory.Reset();
         }
     }
 }
