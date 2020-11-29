@@ -66,6 +66,7 @@ namespace DentistryManagement.Server
             services.AddScoped<IAllergyService, AllergyService>();
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<ITreatmentService<TreatmentDTO>, TreatmentService>();
+            services.AddScoped<ITreatmentHistoryService, TreatmentHistoryService>();
             services.AddScoped<UserProviderService>();
         }
 

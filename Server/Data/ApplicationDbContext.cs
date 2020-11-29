@@ -23,6 +23,7 @@ namespace DentistryManagement.Server.Data
 
             builder.Entity<ApplicationUser>(b => {
                 b.HasMany(x => x.UserRoles).WithOne().HasForeignKey(ur => ur.UserId).IsRequired();
+                b.HasMany(t => t.TreatmentHistories).WithOne(th => th.User).HasForeignKey(th => th.UserId).IsRequired();
             });
 
             builder.Entity<ApplicationRole>(b =>
@@ -43,6 +44,7 @@ namespace DentistryManagement.Server.Data
             builder.Entity<Affiliate>(b => {
                 b.HasMany(u => u.Users).WithOne(a => a.Affiliate);
                 b.HasOne(a => a.Address).WithOne(a => a.Affiliate).HasForeignKey<Address>(a => a.AffiliateId);
+                b.HasMany(t => t.TreatmentHistories).WithOne(a => a.Affiliate);
             });
 
             #endregion
@@ -63,6 +65,7 @@ namespace DentistryManagement.Server.Data
                 b.HasMany(t => t.Teeth).WithOne(mc => mc.MedicalChart);
                 b.HasMany(t => t.Allergies).WithOne(mc => mc.MedicalChart);
                 b.HasMany(t => t.Files).WithOne(mc => mc.MedicalChart);
+                b.HasMany(t => t.TreatmentHistories).WithOne(mc => mc.MedicalChart);
             });
 
             #endregion
@@ -74,6 +77,14 @@ namespace DentistryManagement.Server.Data
             builder.Entity<ToothDisease>().HasOne(td => td.Disease).WithMany(d => d.ToothDiseases).HasForeignKey(td => td.DiseaseId);
 
             builder.Entity<ToothDisease>().HasOne(td => td.Tooth).WithMany(d => d.ToothDiseases).HasForeignKey(td => td.ToothId);
+
+            #endregion
+
+            #region Treatment
+
+            builder.Entity<Treatment>(b => {
+                b.HasMany(t => t.TreatmentHistories).WithOne(th => th.Treatment);
+            });
 
             #endregion
 
@@ -100,5 +111,6 @@ namespace DentistryManagement.Server.Data
         public DbSet<Allergy> Allergies { get; set; }
         public DbSet<File> Files { get; set; }
         public DbSet<Treatment> Treatments { get; set; }
+        public DbSet<TreatmentHistory> TreatmentHistories { get; set; }
     }
 }

@@ -10,6 +10,7 @@ namespace DentistryManagement.Server.Services.Interfaces
         public bool Exist(int id);
         public TeethCategoryDTO GetTeeth(int medicalChartId);
         public List<AllergyDTO> GetAllergies(int medicalChartId); 
-        public List<FileDTO> GetFiles(int medicalChartId); 
+        public List<FileDTO> GetFiles(int medicalChartId);
+        public List<TreatmentHistoryDTO> GetTreatmentHistories(int medicalChartId);
     }
 }

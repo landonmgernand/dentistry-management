@@ -15,5 +15,7 @@ namespace DentistryManagement.Server.Models
         public ICollection<Allergy> Allergies { get; set; }
 
         public ICollection<File> Files { get; set; }
+
+        public ICollection<TreatmentHistory> TreatmentHistories { get; set; }
     }
 }

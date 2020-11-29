@@ -31,7 +31,7 @@ namespace DentistryManagement.Server.Controllers
             _affiliateService = affiliateService;
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Manager, Dentist")]
         [HttpGet]
         public ActionResult<IEnumerable<UserViewModel>> GetUsers()
         {

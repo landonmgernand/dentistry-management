@@ -8,6 +8,7 @@ namespace DentistryManagement.Server.Services.Interfaces
         public List<DentistDTO> GetAll();
         public DentistDTO Get(string id);
         public DentistDTO GetByUsername(string username);
+        public DentistDTO GetCurrent();
         public void Create(DentistDTO dentistDTO);
         public void Update(DentistDTO dentistDTO);
         public void Delete(string id);

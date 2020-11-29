@@ -14,5 +14,7 @@ namespace DentistryManagement.Server.Models
         public Address Address { get; set; }
 
         public ICollection<ApplicationUser> Users { get; set; }
+
+        public ICollection<TreatmentHistory> TreatmentHistories { get; set; }
     }
 }

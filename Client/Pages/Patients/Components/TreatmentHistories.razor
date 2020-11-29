@@ -1,0 +1,119 @@
+﻿@using DentistryManagement.Client.Components
+@using DentistryManagement.Client.Pages.Patients.Modals
+@using DentistryManagement.Shared.ViewModels.TreatmentHistories
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Extensions.Logging
+
+@inject HttpClient Http
+@inject IModalService Modal
+@inject ILogger<TreatmentHistories> Logger
+
+@if (treatmentHistories != null)
+{
+    <div class="grph-paper">
+        <Panel Title="Treatment Histories" Class="grph-content">
+            <div class="grph-paper">
+                <table class="grp-table">
+                    <thead class="grph-table-head">
+                        <tr class="grph-table-row">
+                            <th>Treatment Date</th>
+                            <th>Treatment</th>
+                            <th>Dentist</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var treatmentHistory in treatmentHistories)
+                        {
+                        <tr class="grph-table-row">
+                            <td>@treatmentHistory.DateOfTreatment</td>
+                            <td>@treatmentHistory.Treatment</td>
+                            <td>@treatmentHistory.User</td>
+                            <td class="grph-actions">
+                                <span class="oi oi-pencil" @onclick="@(() => Edit(treatmentHistory))"></span>
+                                <AuthorizeView Roles="Admin">
+                                    <span class="oi oi-trash" @onclick="@(() => Delete(treatmentHistory))"></span>
+                                </AuthorizeView>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </Panel>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int MedicalChartId { get; set; }
+
+    private List<TreatmentHistoryViewModel> treatmentHistories;
+
+    private ModalOptions modalOptions = new ModalOptions() { DisableBackgroundCancel = true };
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            treatmentHistories = await Http.GetFromJsonAsync<List<TreatmentHistoryViewModel>>("api/MedicalChart/" + MedicalChartId + "/Treatment-Histories");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+
+    public Task<ModalResult> OpenModal()
+    {
+        var parameters = new ModalParameters();
+
+        parameters.Add(nameof(MedicalChartId), MedicalChartId);
+
+        var addModal = Modal.Show<CreateTreatmentHistoryModal>("Add Treatment History", parameters, modalOptions);
+
+        return addModal.Result;
+    }
+
+    public async Task Reset()
+    {
+        await OnInitializedAsync();
+        StateHasChanged();
+    }
+
+    private async Task Edit(TreatmentHistoryViewModel treatment)
+    {
+        var parameters = new ModalParameters();
+
+        parameters.Add(nameof(treatment.Id), treatment.Id);
+
+        parameters.Add(nameof(MedicalChartId), MedicalChartId);
+
+        var updateModal = Modal.Show<UpdateTreatmentHistoryModal>("Details of Treatment History", parameters, modalOptions);
+
+        var result = await updateModal.Result;
+
+        if (!result.Cancelled)
+        {
+            await OnInitializedAsync();
+        }
+    }
+
+    private async Task Delete(TreatmentHistoryViewModel treatment)
+    {
+        var parameters = new ModalParameters();
+
+        parameters.Add(nameof(treatment.Id), treatment.Id);
+
+        parameters.Add(nameof(MedicalChartId), MedicalChartId);
+
+        var deleteModal = Modal.Show<DeleteTreatmentHistoryModal>("Confirm action", parameters, modalOptions);
+
+        var result = await deleteModal.Result;
+
+        if (!result.Cancelled)
+        {
+            treatmentHistories.RemoveAll(x => x.Id == treatment.Id);
+        }
+    }
+}
