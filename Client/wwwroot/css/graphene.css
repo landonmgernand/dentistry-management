@@ -398,11 +398,11 @@
             text-decoration: none;
         }
 
-        .grph-content-input-disabled {
-            background-color: transparent !important;
-            opacity: inherit !important;
-            border: 0px;
-        }
+.grph-content-input-disabled {
+    background-color: transparent !important;
+    opacity: inherit !important;
+    border-color: transparent;
+}
 
 .grph-content-input:focus {
     border-color: #193C6B;
