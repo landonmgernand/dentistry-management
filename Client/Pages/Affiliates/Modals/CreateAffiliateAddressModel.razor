@@ -1,0 +1,110 @@
+﻿@using DentistryManagement.Shared.ViewModels.Addresses;
+@using DentistryManagement.Client.Pages.Affiliates
+@using DentistryManagement.Client.Helpers
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using System.Net
+@using System.Net.Http.Json
+@using Microsoft.Extensions.Logging
+
+@inject ILogger<Affiliate> Logger
+@inject HttpClient Http
+
+<div class="grph-modal-form">
+    <EditForm Model="@createAddress" OnValidSubmit="@HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <CustomValidator @ref="customValidator" />
+
+        <p class="validation-message" style="@messageStyles">
+            @message
+        </p>
+
+        <div class="row">
+            <div class="col">
+                <MatTextField @bind-Value="createAddress.Address1" Label="Address1" Outlined="true"></MatTextField>
+                <ValidationMessage For="@(() => createAddress.Address1)" />
+            </div>
+            <div class="col">
+                <MatTextField @bind-Value="createAddress.Address2" Label="Address1" Outlined="true"></MatTextField>
+                <ValidationMessage For="@(() => createAddress.Address2)" />
+            </div>
+            <div class="col"></div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <MatTextField @bind-Value="createAddress.PostalCode" Label="Postal code" Outlined="true"></MatTextField>
+                <ValidationMessage For="@(() => createAddress.PostalCode)" />
+            </div>
+            <div class="col">
+                <MatTextField @bind-Value="createAddress.City" Label="City" Outlined="true"></MatTextField>
+                <ValidationMessage For="@(() => createAddress.City)" />
+            </div>
+            <div class="col">
+                <MatTextField @bind-Value="createAddress.Country" Label="Country" Outlined="true"></MatTextField>
+                <ValidationMessage For="@(() => createAddress.Country)" />
+            </div>
+        </div>
+
+        <br />
+
+        <div class="input-group grph-button-actions">
+            <button class="btn btn-primary grph-cancel" @onclick="BlazoredModal.Cancel">Cancel</button>
+            <button class="btn btn-primary grph-primary" disabled="@disabled">Create Affiliate</button>
+        </div>
+
+    </EditForm>
+</div>
+
+@code {
+    [CascadingParameter]
+    BlazoredModalInstance BlazoredModal { get; set; }
+
+    [Parameter]
+    public int Id { get; set; }
+
+    private bool disabled;
+
+    private string message;
+
+    private string messageStyles = "display:none";
+
+    private CreateAddressViewModel createAddress = new CreateAddressViewModel();
+
+    private CustomValidator customValidator;
+
+    private async Task HandleValidSubmit()
+    {
+        customValidator.ClearErrors();
+
+        try
+        {
+            createAddress.AffiliateId = Id;
+            var response = await Http.PostAsJsonAsync("api/affiliate/" + Id + "/address", createAddress);
+
+            if (response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                var errors = await response.Content
+                    .ReadFromJsonAsync<Dictionary<string, List<string>>>();
+
+                if (errors.Count > 0)
+                {
+                    customValidator.DisplayErrors(errors);
+                }
+            }
+            else
+            {
+                await BlazoredModal.Close(ModalResult.Ok(response));
+            }
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError("Form processing error: {Message}", exception.Message);
+            disabled = true;
+            messageStyles = "display:block";
+            message = "There was an error processing the form.";
+        }
+    }
+}

@@ -1,0 +1,94 @@
+﻿@using DentistryManagement.Client.Components
+@using DentistryManagement.Shared.ViewModels.Allergies
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Extensions.Logging
+
+@inject HttpClient Http
+@inject ILogger<Allergies> Logger
+
+@if (allergies != null)
+{
+    <div class="grph-paper">
+        <Panel Title="Allergies" Class="grph-content">
+            <p class="validation-message" style="@messageStyles">
+                @message
+            </p>
+            <MatChipSet>
+                @foreach (var allergy in allergies)
+                {
+                    <MatChip class="mt-1" Label=@allergy.Name TrailingIcon="clear" TrailingIconClick="@(() => Delete(allergy))"></MatChip>
+                }
+            </MatChipSet>
+
+            <MatTextField @bind-Value="@allergyViewModel.Name" Label="" FullWidth="true" OnKeyUp="Add"></MatTextField>          
+        </Panel>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int MedicalChartId { get; set; }
+
+    private List<AllergyViewModel> allergies;
+
+    private CreateAllergyViewModel allergyViewModel = new CreateAllergyViewModel();
+
+    private string message;
+
+    private string messageStyles = "display:none";
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            allergies = await Http.GetFromJsonAsync<List<AllergyViewModel>>("api/MedicalChart/" + MedicalChartId + "/Allergies");
+            allergyViewModel.MedicalChartId = MedicalChartId;
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+
+    private async Task Add(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            try
+            {
+                var response = await Http.PostAsJsonAsync("api/MedicalChart/" + MedicalChartId + "/Allergies", allergyViewModel);
+                allergyViewModel.Name = "";
+                await OnInitializedAsync();
+            }
+            catch (AccessTokenNotAvailableException exception)
+            {
+                exception.Redirect();
+            }
+            catch (Exception exception)
+            {
+                Logger.LogError("Form processing error: {Message}", exception.Message);
+                messageStyles = "display:block";
+                message = "There was an error processing the form.";
+            }
+        }
+    }
+
+    private async Task Delete(AllergyViewModel allergy)
+    {
+        try
+        {
+            var response = await Http.DeleteAsync("api/MedicalChart/" + MedicalChartId + "/Allergies/" + allergy.Id);
+            allergies.Remove(allergy);
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError("Form processing error: {Message}", exception.Message);
+            messageStyles = "display:block";
+            message = "There was an error processing the form.";
+        }
+    }
+}

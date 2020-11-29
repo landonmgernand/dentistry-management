@@ -19,8 +19,13 @@ namespace DentistryManagement.Server.Data.DatabaseSeeders
                 }, 
                 new ApplicationRole
                 {
-                    Name = "User",
-                    NormalizedName = "User"
+                    Name = "Manager",
+                    NormalizedName = "Manager"
+                },
+                new ApplicationRole
+                {
+                    Name = "Dentist",
+                    NormalizedName = "Dentist"
                 });
         }
     }

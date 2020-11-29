@@ -1,0 +1,14 @@
+﻿<div class="grph-action-add" @onclick="Add">
+    <span>
+        <DentistryManagement.Client.Icons.Plus/>
+        @Title
+    </span>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback Add { get; set; }
+
+    [Parameter]
+    public string Title { get; set; } = "Add";
+}

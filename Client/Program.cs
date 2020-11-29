@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Syncfusion.Blazor;
 using Blazored.Modal;
-using Microsoft.Extensions.Configuration;
+using Tewr.Blazor.FileReader;
 
 namespace DentistryManagement.Client
 {
@@ -26,7 +26,7 @@ namespace DentistryManagement.Client
             builder.Services.AddApiAuthorization();
             builder.Services.AddSyncfusionBlazor();
             builder.Services.AddBlazoredModal();
-
+            builder.Services.AddFileReaderService(options => options.UseWasmSharedBuffer = true);
             await builder.Build().RunAsync();
         }
     }

@@ -1,0 +1,114 @@
+﻿@using DentistryManagement.Shared.ViewModels.Treatments;
+@using DentistryManagement.Client.Pages.Treatments
+@using DentistryManagement.Client.Helpers
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using System.Net
+@using System.Net.Http.Json
+@using Microsoft.Extensions.Logging
+
+@inject ILogger<Treatments> Logger
+@inject HttpClient Http
+
+<div class="grph-modal-form">
+    <EditForm Model="@updateTreatment" OnValidSubmit="@HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <CustomValidator @ref="customValidator" />
+
+        <p class="validation-message" style="@messageStyles">
+            @message
+        </p>
+
+        <div class="row">
+            <div class="col">
+                <MatTextField @bind-Value="updateTreatment.Name" Label="Name" Outlined="true"></MatTextField>
+                <ValidationMessage For="@(() => updateTreatment.Name)" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <MatNumericUpDownField Label="Price"
+                                       @bind-Value="updateTreatment.Price"
+                                       Step="0.1m"
+                                       Outlined="true"
+                                       DecimalPlaces=4>
+                </MatNumericUpDownField>
+                <ValidationMessage For="@(() => updateTreatment.Price)" />
+            </div>
+        </div>
+
+        <br />
+
+        <div class="input-group grph-button-actions">
+            <button class="btn btn-primary grph-cancel" @onclick="BlazoredModal.Cancel">Cancel</button>
+            <button class="btn btn-primary grph-primary" disabled="@disabled">Update Disease</button>
+        </div>
+
+    </EditForm>
+</div>
+
+@code {
+    [CascadingParameter]
+    BlazoredModalInstance BlazoredModal { get; set; }
+
+    [Parameter]
+    public int Id { get; set; }
+
+    private bool disabled;
+
+    private string message;
+
+    private string messageStyles = "display:none";
+
+    private UpdateTreatmentViewModel updateTreatment = new UpdateTreatmentViewModel();
+
+    private CustomValidator customValidator;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            updateTreatment = await Http.GetFromJsonAsync<UpdateTreatmentViewModel>("api/treatment/" + Id);
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        customValidator.ClearErrors();
+        disabled = true;
+        try
+        {
+            var response = await Http.PutAsJsonAsync("api/treatment/" + Id, updateTreatment);
+
+            if (response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                var errors = await response.Content
+                    .ReadFromJsonAsync<Dictionary<string, List<string>>>();
+
+                if (errors.Count > 0)
+                {
+                    customValidator.DisplayErrors(errors);
+                    disabled = false;
+                }
+            }
+            else
+            {
+                await BlazoredModal.Close(ModalResult.Ok(response));
+            }
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError("Form processing error: {Message}", exception.Message);
+            messageStyles = "display:block";
+            message = "There was an error processing the form.";
+        }
+    }
+}

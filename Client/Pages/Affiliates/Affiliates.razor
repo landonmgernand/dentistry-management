@@ -1,0 +1,124 @@
+﻿@page "/affiliates"
+
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using DentistryManagement.Shared.ViewModels.Affiliates
+@using DentistryManagement.Client.Pages.Affiliates.Modals
+@using DentistryManagement.Client.Components
+@using Microsoft.AspNetCore.Authorization
+
+@inject HttpClient Http
+@inject IModalService Modal
+@inject NavigationManager Navigation
+
+@attribute [Authorize(Roles = "Admin")]
+
+<div class="under-top-row px-4">
+    <AddAction Add="Add" />
+</div>
+
+<div class="content px-4">
+    @if (affiliates == null)
+    {
+        <div class="loader">Loading...</div>
+    }
+    else
+    {
+        <div class="grph-paper">
+            <table class="grp-table">
+                <thead class="grph-table-head">
+                    <tr class="grph-table-row">
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var affiliate in affiliates)
+                    {
+                        <tr class="grph-table-row">
+                            <td @onclick="@(() => Details(affiliate))">@affiliate.Name</td>
+                            <td @onclick="@(() => Details(affiliate))">@affiliate.Address</td>
+                            <td class="grph-actions">
+                                <span class="oi oi-pencil" @onclick="@(() => Edit(affiliate))"></span>
+                                <span class="oi oi-trash" @onclick="@(() => Delete(affiliate))"></span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+
+@code {
+    [CascadingParameter]
+    protected MainLayout navigationSet { get; set; }
+
+    private ModalOptions modalOptions = new ModalOptions() { DisableBackgroundCancel = true };
+
+    private List<AffiliateViewModel> affiliates;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            affiliates = await Http.GetFromJsonAsync<List<AffiliateViewModel>>("api/Affiliate");
+            navigationSet.resetNavigationPanelWithoutState();
+            navigationSet.addNavigationItem("Affiliates");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+
+    private async Task Add()
+    {
+        var addModal = Modal.Show<CreateAffiliateModal>("Create Affiliate", modalOptions);
+
+        var result = await addModal.Result;
+
+        if (!result.Cancelled)
+        {
+            await OnInitializedAsync();
+        }
+    }
+
+    private async Task Edit(AffiliateViewModel affiliate)
+    {
+        var parameters = new ModalParameters();
+
+        parameters.Add(nameof(affiliate.Id), affiliate.Id);
+
+        var updateModal = Modal.Show<UpdateAffiliateModal>("Details of " + affiliate.Name, parameters, modalOptions);
+
+        var result = await updateModal.Result;
+
+        if (!result.Cancelled)
+        {
+            await OnInitializedAsync();
+        }
+    }
+
+    private async Task Delete(AffiliateViewModel affiliate)
+    {
+        var parameters = new ModalParameters();
+
+        parameters.Add(nameof(affiliate.Id), affiliate.Id);
+
+        var deleteModal = Modal.Show<DeleteAffiliateModal>("Confirm action", parameters, modalOptions);
+
+        var result = await deleteModal.Result;
+
+        if (!result.Cancelled)
+        {
+            affiliates.RemoveAll(x => x.Id == affiliate.Id);
+        }
+    }
+
+    private void Details(AffiliateViewModel affiliate)
+    {
+        Navigation.NavigateTo("/affiliates/" + affiliate.Id);
+    }
+}

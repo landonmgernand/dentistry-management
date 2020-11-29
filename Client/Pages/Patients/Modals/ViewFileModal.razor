@@ -1,0 +1,17 @@
+﻿@using Microsoft.Extensions.Logging
+@using DentistryManagement.Client.Pages.Patients
+
+@inject HttpClient Http
+@inject ILogger<Patient> Logger
+
+<div class="grph-modal-form">
+    <img src="@("images/files/" + Path)">
+</div>
+
+@code {
+    [CascadingParameter]
+    BlazoredModalInstance BlazoredModal { get; set; }
+
+    [Parameter]
+    public string Path { get; set; }
+}

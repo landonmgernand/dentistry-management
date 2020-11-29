@@ -1,0 +1,168 @@
+﻿@using DentistryManagement.Client.Components
+@using DentistryManagement.Client.Pages.Patients.Modals;
+@using DentistryManagement.Shared.ViewModels.Files
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Extensions.Logging
+@using System.IO;
+@using Tewr.Blazor.FileReader
+
+@inject HttpClient Http
+@inject ILogger<Allergies> Logger
+@inject IModalService Modal
+@inject IFileReaderService fileReaderService
+
+<div class="grph-paper">
+    <Panel Title="Files" Class="grph-file-content">
+        <p class="validation-message" style="@messageStyles">
+            @message
+        </p>
+        @if (files != null)
+        {
+            <div class="grph-files">
+
+                @foreach (var file in files)
+                {
+
+                    <div class="grph-thumbnail">
+                        <div class="grph-thumbnail-container">
+                            <div class="grph-thumbnail-img"
+                                 style="background-image: url(@("images/files/" + file.Path));"
+                                 @onclick="@(() => View(file))">
+                            </div>
+                            <div class="grph-thumbnail-content" @onclick="@(() => Delete(file))">
+                                <span class="oi oi-trash"></span>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        <div class="mat-file-upload mdc-ripple-surface mdc-ripple-upgraded">
+            <input type="file" @ref=inputTypeFileElement @onchange="HandleSelection" accept="image/*" />
+            <div class="mat-file-upload-content">
+                <span>Drop Or Browse</span>
+            </div>
+        </div>
+        @if (Progress > 0)
+        {
+            <MatProgressBar Progress="@(Progress / 100)"></MatProgressBar>
+        }
+    </Panel>
+</div>
+
+@code {
+    [Parameter]
+    public int MedicalChartId { get; set; }
+
+    private string message;
+
+    private string messageStyles = "display:none";
+
+    private List<FileViewModel> files;
+
+    private ModalOptions modalOptions = new ModalOptions() { DisableBackgroundCancel = true };
+
+    private IFileReaderRef fileReaderReference;
+
+    private ElementReference inputTypeFileElement;
+
+    private double Progress { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            files = await Http.GetFromJsonAsync<List<FileViewModel>>("api/MedicalChart/" + MedicalChartId + "/files");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        fileReaderReference = fileReaderService.CreateReference(inputTypeFileElement);
+    }
+
+    private async Task HandleSelection()
+    {
+        await UploadFile();
+    }
+
+    public async Task UploadFile()
+    {
+        foreach (var file in await fileReaderReference.EnumerateFilesAsync())
+        {
+            var fileInfo = await file.ReadFileInfoAsync();
+            var ms = new MemoryStream();
+            var bufferSize = 4096;
+            using (var fileStream = await file.OpenReadAsync())
+            {
+                var buffer = new byte[bufferSize];
+
+                int count;
+                int intCount = 0;
+                while ((count = await fileStream.ReadAsync(buffer, 0, buffer.Length)) != 0)
+                {
+                    ms.Write(buffer, 0, buffer.Length);
+                    intCount = intCount + count;
+                    Progress = Convert.ToDouble(((intCount * 100) / fileInfo.Size));
+                    StateHasChanged();
+                }
+                var content = new MultipartFormDataContent
+                {
+                    {
+                        new ByteArrayContent(ms.GetBuffer()), "file", fileInfo.Name
+                    }
+                };
+
+                try
+                {
+                    var response = await Http.PostAsync("api/MedicalChart/" + MedicalChartId + "/Files", content);
+                }
+                catch (AccessTokenNotAvailableException exception)
+                {
+                    exception.Redirect();
+                }
+                catch (Exception exception)
+                {
+                    Logger.LogError("Form processing error: {Message}", exception.Message);
+                    messageStyles = "display:block";
+                    message = "There was an error processing the form.";
+                }
+                finally
+                {
+                    Progress = 0;
+                    await OnInitializedAsync();
+                }
+            }
+        }
+    }
+
+    private async Task Delete(FileViewModel fileView)
+    {
+        var parameters = new ModalParameters();
+
+        parameters.Add(nameof(fileView.Id), fileView.Id);
+        parameters.Add(nameof(MedicalChartId), MedicalChartId);
+
+        var deleteModal = Modal.Show<DeleteFileModal>("Confirm action", parameters, modalOptions);
+
+        var result = await deleteModal.Result;
+
+        if (!result.Cancelled)
+        {
+            files.RemoveAll(x => x.Id == fileView.Id);
+        }
+    }
+
+    private void View(FileViewModel fileView)
+    {
+        var parameters = new ModalParameters();
+
+        parameters.Add(nameof(fileView.Path), fileView.Path);
+
+        Modal.Show<ViewFileModal>("File uploaded - " + fileView.UploadDT.ToString("dd/MM/yyyy"), parameters, modalOptions);
+    }
+}

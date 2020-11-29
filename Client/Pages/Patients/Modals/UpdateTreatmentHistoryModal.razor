@@ -1,0 +1,156 @@
+﻿@using DentistryManagement.Shared.ViewModels.TreatmentHistories;
+@using DentistryManagement.Shared.ViewModels.Treatments;
+@using DentistryManagement.Shared.ViewModels.Dentists;
+@using DentistryManagement.Client.Pages.Patients
+@using DentistryManagement.Client.Helpers
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using System.Net
+@using System.Net.Http.Json
+@using Microsoft.Extensions.Logging
+@using Microsoft.AspNetCore.Authorization
+
+@inject ILogger<Patients> Logger
+@inject HttpClient Http
+
+<div class="grph-modal-form">
+    <EditForm Model="@treatmentHistoryViewModel" OnValidSubmit="@HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <CustomValidator @ref="customValidator" />
+
+        <p class="validation-message" style="@messageStyles">
+            @message
+        </p>
+
+        <div class="row">
+            <div class="col">
+                <ul class="grph-ul">
+                    <li class="grph-li">
+                        <span class="grph-span">Treatment date:</span>
+                        <span>@treatmentHistoryViewModel.DateOfTreatment</span>
+                    </li>
+                    <li class="grph-li">
+                        <span class="grph-span">Dentist:</span>
+                        <span>@treatmentHistoryViewModel.User</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <br />
+
+        <div class="row">
+            <div class="col">
+                <MatSelect Label="Treatment" Outlined="true" @bind-Value="treatmentHistoryViewModel.TreatmentId">
+                    @if (treatments != null)
+                    {
+                        @foreach (var treatment in treatments)
+                        {
+                            <MatOption Value="@treatment.Id">@treatment.Name</MatOption>
+                        }
+                    }
+                </MatSelect>
+                <ValidationMessage For="@(() => treatmentHistoryViewModel.TreatmentId)" />
+            </div>
+            <div class="col">
+                <AuthorizeView Roles="Admin" Context="Authorization">
+                    <MatSelect Label="Dentist" Outlined="true" @bind-Value="treatmentHistoryViewModel.UserId">
+                        @if (dentists != null)
+                        {
+                            @foreach (var dentist in dentists)
+                            {
+                                <MatOption Value="@dentist.Id">@dentist.FullName</MatOption>
+                            }
+                        }
+                    </MatSelect>
+                </AuthorizeView>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <MatTextField @bind-Value="treatmentHistoryViewModel.Comment" Label="Comment" Outlined="true" TextArea="true" Class="grph-textarea"></MatTextField>
+            </div>
+        </div>
+
+        <div class="input-group grph-button-actions">
+            <button class="btn btn-primary grph-cancel" @onclick="BlazoredModal.Cancel">Cancel</button>
+            <button class="btn btn-primary grph-primary" disabled="@disabled">Update Treatment History</button>
+        </div>
+
+    </EditForm>
+</div>
+
+@code {
+    [CascadingParameter]
+    BlazoredModalInstance BlazoredModal { get; set; }
+
+    [Parameter]
+    public int MedicalChartId { get; set; }
+
+    [Parameter]
+    public int Id { get; set; }
+
+    private bool disabled;
+
+    private string message;
+
+    private string messageStyles = "display:none";
+
+    private UpdateTreatmentHistoryViewModel treatmentHistoryViewModel = new UpdateTreatmentHistoryViewModel();
+
+    private CustomValidator customValidator;
+
+    private List<TreatmentViewModel> treatments;
+
+    private List<DentistViewModel> dentists;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            treatmentHistoryViewModel = await Http.GetFromJsonAsync<UpdateTreatmentHistoryViewModel>("api/MedicalChart/" + MedicalChartId + "/Treatment-Histories/" + Id);
+            treatments = await Http.GetFromJsonAsync<List<TreatmentViewModel>>("api/Treatment");
+            dentists = await Http.GetFromJsonAsync<List<DentistViewModel>>("api/User");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        customValidator.ClearErrors();
+        disabled = true;
+        try
+        {
+            var response = await Http.PutAsJsonAsync("api/MedicalChart/" + MedicalChartId + "/Treatment-Histories/" + Id, treatmentHistoryViewModel);
+
+            if (response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                var errors = await response.Content
+                    .ReadFromJsonAsync<Dictionary<string, List<string>>>();
+
+                if (errors.Count > 0)
+                {
+                    customValidator.DisplayErrors(errors);
+                    disabled = false;
+                }
+            }
+            else
+            {
+                await BlazoredModal.Close(ModalResult.Ok(response));
+            }
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError("Form processing error: {Message}", exception.Message);
+            messageStyles = "display:block";
+            message = "There was an error processing the form.";
+        }
+    }
+}

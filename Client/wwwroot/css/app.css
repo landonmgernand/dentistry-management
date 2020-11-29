@@ -25,6 +25,7 @@ app {
     height: 3.5rem;
     display: flex;
     align-items: center;
+    z-index: 102;
 }
 
 .main {
@@ -44,6 +45,8 @@ app {
         box-shadow: 0px 3px 3px -2px rgba(0,0,0,0.1), 0px 3px 4px 0px rgba(0,0,0,0.07), 0px 1px 8px 0px rgba(0,0,0,0.05);
         align-items: center;
         display: flex;
+        z-index: 102;
+        position: relative;
     }
 
         .main .top-row > a, .main .top-row .btn-link {
@@ -99,7 +102,12 @@ app {
 
             .sidebar .nav-item a.active {
                 color: #FAB522;
+                fill: #FAB522;
             }
+
+                .sidebar .nav-item a.active > svg {
+                    fill: #FAB522;
+                }
 
             .sidebar .nav-item a:hover {
                 background-color: rgba(0, 0, 0, 0.04);
@@ -107,6 +115,9 @@ app {
 
 .content {
     padding-top: 1.1rem;
+    height: 865px;
+    overflow: scroll;
+    overflow-x: hidden;
 }
 
 .navbar-toggler {
@@ -124,6 +135,7 @@ app {
 .validation-message {
     color: #b71c1c !important;
     font-size: 0.6428571428571428rem !important;
+    height: 30px;
 }
 
 #blazor-error-ui {
@@ -151,6 +163,23 @@ app {
 
 .mdc-list > a:hover {
     background-color: rgba(0, 0, 0, 0.04);
+}
+
+.mdc-menu {
+    z-index: 103 !important;
+}
+
+.mdc-select {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.blazored-modal-container {
+    z-index: 103;
+}
+
+.mdc-form-field > label {
+    margin-bottom: -2px;
 }
 
 @media (max-width: 767.98px) {
@@ -196,5 +225,8 @@ app {
     .sidebar .collapse {
         /* Never collapse the sidebar for wide screens */
         display: block;
+    }
+    .mdc-linear-progress__bar-inner {
+        border-color: #193c6b;
     }
 }

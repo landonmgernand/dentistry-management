@@ -9,10 +9,11 @@ using System;
 using DentistryManagement.Server.DataTransferObjects;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore;
+using DentistryManagement.Server.Services.Interfaces;
 
 namespace DentistryManagement.Server.Services
 {
-    public class UserService : IUserService<UserDTO>
+    public class UserService : IUserService
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -28,6 +29,7 @@ namespace DentistryManagement.Server.Services
             var users = _context.ApplicationUsers
                 .Include(ur => ur.UserRoles)
                 .ThenInclude(r => r.Role)
+                .Include(a => a.Affiliate)
                 .Select(x => UserMapper.ApplicationUserToDTO(x))
                 .ToList();
             
@@ -39,6 +41,7 @@ namespace DentistryManagement.Server.Services
             var applicationUser = _context.ApplicationUsers
              .Include(ur => ur.UserRoles)
              .ThenInclude(r => r.Role)
+             .Include(a => a.Affiliate)
              .SingleOrDefault(x => x.Id.Equals(id));
 
             if (applicationUser == null)
@@ -59,6 +62,7 @@ namespace DentistryManagement.Server.Services
             var applicationUser = _context.ApplicationUsers
                 .Include(ur => ur.UserRoles)
                 .ThenInclude(r => r.Role)
+                .Include(a => a.Affiliate)
                 .SingleOrDefault(x => x.UserName.Equals(username));
            
             if (applicationUser == null)
@@ -72,23 +76,19 @@ namespace DentistryManagement.Server.Services
         public async Task CreateUser(UserDTO userDTO)
         {
             var applicationUser = UserMapper.DTOtoApplicationUser(userDTO);
-
-            await _userManager.CreateAsync(applicationUser, userDTO.Password);
-
-            var roleName = "User";
-
-            if (userDTO.IsAdmin)
-            {
-                roleName = "Admin";
-            }
-
-            var role = _context.ApplicationRole.SingleOrDefault(x => x.Name.Equals(roleName));
+          
+            var adsa = await _userManager.CreateAsync(applicationUser, userDTO.Password);
+            
+            var role = _context.ApplicationRole.Find(userDTO.RoleId);
 
             applicationUser.UserRoles.Add(new ApplicationUserRole()
             {
                 User = applicationUser,
                 Role = role,
             });
+
+            var affiliate = _context.Affiliates.Find(userDTO.AffiliateId);
+            applicationUser.Affiliate = affiliate;
 
             _context.SaveChanges();
         }
@@ -97,24 +97,27 @@ namespace DentistryManagement.Server.Services
         {
             var applicationUser = _context.ApplicationUsers
                 .Include(ur => ur.UserRoles)
+                .Include(a => a.Affiliate)
                 .SingleOrDefault(x => x.Id.Equals(userDTO.Id));
 
-            var roleName = "User";
-
-            if (userDTO.IsAdmin)
+            if (userDTO.RoleId != null)
             {
-                roleName = "Admin";
+                applicationUser.UserRoles.Clear();
+
+                var role = _context.ApplicationRole.Find(userDTO.RoleId);
+
+                applicationUser.UserRoles.Add(new ApplicationUserRole()
+                {
+                    User = applicationUser,
+                    Role = role,
+                });
             }
 
-            applicationUser.UserRoles.Clear();
-
-            var role = _context.ApplicationRole.SingleOrDefault(x => x.Name.Equals(roleName));
-
-            applicationUser.UserRoles.Add(new ApplicationUserRole()
+            if (userDTO.AffiliateId != 0)
             {
-                User = applicationUser,
-                Role = role,
-            });
+                var affiliate = _context.Affiliates.Find(userDTO.AffiliateId);
+                applicationUser.Affiliate = affiliate;
+            }
 
             applicationUser.FirstName = userDTO.FirstName;
             applicationUser.LastName = userDTO.LastName;

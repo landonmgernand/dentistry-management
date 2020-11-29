@@ -1,0 +1,123 @@
+﻿@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Extensions.Logging
+@using DentistryManagement.Shared.ViewModels.Affiliates;
+@using DentistryManagement.Client.Components
+@using DentistryManagement.Client.Helpers
+@using System.Net
+
+@inject HttpClient Http
+@inject ILogger<Affiliate> Logger
+
+<div class="grph-paper">
+    <EditForm Model="@affiliateViewModel">
+        <DataAnnotationsValidator />
+        <CustomValidator @ref="customValidator" />
+        <FormPanel Title="Details"
+                   ChangeEditMode="ChangeEditMode"
+                   EditMode="@EditMode"
+                   Cancel="Cancel"
+                   Save="Save"
+                   Message="@message"
+                   MessageStyle="@messageStyles">
+            <li>
+                <div class="col-4">
+                    <span>Name:</span>
+                </div>
+                <div class="col-8">
+                    <InputText disabled="@(!EditMode)"
+                               class="@InputStyle"
+                               @bind-Value="affiliateViewModel.Name" />
+                    <ValidationMessage For="@(() => affiliateViewModel.Name)" />
+                </div>
+            </li>
+        </FormPanel>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    private UpdateAffiliateViewModel affiliateViewModel = new UpdateAffiliateViewModel();
+
+    private CustomValidator customValidator;
+
+    private bool EditMode = false;
+
+    private string message;
+
+    private string messageStyles = "display:none";
+
+    private string InputStyle
+    {
+        get
+        {
+            return "form-control " + (!EditMode ? "grph-content-input-disabled" : "grph-content-input");
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            affiliateViewModel = await Http.GetFromJsonAsync<UpdateAffiliateViewModel>("api/Affiliate/" + Id);
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError("Form processing error: {Message}", exception.Message);
+            messageStyles = "display:block";
+            message = "There was an error getting the data.";
+        }
+    }
+
+    private async Task Save()
+    {
+        customValidator.ClearErrors();
+
+        try
+        {
+            var response = await Http.PutAsJsonAsync("api/Affiliate/" + affiliateViewModel.Id, affiliateViewModel);
+
+            if (response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                var errors = await response.Content
+                    .ReadFromJsonAsync<Dictionary<string, List<string>>>();
+
+                if (errors.Count > 0)
+                {
+                    customValidator.DisplayErrors(errors);
+                }
+            }
+            else
+            {
+                EditMode = false;
+                await OnInitializedAsync();
+            }
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError("Form processing error: {Message}", exception.Message);
+            messageStyles = "display:block";
+            message = "There was an error processing the form.";
+        }
+    }
+
+    private async Task Cancel()
+    {
+        EditMode = false;
+        await OnInitializedAsync();
+    }
+
+    private void ChangeEditMode(bool mode)
+    {
+        EditMode = mode;
+    }
+}

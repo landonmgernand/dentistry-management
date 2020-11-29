@@ -1,8 +1,9 @@
 ﻿@page "/users"
+
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using DentistryManagement.Shared.ViewModels.Users;
-@using DentistryManagement.Client.Modals.Users
-@using Skclusive.Material.Paper
+@using DentistryManagement.Client.Pages.Users.Modals;
+@using DentistryManagement.Client.Components;
 @using Microsoft.AspNetCore.Authorization
 
 @inject HttpClient Http
@@ -11,14 +12,7 @@
 @attribute [Authorize(Roles = "Admin")]
 
 <div class="under-top-row px-4">
-    <div class="grph-action-add" @onclick="Add">
-        <span>
-            <svg width="1em" height="1em" viewBox="0 0 24 24" fill="#00A8FF">
-                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
-            </svg>
-            Add
-        </span>
-    </div>
+    <AddAction Add="Add" />
 </div>
 
 <div class="content px-4">
@@ -28,36 +22,38 @@
     }
     else
     {
-        <Paper Class="grph-paper">
-            <Table Size="@Skclusive.Core.Component.Size.Small">
-                <TableHead Class="grph-table-head">
-                    <Skclusive.Material.Table.TableRow class="grph-table-row">
-                        <TableCell>First Name</TableCell>
-                        <TableCell>Last Name</TableCell>
-                        <TableCell>Email</TableCell>
-                        <TableCell>Phone Number</TableCell>
-                        <TableCell>Admin</TableCell>
-                        <TableCell></TableCell>
-                    </Skclusive.Material.Table.TableRow>
-                </TableHead>
-                <TableBody>
+        <div class="grph-paper">
+            <table class="grp-table">
+                <thead class="grph-table-head">
+                    <tr class="grph-table-row">
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Phone Number</th>
+                        <th>Role</th>
+                        <th>Affiliate</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
                     @foreach (var user in users)
                     {
-                        <Skclusive.Material.Table.TableRow class="grph-table-row">
-                            <TableCell>@user.FirstName</TableCell>
-                            <TableCell>@user.LastName</TableCell>
-                            <TableCell>@user.Email</TableCell>
-                            <TableCell>@user.PhoneNumber</TableCell>
-                            <TableCell>@(user.IsAdmin ? "Yes" : "No")</TableCell>
-                            <TableCell Class="grph-actions">
-                                <span class="oi oi-pencil" @onclick="@(() => Edit(user))"></span>
-                                <span class="oi oi-trash" @onclick="@(() => Delete(user))"></span>
-                            </TableCell>
-                        </Skclusive.Material.Table.TableRow>
+                    <tr class="grph-table-row">
+                        <td>@user.FirstName</td>
+                        <td>@user.LastName</td>
+                        <td>@user.Email</td>
+                        <td>@user.PhoneNumber</td>
+                        <td>@user.Role</td>
+                        <td>@user.Affiliate</td>
+                        <td class="grph-actions">
+                            <span class="oi oi-pencil" @onclick="@(() => Edit(user))"></span>
+                            <span class="oi oi-trash" @onclick="@(() => Delete(user))"></span>
+                        </td>
+                    </tr>
                     }
-                </TableBody>
-            </Table>
-        </Paper>
+                </tbody>
+            </table>
+        </div>
     }
 </div>
 
@@ -118,7 +114,7 @@
 
         parameters.Add(nameof(UpdateUserModal.Id), userViewModel.Id);
 
-        var deleteModal = Modal.Show<DeleteUserModal>("Confirm delete of " + userViewModel.Email, parameters, modalOptions);
+        var deleteModal = Modal.Show<DeleteUserModal>("Confirm action", parameters, modalOptions);
 
         var result = await deleteModal.Result;
 

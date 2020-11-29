@@ -1,0 +1,139 @@
+﻿@page "/patients/{Id}"
+
+@using DentistryManagement.Shared.ViewModels.Patients
+@using DentistryManagement.Shared.ViewModels.MedicalChart
+@using DentistryManagement.Client.Pages.Patients.Components
+@using DentistryManagement.Client.Components
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Extensions.Logging
+
+@inject ILogger<Patient> Logger
+@inject HttpClient Http
+
+<div class="under-top-row px-4">
+    <AddAction Title="Add Treatment History" Add="Add" />
+</div>
+
+<div class="content px-4">
+    @if (patient == null)
+    {
+        <div class="loader">Loading...</div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-7">
+                <Profile PatientId="patient.Id" />
+            </div>
+        </div>
+
+        <br />
+
+        @if (!patient.MedicalChartOpen)
+        {
+            <div class="grph-paper">
+                <div class="grph-chart-open-holder">
+                    <div class="grph-text">
+                        <div class="grph-text-wrapper">
+                            <p class="validation-message" style="@messageStyles">
+                                @message
+                            </p>
+                            <p>There is no open Medical Chart for @patient.FirstName @patient.LastName</p>
+                            <button class="btn btn-primary grph-primary" @onclick="Open" disabled="@disabled">Open Medical Chart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col">
+                    <ToothSet>
+                        <Teeth MedicalChartId="patient.MedicalChart.Id" />
+                    </ToothSet>
+                </div>
+                <div class="col">
+                    <Files MedicalChartId="patient.MedicalChart.Id" /> 
+                </div>
+            </div>
+
+            <br />
+
+            <div class="row">
+                <div class="col">
+                    <Allergies MedicalChartId="patient.MedicalChart.Id" />
+                </div>
+
+                <div class="col">
+                    <TreatmentHistories MedicalChartId="patient.MedicalChart.Id" @ref="treatmentHistory" />
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    [CascadingParameter]
+    protected MainLayout navigationSet { get; set; }
+
+    [Parameter]
+    public string Id { get; set; }
+
+    private PatientViewModel patient;
+
+    private OpenMedicalChartViewModel openMedicalChart = new OpenMedicalChartViewModel();
+
+    private bool disabled;
+
+    private string message;
+
+    private string messageStyles = "display:none";
+
+    private TreatmentHistories treatmentHistory;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            patient = await Http.GetFromJsonAsync<PatientViewModel>("api/Patient/" + Id);
+            openMedicalChart.PatientId = patient.Id;
+            navigationSet.addNavigationItem("Patient's Chart");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+
+    private async Task Open()
+    {
+        try
+        {
+            var response = await Http.PostAsJsonAsync("api/medicalchart", openMedicalChart);
+            await OnInitializedAsync();
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError("Form processing error: {Message}", exception.Message);
+            disabled = true;
+            messageStyles = "display:block";
+            message = "There was an error processing the form.";
+        }
+    }
+
+    private async Task Add()
+    {
+        var result = await treatmentHistory.OpenModal();
+
+        if (!result.Cancelled)
+        {
+            await treatmentHistory.Reset();
+        }
+    }
+}

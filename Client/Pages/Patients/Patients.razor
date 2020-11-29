@@ -1,0 +1,130 @@
+﻿@page "/patients"
+
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using DentistryManagement.Shared.ViewModels.Patients
+@using DentistryManagement.Client.Pages.Patients.Modals
+@using DentistryManagement.Client.Components
+@using Microsoft.AspNetCore.Authorization
+
+@inject HttpClient Http
+@inject IModalService Modal
+@inject NavigationManager Navigation
+
+@attribute [Authorize]
+
+<div class="under-top-row px-4">
+    <AddAction Add="Add" />
+</div>
+
+<div class="content px-4">
+    @if (patients == null)
+    {
+        <div class="loader">Loading...</div>
+    }
+    else
+    {
+        <div class="grph-paper">
+            <table class="grp-table">
+                <thead class="grph-table-head">
+                    <tr class="grph-table-row">
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Date of Birth</th>
+                        <th>Email</th>
+                        <th>Phone Number</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var patient in patients)
+                    {
+                        <tr class="grph-table-row">
+                            <td @onclick="@(() => Details(patient))">@patient.FirstName</td>
+                            <td @onclick="@(() => Details(patient))">@patient.LastName</td>
+                            <td @onclick="@(() => Details(patient))">@patient.DateOfBirth.ToShortDateString()</td>
+                            <td @onclick="@(() => Details(patient))">@patient.Email</td>
+                            <td @onclick="@(() => Details(patient))">@patient.PhoneNumber</td>
+                            <td class="grph-actions">
+                                <span class="oi oi-pencil" @onclick="@(() => Edit(patient))"></span>
+                                <span class="oi oi-trash" @onclick="@(() => Delete(patient))"></span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+
+@code {
+    [CascadingParameter]
+    protected MainLayout navigationSet { get; set; }
+
+    private ModalOptions modalOptions = new ModalOptions() { DisableBackgroundCancel = true };
+
+    private List<PatientViewModel> patients;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            patients = await Http.GetFromJsonAsync<List<PatientViewModel>>("api/Patient");
+            navigationSet.resetNavigationPanelWithoutState();
+            navigationSet.addNavigationItem("Patients");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+
+    private async Task Add()
+    {
+        var addModal = Modal.Show<CreatePatientModal>("Create Patient", modalOptions);
+
+        var result = await addModal.Result;
+
+        if (!result.Cancelled)
+        {
+            await OnInitializedAsync();
+        }
+    }
+
+    private async Task Edit(PatientViewModel patient)
+    {
+        var parameters = new ModalParameters();
+
+        parameters.Add(nameof(patient.Id), patient.Id);
+
+        var updateModal = Modal.Show<UpdatePatientModal>("Details of " + patient.FirstName + patient.LastName, parameters, modalOptions);
+
+        var result = await updateModal.Result;
+
+        if (!result.Cancelled)
+        {
+            await OnInitializedAsync();
+        }
+    }
+
+    private async Task Delete(PatientViewModel patient)
+    {
+        var parameters = new ModalParameters();
+
+        parameters.Add(nameof(patient.Id), patient.Id);
+
+        var deleteModal = Modal.Show<DeletePatientModal>("Confirm action", parameters, modalOptions);
+
+        var result = await deleteModal.Result;
+
+        if (!result.Cancelled)
+        {
+            patients.RemoveAll(x => x.Id == patient.Id);
+        }
+    }
+
+    private void Details(PatientViewModel PatientViewModel)
+    {
+        Navigation.NavigateTo("/patients/" + PatientViewModel.Id);
+    }
+}

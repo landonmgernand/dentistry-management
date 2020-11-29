@@ -22,7 +22,12 @@ namespace DentistryManagement.Shared.ViewModels.Users
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
 
-        [Display(Name = "Admin")]
-        public bool IsAdmin { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "The Affiliate field is required")]
+        [Display(Name = "Affiliate")]
+        public int AffiliateId { get; set; }
+
+        [Required]
+        [Display(Name = "Role")]
+        public string RoleId { get; set; }
     }
 }

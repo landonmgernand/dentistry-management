@@ -17,12 +17,100 @@ namespace DentistryManagement.Server.Migrations
                 .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("DentistryManagement.Server.Models.Address", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Address1")
+                        .IsRequired()
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Address2")
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100);
+
+                    b.Property<int>("AffiliateId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasColumnType("varchar(20) CHARACTER SET utf8mb4")
+                        .HasMaxLength(20);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AffiliateId")
+                        .IsUnique();
+
+                    b.ToTable("Addresses");
+                });
+
+            modelBuilder.Entity("DentistryManagement.Server.Models.Affiliate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Affiliates");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Graphene"
+                        });
+                });
+
+            modelBuilder.Entity("DentistryManagement.Server.Models.Allergy", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("MedicalChartId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MedicalChartId");
+
+                    b.ToTable("Allergies");
+                });
+
             modelBuilder.Entity("DentistryManagement.Server.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
 
                     b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AffiliateId")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -77,6 +165,8 @@ namespace DentistryManagement.Server.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AffiliateId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
 
@@ -91,7 +181,8 @@ namespace DentistryManagement.Server.Migrations
                         {
                             Id = "B22698B8-42A2-4115-9631-1C2D1E2AC5F7",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "26e8501f-9b54-4596-94f1-41fbe02526e9",
+                            AffiliateId = 1,
+                            ConcurrencyStamp = "0ecc78dd-7dbd-4c20-ae56-36d07583207a",
                             Email = "admin@graphene.com",
                             EmailConfirmed = true,
                             FirstName = "Graphene",
@@ -99,12 +190,218 @@ namespace DentistryManagement.Server.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "admin@graphene.com",
                             NormalizedUserName = "admin@graphene.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEAnSuqtmDRykjJZmfhYhFgQ88AbX1WfFA3h/APmAXdOgsCGFEbJ7UoWxpo88EC0icA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEM79P1ScPESGXxwZdNOeKahvipP5VK6BaubvVnZHKBoAWQDFkAwQSd25eg4F2guvrQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f86b1443-a993-4fec-9690-7b13a6cf537f",
+                            SecurityStamp = "028d8f0b-c7c9-4948-b1e1-ca55306c32b9",
                             TwoFactorEnabled = false,
                             UserName = "admin@graphene.com"
                         });
+                });
+
+            modelBuilder.Entity("DentistryManagement.Server.Models.Disease", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Diseases");
+                });
+
+            modelBuilder.Entity("DentistryManagement.Server.Models.File", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Extension")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Filename")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<int>("Filesize")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MedicalChartId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Path")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<DateTime>("UploadDT")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MedicalChartId");
+
+                    b.ToTable("Files");
+                });
+
+            modelBuilder.Entity("DentistryManagement.Server.Models.MedicalChart", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("PatientId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PatientId")
+                        .IsUnique();
+
+                    b.ToTable("MedicalCharts");
+                });
+
+            modelBuilder.Entity("DentistryManagement.Server.Models.Patient", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Patients");
+                });
+
+            modelBuilder.Entity("DentistryManagement.Server.Models.Tooth", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100);
+
+                    b.Property<int>("MedicalChartId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("varchar(150) CHARACTER SET utf8mb4")
+                        .HasMaxLength(150);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MedicalChartId");
+
+                    b.ToTable("Teeth");
+                });
+
+            modelBuilder.Entity("DentistryManagement.Server.Models.ToothDisease", b =>
+                {
+                    b.Property<int>("DiseaseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ToothId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DiseaseId", "ToothId");
+
+                    b.HasIndex("ToothId");
+
+                    b.ToTable("ToothDiseases");
+                });
+
+            modelBuilder.Entity("DentistryManagement.Server.Models.Treatment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100);
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Treatments");
+                });
+
+            modelBuilder.Entity("DentistryManagement.Server.Models.TreatmentHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("AffiliateId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<DateTime>("DateOfTreatment")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("MedicalChartId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<int>("TreatmentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AffiliateId");
+
+                    b.HasIndex("MedicalChartId");
+
+                    b.HasIndex("TreatmentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("TreatmentHistories");
                 });
 
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.DeviceFlowCodes", b =>
@@ -343,16 +640,23 @@ namespace DentistryManagement.Server.Migrations
                         new
                         {
                             Id = "2301D884-221A-4E7D-B509-0113DCC043E1",
-                            ConcurrencyStamp = "e4315321-db50-4cc2-b500-b94d0af455fa",
+                            ConcurrencyStamp = "dbda4b70-554d-460a-8702-46be59dd579b",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         },
                         new
                         {
-                            Id = "83617646-4e9d-47e3-a089-cfe4691b9e71",
-                            ConcurrencyStamp = "2e4db6d6-1efb-4224-abf9-4377b7326a71",
-                            Name = "User",
-                            NormalizedName = "User"
+                            Id = "f016dd82-c21a-4b06-b0a2-a5e53e7d030b",
+                            ConcurrencyStamp = "b13dab17-5ec2-4eb2-af02-f80e4bddafdd",
+                            Name = "Manager",
+                            NormalizedName = "Manager"
+                        },
+                        new
+                        {
+                            Id = "c96e7111-fe86-419c-aaa7-3546211c8e13",
+                            ConcurrencyStamp = "bb6b286f-ca53-47b2-b838-22b788b8cc35",
+                            Name = "Dentist",
+                            NormalizedName = "Dentist"
                         });
                 });
 
@@ -368,6 +672,102 @@ namespace DentistryManagement.Server.Migrations
                             UserId = "B22698B8-42A2-4115-9631-1C2D1E2AC5F7",
                             RoleId = "2301D884-221A-4E7D-B509-0113DCC043E1"
                         });
+                });
+
+            modelBuilder.Entity("DentistryManagement.Server.Models.Address", b =>
+                {
+                    b.HasOne("DentistryManagement.Server.Models.Affiliate", "Affiliate")
+                        .WithOne("Address")
+                        .HasForeignKey("DentistryManagement.Server.Models.Address", "AffiliateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DentistryManagement.Server.Models.Allergy", b =>
+                {
+                    b.HasOne("DentistryManagement.Server.Models.MedicalChart", "MedicalChart")
+                        .WithMany("Allergies")
+                        .HasForeignKey("MedicalChartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DentistryManagement.Server.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("DentistryManagement.Server.Models.Affiliate", "Affiliate")
+                        .WithMany("Users")
+                        .HasForeignKey("AffiliateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DentistryManagement.Server.Models.File", b =>
+                {
+                    b.HasOne("DentistryManagement.Server.Models.MedicalChart", "MedicalChart")
+                        .WithMany("Files")
+                        .HasForeignKey("MedicalChartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DentistryManagement.Server.Models.MedicalChart", b =>
+                {
+                    b.HasOne("DentistryManagement.Server.Models.Patient", "Patient")
+                        .WithOne("MedicalChart")
+                        .HasForeignKey("DentistryManagement.Server.Models.MedicalChart", "PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DentistryManagement.Server.Models.Tooth", b =>
+                {
+                    b.HasOne("DentistryManagement.Server.Models.MedicalChart", "MedicalChart")
+                        .WithMany("Teeth")
+                        .HasForeignKey("MedicalChartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DentistryManagement.Server.Models.ToothDisease", b =>
+                {
+                    b.HasOne("DentistryManagement.Server.Models.Disease", "Disease")
+                        .WithMany("ToothDiseases")
+                        .HasForeignKey("DiseaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DentistryManagement.Server.Models.Tooth", "Tooth")
+                        .WithMany("ToothDiseases")
+                        .HasForeignKey("ToothId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DentistryManagement.Server.Models.TreatmentHistory", b =>
+                {
+                    b.HasOne("DentistryManagement.Server.Models.Affiliate", "Affiliate")
+                        .WithMany("TreatmentHistories")
+                        .HasForeignKey("AffiliateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DentistryManagement.Server.Models.MedicalChart", "MedicalChart")
+                        .WithMany("TreatmentHistories")
+                        .HasForeignKey("MedicalChartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DentistryManagement.Server.Models.Treatment", "Treatment")
+                        .WithMany("TreatmentHistories")
+                        .HasForeignKey("TreatmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DentistryManagement.Server.Models.ApplicationUser", "User")
+                        .WithMany("TreatmentHistories")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

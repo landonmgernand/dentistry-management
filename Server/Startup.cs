@@ -1,11 +1,6 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,10 +8,11 @@ using Microsoft.Extensions.Hosting;
 using System.Linq;
 using DentistryManagement.Server.Data;
 using DentistryManagement.Server.Models;
+using DentistryManagement.Server.Services.Interfaces;
 using DentistryManagement.Server.Services;
-using DentistryManagement.Shared;
-using AutoMapper;
 using System.IdentityModel.Tokens.Jwt;
+using DentistryManagement.Server.Helpers;
+using DentistryManagement.Server.DataTransferObjects;
 
 namespace DentistryManagement.Server
 {
@@ -55,8 +51,23 @@ namespace DentistryManagement.Server
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.Configure<TeethSettingsDTO>(Configuration.GetSection("TeethSettings"));
     
-            services.AddScoped<UserService, UserService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAffiliateService<AffiliateDTO>,AffiliateService>();
+            services.AddScoped<IAddressService, AddressService>();
+            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IDentistService, DentistService>();
+            services.AddScoped<IPatientService<PatientDTO>, PatientService>();
+            services.AddScoped<IMedicalChartService, MedicalChartService>();
+            services.AddScoped<IDiseaseService<DiseaseDTO>, DiseaseService>();
+            services.AddScoped<IToothService, ToothService>();
+            services.AddScoped<IAllergyService, AllergyService>();
+            services.AddScoped<IFileService, FileService>();
+            services.AddScoped<ITreatmentService<TreatmentDTO>, TreatmentService>();
+            services.AddScoped<ITreatmentHistoryService, TreatmentHistoryService>();
+            services.AddScoped<UserProviderService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -91,6 +102,8 @@ namespace DentistryManagement.Server
                 endpoints.MapControllers();
                 endpoints.MapFallbackToFile("index.html");
                 endpoints.MapFallbackToFile("/settings/{email?}", "index.html");
+                endpoints.MapFallbackToFile("/affiliates/{id?}", "index.html");
+                endpoints.MapFallbackToFile("/patients/{id?}", "index.html");
             });
         }
     }

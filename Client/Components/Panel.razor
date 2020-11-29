@@ -1,0 +1,28 @@
+﻿<div class="grph-header-root">
+    <div class="grph-header-content">
+        <span>@Title</span>
+
+    </div>
+</div>
+<div class="@ContentStyle">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public string Class { get; set; }
+
+    private string ContentStyle
+    {
+        get
+        {
+            return "grph-content-root " + Class;
+        }
+    }
+}
