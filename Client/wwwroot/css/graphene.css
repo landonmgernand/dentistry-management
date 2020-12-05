@@ -493,7 +493,7 @@
 }
 
 .grph-tooth-diseases {
-    background-color: #e0e0e0;
+    background-color: #EAF3F9;
 }
 
 .grph-content {
@@ -643,4 +643,72 @@
 
 .grph-span {
     padding-right :10px;
+}
+
+.grph-comment-action {
+    width: 102px;
+    padding-left: 3px;
+}
+
+    .grph-comment-action:hover {
+        background-color: #eaf3f961;
+        cursor: pointer;
+        border-radius: .25rem;
+    }
+
+        .grph-tooh-action {
+            margin: auto;
+            max-width: 600px;
+            padding: 11px;
+        }
+
+.grph-comment-action-text {
+    font-size: 13px;
+}
+
+.grph-comment-action-icon {
+    fill: #193C6B;
+}
+
+.grph-comment {
+    width: 350px;
+    padding-top: 12px;
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-bottom: 12px;
+    background-color: #CDE4F0;
+    margin-bottom: 5px;
+    border-radius: 1px;
+    word-break: break-all;
+    cursor: pointer;
+}
+
+    .grph-comment:hover {
+        background-color: #c5dae6;
+    }
+
+.grph-comment-header {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    justify-content: space-between;
+    font-size: 11px;
+}
+
+.grph-comment-content {
+    padding-top: 10px;
+}
+
+.grph-comment-remove {
+    color: #3d4448;
+}
+
+    .grph-comment-remove:hover {
+        color: #3d4448;
+    }
+
+.grph-comments {
+    max-height: 350px;
+    overflow: auto;
 }

@@ -3,14 +3,16 @@ using System;
 using DentistryManagement.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DentistryManagement.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201129180738_AddCommentTableAndRelation")]
+    partial class AddCommentTableAndRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -182,7 +184,7 @@ namespace DentistryManagement.Server.Migrations
                             Id = "B22698B8-42A2-4115-9631-1C2D1E2AC5F7",
                             AccessFailedCount = 0,
                             AffiliateId = 1,
-                            ConcurrencyStamp = "0df53bcf-e14f-4f19-a553-22bfb377f0ae",
+                            ConcurrencyStamp = "b5aa5307-2b7f-48b2-b691-10ec96a60bd1",
                             Email = "admin@graphene.com",
                             EmailConfirmed = true,
                             FirstName = "Graphene",
@@ -190,9 +192,9 @@ namespace DentistryManagement.Server.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "admin@graphene.com",
                             NormalizedUserName = "admin@graphene.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPwuAlTUWflOOkzE/d2LegV28llq1LvUnEHp9fs0Dl7xSIsrmomds6/yRzneMjLjUw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJh+6+ZP0P2Y4iVBbER+OTvoPH0oIQ6IeHts5S+V1DqIaqwyNiBh7bkrqTV2xVmgow==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "03730781-9836-4f5e-b3f4-b7318fb08ed9",
+                            SecurityStamp = "ac474587-7335-49b6-ace9-78d4ab68e47a",
                             TwoFactorEnabled = false,
                             UserName = "admin@graphene.com"
                         });
@@ -204,23 +206,15 @@ namespace DentistryManagement.Server.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<string>("Text")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<int>("ToothId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ToothId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Comments");
                 });
@@ -667,21 +661,21 @@ namespace DentistryManagement.Server.Migrations
                         new
                         {
                             Id = "2301D884-221A-4E7D-B509-0113DCC043E1",
-                            ConcurrencyStamp = "7c2f1ff1-c1b0-4504-98a2-ac3be0d2023c",
+                            ConcurrencyStamp = "427d3608-c62e-4152-bf9d-555400b5e647",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         },
                         new
                         {
-                            Id = "fcfa3ac3-310b-4807-bedc-a3db9cbafaa5",
-                            ConcurrencyStamp = "bda7477a-7e1c-4d98-afac-91c1a90f6783",
+                            Id = "11db4857-f39f-45a0-9423-a523c70ba97b",
+                            ConcurrencyStamp = "53770672-8344-4719-870d-f4dfcc667bc6",
                             Name = "Manager",
                             NormalizedName = "Manager"
                         },
                         new
                         {
-                            Id = "5832d829-ce1f-4e7f-b809-10b2c28f9d12",
-                            ConcurrencyStamp = "31f062cc-c731-4461-84f7-0e6395331fdc",
+                            Id = "aedf5402-f8e6-481d-a7c0-3b546e9cbc8d",
+                            ConcurrencyStamp = "49ec70bb-f622-41d6-9c05-0a3619ece5d9",
                             Name = "Dentist",
                             NormalizedName = "Dentist"
                         });
@@ -735,10 +729,6 @@ namespace DentistryManagement.Server.Migrations
                         .HasForeignKey("ToothId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("DentistryManagement.Server.Models.ApplicationUser", "User")
-                        .WithMany("Comments")
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("DentistryManagement.Server.Models.File", b =>

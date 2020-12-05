@@ -1,11 +1,14 @@
 ﻿@using DentistryManagement.Client.Pages.Patients.Components.Interfaces
+@using DentistryManagement.Client.Pages.Patients.Modals
 @using DentistryManagement.Client.Components
 @using DentistryManagement.Shared.ViewModels.Teeth
+@using DentistryManagement.Client.Icons 
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using Microsoft.Extensions.Logging
 
 @inject HttpClient Http
 @inject ILogger<ToothSet> Logger
+@inject IModalService Modal
 
 <div class="grph-paper">
     <Panel Title="Teeth">
@@ -29,6 +32,14 @@
                 }
             }
         </div>
+        <div class="grph-tooh-action">
+            <div class="grph-comment-action" @onclick="@View">
+                <Comment Class="grph-comment-action-icon" />
+                <span class="grph-comment-action-text">
+                    @commentsCount Comments
+                </span>
+            </div>
+        </div>
     </Panel>
 </div>
 
@@ -45,6 +56,10 @@
     private string message;
 
     private string messageStyles = "display:none";
+
+    private ModalOptions modalOptions = new ModalOptions() { DisableBackgroundCancel = true };
+
+    private int commentsCount { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -75,6 +90,7 @@
             try
             {
                 selectedDiseases.ToothDiseases = await Http.GetFromJsonAsync<List<ToothDiseaseViewModel>>("api/tooth/" + ActiveTooth.ToothId + "/diseases");
+                commentsCount = await Http.GetFromJsonAsync<int>("api/tooth/" + ActiveTooth.ToothId + "/comments-count");
                 foreach (var disease in diseases)
                 {
                     disease.Active = false;
@@ -124,5 +140,21 @@
         }
 
         StateHasChanged();
+    }
+
+    private async Task View()
+    {
+        var parameters = new ModalParameters();
+
+        parameters.Add(nameof(ActiveTooth.ToothId), ActiveTooth.ToothId);
+
+        var modal = Modal.Show<CommentViewModal>("Tooth's Comments", parameters, modalOptions);
+
+        var result = await modal.Result;
+
+        if (result.Cancelled)
+        {
+            commentsCount = await Http.GetFromJsonAsync<int>("api/tooth/" + ActiveTooth.ToothId + "/comments-count");
+        }
     }
 }

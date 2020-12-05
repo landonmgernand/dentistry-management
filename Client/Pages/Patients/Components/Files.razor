@@ -163,6 +163,6 @@
 
         parameters.Add(nameof(fileView.Path), fileView.Path);
 
-        Modal.Show<ViewFileModal>("File uploaded - " + fileView.UploadDT.ToString("dd/MM/yyyy"), parameters, modalOptions);
+        Modal.Show<FileViewModal>("File uploaded - " + fileView.UploadDT.ToString("dd/MM/yyyy"), parameters, modalOptions);
     }
 }

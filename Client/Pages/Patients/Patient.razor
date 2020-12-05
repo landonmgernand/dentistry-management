@@ -48,6 +48,26 @@
         }
         else
         {
+            @*<div class="card-columns">
+                <div class="card">
+                    <ToothSet>
+                        <Teeth MedicalChartId="patient.MedicalChart.Id" />
+                    </ToothSet>
+                </div>
+                <div class="card">        
+                    <TreatmentHistories MedicalChartId="patient.MedicalChart.Id" @ref="treatmentHistory" />
+                    
+                </div>
+                <div class="card">
+                    <Allergies MedicalChartId="patient.MedicalChart.Id" />  
+                </div>
+
+                <div class="card">
+                    <Files MedicalChartId="patient.MedicalChart.Id" />          
+                </div>
+            </div>*@
+
+
             <div class="row">
                 <div class="col">
                     <ToothSet>
