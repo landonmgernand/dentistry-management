@@ -118,6 +118,7 @@ app {
     height: 879px;
     overflow: scroll;
     overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .navbar-toggler {
@@ -229,6 +230,7 @@ app {
     .mdc-linear-progress__bar-inner {
         border-color: #193c6b;
     }
+
     .card {
         position: initial;
     }

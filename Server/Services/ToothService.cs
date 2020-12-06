@@ -41,6 +41,18 @@ namespace DentistryManagement.Server.Services
             return _context.Teeth.Any(x => x.Id.Equals(id));
         }
 
+        public List<CommentDTO> GetComments(int id)
+        {
+            var comments = _context.Comments
+                .Where(c => c.ToothId.Equals(id))
+                .OrderByDescending(c => c.Created)
+                .Include(u => u.User)
+                .Select(c => CommentMapper.CommentToDTO(c))
+                .ToList();
+
+            return comments;
+        }
+
         public List<DiseaseDTO> GetDiseases(int id)
         {
             var diseases = _context.Diseases

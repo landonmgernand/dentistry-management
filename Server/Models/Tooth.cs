@@ -22,5 +22,7 @@ namespace DentistryManagement.Server.Models
         public MedicalChart MedicalChart { get; set; }
 
         public ICollection<ToothDisease> ToothDiseases { get; set; }
+
+        public ICollection<Comment> Comments { get; set; }
     }
 }

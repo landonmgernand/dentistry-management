@@ -1,0 +1,113 @@
+﻿@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using DentistryManagement.Shared.ViewModels.Comments
+@using Microsoft.Extensions.Logging
+
+@inject HttpClient Http
+@inject ILogger<Patient> Logger
+
+<div class="grph-modal-form">
+    <p class="validation-message" style="@messageStyles">
+        @message
+    </p>
+    <div class="row">
+        <div class="col">
+            <MatTextField @bind-Value="@commentViewModel.Text" Label="Enter Comment" FullWidth="true" OnKeyUp="Add"></MatTextField>
+        </div>
+
+        @if (comments != null && comments.Count > 0)
+        {
+            <div class="col">
+                <div class="grph-comments">
+                    @foreach (var comment in comments)
+                    {
+                        <div class="grph-comment">
+                            <div class="grph-comment-header">
+                                <span>
+                                    @comment.Created
+                                </span>
+                                <span>
+                                    @comment.User
+                                    <i class="material-icons mdc-chip__icon mdc-chip__icon--trailing mdc-chip-trailing-action mdc-ripple-upgraded grph-comment-remove"
+                                       @onclick="(() => Delete(comment))">clear</i>
+                                </span>
+                            </div>
+                            <div class="grph-comment-content">
+                                @comment.Text
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+         }
+    </div>
+</div>
+
+@code {
+    [CascadingParameter]
+    BlazoredModalInstance BlazoredModal { get; set; }
+
+    [Parameter]
+    public int ToothId { get; set; }
+
+    private List<CommentViewModel> comments;
+
+    private CreateCommentViewModel commentViewModel = new CreateCommentViewModel();
+
+    private string message;
+
+    private string messageStyles = "display:none";
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            comments = await Http.GetFromJsonAsync<List<CommentViewModel>>("api/tooth/" + ToothId + "/comments");
+            commentViewModel.ToothId = ToothId;
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+
+    private async Task Add(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            try
+            {
+                var response = await Http.PostAsJsonAsync("api/tooth/" + ToothId + "/comments", commentViewModel);
+                await OnInitializedAsync();
+            }
+            catch (AccessTokenNotAvailableException exception)
+            {
+                exception.Redirect();
+            }
+            catch (Exception exception)
+            {
+                Logger.LogError("Form processing error: {Message}", exception.Message);
+                messageStyles = "display:block";
+                message = "There was an error processing the form.";
+            }
+        }
+    }
+
+    private async Task Delete(CommentViewModel comment)
+    {
+        try
+        {
+            var response = await Http.DeleteAsync("api/tooth/" + ToothId + "/comments/" + comment.Id);
+            comments.Remove(comment);
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError("Form processing error: {Message}", exception.Message);
+            messageStyles = "display:block";
+            message = "There was an error processing the form.";
+        }
+    }
+}
