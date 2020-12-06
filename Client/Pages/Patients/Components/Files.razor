@@ -13,9 +13,12 @@
 
 <div class="grph-paper">
     <Panel Title="Files">
-        <div class="mat-file-upload grph-file-upload">
-            <input type="file" @ref=inputTypeFileElement @onchange="HandleSelection" accept="image/*" />
-            <MatFAB Icon="@MatIconNames.Add" Class="grph-fab-file"></MatFAB>
+        <div class="grph-file-actions">
+            <div class="grph-file-wrapper">
+                <MatFAB Icon="@MatIconNames.Add" Class="grph-file-fab"></MatFAB>
+                <input type="file" @ref=inputTypeFileElement @onchange="HandleSelection" accept="image/*" />
+            </div>
+            
         </div>
         <div class="grph-file-content">
             <p class="validation-message" style="@messageStyles">

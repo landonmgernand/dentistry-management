@@ -24,6 +24,7 @@ namespace DentistryManagement.Server.Services
             var treatmentHistory = TreatmentHistoryMapper.DTOtoTreatmentHistory(treatmentHistoryDTO);
             var medicalChart = _context.MedicalCharts.Find(treatmentHistoryDTO.MedicalChartId);
             var treatment = _context.Treatments.Find(treatmentHistoryDTO.TreatmentId);
+            var tooth = _context.Teeth.Find(treatmentHistoryDTO.ToothId);
 
             string userId;
 
@@ -46,6 +47,7 @@ namespace DentistryManagement.Server.Services
 
             treatmentHistory.Price = treatment.Price;
             treatmentHistory.Treatment = treatment;
+            treatmentHistory.Tooth = tooth;
             treatmentHistory.Affiliate = affiliate;
             treatmentHistory.MedicalChart = medicalChart;
             treatmentHistory.User = user;
@@ -71,12 +73,11 @@ namespace DentistryManagement.Server.Services
             var treatmentHistory = _context.TreatmentHistories
                  .Include(th => th.User)
                  .Include(th => th.Treatment)
+                 .Include(th => th.Tooth)
                  .Include(th => th.Affiliate)
                  .Where(th => th.Id.Equals(treatmentHistoryId))
                  .Where(th => th.MedicalChartId.Equals(medicalChartId))
                  .SingleOrDefault();
- 
-                // .SingleOrDefault(x => x.Id.Equals(treatmentHistoryId));
 
             if (treatmentHistory == null)
             {
@@ -90,6 +91,7 @@ namespace DentistryManagement.Server.Services
         {
             var treatmentHistory = _context.TreatmentHistories.Find(treatmentHistoryDTO.Id);
             var treatment = _context.Treatments.Find(treatmentHistoryDTO.TreatmentId);
+            var tooth = _context.Teeth.Find(treatmentHistoryDTO.ToothId);
             string userId;
 
             if (treatmentHistoryDTO.UserId is null)
@@ -112,6 +114,7 @@ namespace DentistryManagement.Server.Services
 
             treatmentHistory.Comment = treatmentHistoryDTO.Comment;
             treatmentHistory.Treatment = treatment;
+            treatmentHistory.Tooth = tooth;
             treatmentHistory.Price = treatment.Price;
             treatmentHistory.Affiliate = affiliate;
             treatmentHistory.User = user;

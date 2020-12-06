@@ -18,6 +18,11 @@ namespace DentistryManagement.Shared.ViewModels.TreatmentHistories
         [Display(Name = "Treatment")]
         public int TreatmentId { get; set; }
 
+        [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "The Tooth field is required")]
+        [Display(Name = "Tooth")]
+        public int ToothId { get; set; }
+
         public string UserId { get; set; }
     }
 }

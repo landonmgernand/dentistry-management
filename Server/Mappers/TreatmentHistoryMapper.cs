@@ -15,6 +15,7 @@ namespace DentistryManagement.Server.Mappers
                 MedicalChartId = createTreatmentHistory.MedicalChartId,
                 TreatmentId = createTreatmentHistory.TreatmentId,
                 UserId = createTreatmentHistory.UserId,
+                ToothId = createTreatmentHistory.ToothId
             };
         }
 
@@ -26,6 +27,7 @@ namespace DentistryManagement.Server.Mappers
                 Comment = updateTreatmentHistory.Comment,
                 TreatmentId = updateTreatmentHistory.TreatmentId,
                 UserId = updateTreatmentHistory.UserId,
+                ToothId = updateTreatmentHistory.ToothId
             };
         }
 
@@ -39,6 +41,7 @@ namespace DentistryManagement.Server.Mappers
                 Price = treatmentHistory.Price,
                 MedicalChart = treatmentHistory.MedicalChart,
                 Treatment = treatmentHistory.Treatment,
+                Tooth = treatmentHistory.Tooth,
                 User = treatmentHistory.User,
                 Affiliate = treatmentHistory.Affiliate
             };
@@ -65,6 +68,8 @@ namespace DentistryManagement.Server.Mappers
                 UserId = treatmentHistoryDTO.User.Id,
                 Treatment = treatmentHistoryDTO.Treatment.Name,
                 TreatmentId = treatmentHistoryDTO.Treatment.Id,
+                Tooth = treatmentHistoryDTO.Tooth.Category + " (" + treatmentHistoryDTO.Tooth.Number + ")",
+                ToothId = treatmentHistoryDTO.Tooth.Id,
                 Affiliate = treatmentHistoryDTO.Affiliate.Name               
             };
         }

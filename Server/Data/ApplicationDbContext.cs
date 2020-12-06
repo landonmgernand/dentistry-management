@@ -93,6 +93,7 @@ namespace DentistryManagement.Server.Data
 
             builder.Entity<Tooth>(b => {
                 b.HasMany(t => t.Comments).WithOne(c => c.Tooth);
+                b.HasMany(t => t.TreatmentHistories).WithOne(c => c.Tooth);
             });
 
             #endregion

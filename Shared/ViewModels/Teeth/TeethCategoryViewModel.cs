@@ -11,5 +11,7 @@ namespace DentistryManagement.Shared.ViewModels.Teeth
         public List<ToothViewModel> LowerRight { get; set; }
 
         public List<ToothViewModel> LowerLeft { get; set; }
+
+        public List<ToothViewModel> All { get; set; }
     }
 }
