@@ -229,4 +229,42 @@ app {
     .mdc-linear-progress__bar-inner {
         border-color: #193c6b;
     }
+    .card {
+        position: initial;
+    }
+
+    .card-columns {
+        column-count: 2;
+    }
+
+    .mdc-chip__icon--trailing {
+        color: white;
+    }
+
+    .mdc-chip {
+        background-color: #91C8E5;
+    }
+
+    .mdc-chip__text {
+       color: white;
+    }
+
+    .mdc-chip:hover {
+        color: white;
+    }
+
+    .mdc-chip__icon--trailing:hover {
+        color: white;
+    }
+
+    .mat-file-upload input[type=file] {
+        width: 56px;
+        height: 56px;
+        z-index: 101;
+    }
+
+    .mat-file-upload {
+        justify-content: flex-end;
+        padding: 0px;
+    }
 }
