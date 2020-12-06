@@ -258,4 +258,15 @@ app {
     .mdc-chip__icon--trailing:hover {
         color: white;
     }
+
+    .mat-file-upload input[type=file] {
+        width: 56px;
+        height: 56px;
+        z-index: 101;
+    }
+
+    .mat-file-upload {
+        justify-content: flex-end;
+        padding: 0px;
+    }
 }

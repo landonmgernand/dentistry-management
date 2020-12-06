@@ -712,3 +712,15 @@
     max-height: 350px;
     overflow: auto;
 }
+
+.grph-file-upload {
+    box-shadow: none;
+}
+
+.grph-file-upload:hover {
+    background-color: transparent;
+}
+
+.grph-fab-file {
+    cursor: pointer;
+}

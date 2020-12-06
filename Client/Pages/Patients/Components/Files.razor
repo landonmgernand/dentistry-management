@@ -12,41 +12,41 @@
 @inject IFileReaderService fileReaderService
 
 <div class="grph-paper">
-    <Panel Title="Files" Class="grph-file-content">
-        <p class="validation-message" style="@messageStyles">
-            @message
-        </p>
-        @if (files != null)
-        {
-            <div class="grph-files">
+    <Panel Title="Files">
+        <div class="mat-file-upload grph-file-upload">
+            <input type="file" @ref=inputTypeFileElement @onchange="HandleSelection" accept="image/*" />
+            <MatFAB Icon="@MatIconNames.Add" Class="grph-fab-file"></MatFAB>
+        </div>
+        <div class="grph-file-content">
+            <p class="validation-message" style="@messageStyles">
+                @message
+            </p>
+            @if (files != null)
+            {
+                <div class="grph-files">
 
-                @foreach (var file in files)
-                {
+                    @foreach (var file in files)
+                    {
 
-                    <div class="grph-thumbnail">
-                        <div class="grph-thumbnail-container">
-                            <div class="grph-thumbnail-img"
-                                 style="background-image: url(@("images/files/" + file.Path));"
-                                 @onclick="@(() => View(file))">
-                            </div>
-                            <div class="grph-thumbnail-content" @onclick="@(() => Delete(file))">
-                                <span class="oi oi-trash"></span>
+                        <div class="grph-thumbnail">
+                            <div class="grph-thumbnail-container">
+                                <div class="grph-thumbnail-img"
+                                     style="background-image: url(@("images/files/" + file.Path));"
+                                     @onclick="@(() => View(file))">
+                                </div>
+                                <div class="grph-thumbnail-content" @onclick="@(() => Delete(file))">
+                                    <span class="oi oi-trash"></span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                }
-            </div>
-        }
-        <div class="mat-file-upload mdc-ripple-surface mdc-ripple-upgraded">
-            <input type="file" @ref=inputTypeFileElement @onchange="HandleSelection" accept="image/*" />
-            <div class="mat-file-upload-content">
-                <span>Drop Or Browse</span>
-            </div>
+                    }
+                </div>
+            }
+            @if (Progress > 0)
+            {
+                <MatProgressBar Progress="@(Progress / 100)"></MatProgressBar>
+            }
         </div>
-        @if (Progress > 0)
-        {
-            <MatProgressBar Progress="@(Progress / 100)"></MatProgressBar>
-        }
     </Panel>
 </div>
 

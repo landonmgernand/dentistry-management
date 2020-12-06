@@ -48,7 +48,8 @@
         }
         else
         {
-            @*<div class="card-columns">
+
+            <div class="card-columns">
                 <div class="card">
                     <ToothSet>
                         <Teeth MedicalChartId="patient.MedicalChart.Id" />
@@ -65,10 +66,9 @@
                 <div class="card">
                     <Files MedicalChartId="patient.MedicalChart.Id" />          
                 </div>
-            </div>*@
+            </div>
 
-
-            <div class="row">
+            @*<div class="row">
                 <div class="col">
                     <ToothSet>
                         <Teeth MedicalChartId="patient.MedicalChart.Id" />
@@ -89,7 +89,7 @@
                 <div class="col">
                     <TreatmentHistories MedicalChartId="patient.MedicalChart.Id" @ref="treatmentHistory" />
                 </div>
-            </div>
+            </div>*@
         }
     }
 </div>
