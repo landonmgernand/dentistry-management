@@ -3,14 +3,16 @@ using System;
 using DentistryManagement.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DentistryManagement.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201206082126_AddToothTreatmentHistoryRelation")]
+    partial class AddToothTreatmentHistoryRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -182,7 +184,7 @@ namespace DentistryManagement.Server.Migrations
                             Id = "B22698B8-42A2-4115-9631-1C2D1E2AC5F7",
                             AccessFailedCount = 0,
                             AffiliateId = 1,
-                            ConcurrencyStamp = "21678110-fcb7-4792-9157-1b30b706da23",
+                            ConcurrencyStamp = "d8ad2339-6a36-46e7-9f2f-481cb9d78a51",
                             Email = "admin@graphene.com",
                             EmailConfirmed = true,
                             FirstName = "Graphene",
@@ -190,9 +192,9 @@ namespace DentistryManagement.Server.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "admin@graphene.com",
                             NormalizedUserName = "admin@graphene.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJbH7S0Wk31TiVTE6QLV2zFRWDrd9udZWR+z87Vkcmk8gHunENUC2ydJxdy1OKhR0g==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMle0sBgHCFOibbMBkl9MiiXeXVKg4RykSpL1e0cVp2KwUsHQBlVLnNj1H9qyYRv9Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "bfb89618-e953-4eac-bf19-cc5e02099334",
+                            SecurityStamp = "3e711072-0cfc-4d20-bfa6-a21decf76c4d",
                             TwoFactorEnabled = false,
                             UserName = "admin@graphene.com"
                         });
@@ -339,9 +341,6 @@ namespace DentistryManagement.Server.Migrations
                         .HasMaxLength(100);
 
                     b.Property<int>("MedicalChartId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Number")
                         .HasColumnType("int");
 
                     b.Property<int>("Order")
@@ -675,21 +674,21 @@ namespace DentistryManagement.Server.Migrations
                         new
                         {
                             Id = "2301D884-221A-4E7D-B509-0113DCC043E1",
-                            ConcurrencyStamp = "523f5b48-d2e8-443a-a35f-1344ebba082a",
+                            ConcurrencyStamp = "7df14db9-b6d1-4d2c-9fdd-9641206c83b9",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         },
                         new
                         {
-                            Id = "b0211b05-6272-49b8-85fe-994cce590f71",
-                            ConcurrencyStamp = "94e0d71a-c40d-4a5d-8cd0-86c9da6a554a",
+                            Id = "94e91e0c-a411-4b30-9606-1faf878495ad",
+                            ConcurrencyStamp = "083510d5-c4d3-40ae-8521-5260cb6bbe1e",
                             Name = "Manager",
                             NormalizedName = "Manager"
                         },
                         new
                         {
-                            Id = "e7de91d3-6be4-49c0-b94f-5274ae84e715",
-                            ConcurrencyStamp = "7cb1e95b-72f1-476f-bf50-bfa7320215e6",
+                            Id = "326109f0-15ed-498f-842f-124cfd26028f",
+                            ConcurrencyStamp = "592f4e41-a7d2-41f2-affc-1b208a35cb00",
                             Name = "Dentist",
                             NormalizedName = "Dentist"
                         });

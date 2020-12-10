@@ -1,5 +1,6 @@
 ﻿@using DentistryManagement.Shared.ViewModels.TreatmentHistories;
 @using DentistryManagement.Shared.ViewModels.Treatments;
+@using DentistryManagement.Shared.ViewModels.Teeth;
 @using DentistryManagement.Shared.ViewModels.Dentists;
 @using DentistryManagement.Client.Pages.Patients
 @using DentistryManagement.Client.Helpers
@@ -40,6 +41,23 @@
 
         <div class="row">
             <div class="col">
+                <AuthorizeView Roles="Admin" Context="Authorization">
+                    <MatSelect Label="Dentist" Outlined="true" @bind-Value="treatmentHistoryViewModel.UserId">
+                        @if (dentists != null)
+                        {
+                            @foreach (var dentist in dentists)
+                            {
+                                <MatOption Value="@dentist.Id">@dentist.FullName</MatOption>
+                            }
+                        }
+                    </MatSelect>
+                </AuthorizeView>
+            </div>
+            <div class="col"></div>
+        </div>
+
+        <div class="row">
+            <div class="col">
                 <MatSelect Label="Treatment" Outlined="true" @bind-Value="treatmentHistoryViewModel.TreatmentId">
                     @if (treatments != null)
                     {
@@ -52,17 +70,16 @@
                 <ValidationMessage For="@(() => treatmentHistoryViewModel.TreatmentId)" />
             </div>
             <div class="col">
-                <AuthorizeView Roles="Admin" Context="Authorization">
-                    <MatSelect Label="Dentist" Outlined="true" @bind-Value="treatmentHistoryViewModel.UserId">
-                        @if (dentists != null)
+                <MatSelect Label="Tooth" Outlined="true" @bind-Value="treatmentHistoryViewModel.ToothId">
+                    @if (treatments != null)
+                    {
+                        @foreach (var tooth in teethCategories.All)
                         {
-                            @foreach (var dentist in dentists)
-                            {
-                                <MatOption Value="@dentist.Id">@dentist.FullName</MatOption>
-                            }
+                            <MatOption Value="@tooth.Id">@(tooth.Name)</MatOption>
                         }
-                    </MatSelect>
-                </AuthorizeView>
+                    }
+                </MatSelect>
+                <ValidationMessage For="@(() => treatmentHistoryViewModel.ToothId)" />
             </div>
         </div>
 
@@ -102,6 +119,8 @@
 
     private List<TreatmentViewModel> treatments;
 
+    private TeethCategoryViewModel teethCategories;
+
     private List<DentistViewModel> dentists;
 
     protected override async Task OnInitializedAsync()
@@ -111,6 +130,8 @@
             treatmentHistoryViewModel = await Http.GetFromJsonAsync<UpdateTreatmentHistoryViewModel>("api/MedicalChart/" + MedicalChartId + "/Treatment-Histories/" + Id);
             treatments = await Http.GetFromJsonAsync<List<TreatmentViewModel>>("api/Treatment");
             dentists = await Http.GetFromJsonAsync<List<DentistViewModel>>("api/User");
+            teethCategories = await Http.GetFromJsonAsync<TeethCategoryViewModel>("api/MedicalChart/" + MedicalChartId + "/Teeth");
+
         }
         catch (AccessTokenNotAvailableException exception)
         {

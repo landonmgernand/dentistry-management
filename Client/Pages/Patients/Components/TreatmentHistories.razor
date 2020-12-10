@@ -18,6 +18,7 @@
                         <tr class="grph-table-row">
                             <th>Treatment Date</th>
                             <th>Treatment</th>
+                            <th>Tooth</th>
                             <th>Dentist</th>
                             <th></th>
                         </tr>
@@ -28,6 +29,7 @@
                         <tr class="grph-table-row">
                             <td>@treatmentHistory.DateOfTreatment</td>
                             <td>@treatmentHistory.Treatment</td>
+                            <td>@treatmentHistory.Tooth</td>
                             <td>@treatmentHistory.User</td>
                             <td class="grph-actions">
                                 <span class="oi oi-pencil" @onclick="@(() => Edit(treatmentHistory))"></span>

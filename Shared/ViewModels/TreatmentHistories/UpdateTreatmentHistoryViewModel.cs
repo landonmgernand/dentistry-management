@@ -11,6 +11,8 @@ namespace DentistryManagement.Shared.ViewModels.TreatmentHistories
 
         public int TreatmentId { get; set; }
 
+        public int ToothId { get; set; }
+
         public string UserId { get; set; }
 
         public string User { get; set; }

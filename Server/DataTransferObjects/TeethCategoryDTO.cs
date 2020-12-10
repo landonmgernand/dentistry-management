@@ -11,5 +11,7 @@ namespace DentistryManagement.Server.DataTransferObjects
         public List<ToothDTO> LowerRight { get; set; }
 
         public List<ToothDTO> LowerLeft { get; set; }
+
+        public List<ToothDTO> All { get; set; }
     }
 }

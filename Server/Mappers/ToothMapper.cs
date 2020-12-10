@@ -15,6 +15,8 @@ namespace DentistryManagement.Server.Mappers
                 Id = tooth.Id,
                 Url = tooth.Url,
                 Category = tooth.Category,
+                Number = tooth.Number,
+                Order = tooth.Order,
                 HasDiseases = tooth.ToothDiseases.Count > 0
             };
         }
@@ -25,7 +27,8 @@ namespace DentistryManagement.Server.Mappers
             {
                 Id = toothDTO.Id,
                 Url = toothDTO.Url,
-                HasDiseases = toothDTO.HasDiseases
+                HasDiseases = toothDTO.HasDiseases,
+                Name = toothDTO.Category + " (" + toothDTO.Number + ")",
             };
         }
 
@@ -37,6 +40,7 @@ namespace DentistryManagement.Server.Mappers
                 UpperLeft = teethDTO.Where(t => t.Category.Equals("UpperLeft")).ToList(),
                 LowerRight = teethDTO.Where(t => t.Category.Equals("LowerRight")).ToList(),
                 LowerLeft = teethDTO.Where(t => t.Category.Equals("LowerLeft")).ToList(),
+                All = teethDTO,
             };
         }
 
@@ -48,6 +52,7 @@ namespace DentistryManagement.Server.Mappers
                 UpperLeft = teethCategoryDTO.UpperLeft.Select(ur => ToothDTOtoVM(ur)).ToList(),
                 LowerRight = teethCategoryDTO.LowerRight.Select(ur => ToothDTOtoVM(ur)).ToList(),
                 LowerLeft = teethCategoryDTO.LowerLeft.Select(ur => ToothDTOtoVM(ur)).ToList(),
+                All = teethCategoryDTO.All.Select(ur => ToothDTOtoVM(ur)).ToList()
             };
         }
 
