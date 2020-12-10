@@ -103,6 +103,7 @@ namespace DentistryManagement.Server.Services
                 .Include(th => th.Tooth)
                 .Include(th => th.Affiliate)
                 .Where(f => f.MedicalChartId.Equals(medicalChartId))
+                .OrderByDescending(th => th.DateOfTreatment)
                 .Select(th => TreatmentHistoryMapper.TreatmentHistoryToDTO(th))
                 .ToList();
 
