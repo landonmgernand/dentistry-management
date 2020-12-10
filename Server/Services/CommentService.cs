@@ -11,12 +11,12 @@ namespace DentistryManagement.Server.Services
     public class CommentService : ICommentService
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserProviderService _userProvider;
+        private readonly IUserProviderService _userProviderService;
 
-        public CommentService(ApplicationDbContext context, UserProviderService userProviderService)
+        public CommentService(ApplicationDbContext context, IUserProviderService userProviderService)
         {
             _context = context;
-            _userProvider = userProviderService;
+            _userProviderService = userProviderService;
         }
 
         public void Create(CommentDTO commentDTO)
@@ -25,7 +25,7 @@ namespace DentistryManagement.Server.Services
             var comment = CommentMapper.DTOtoComment(commentDTO);
             comment.Tooth = tooth;
             comment.Created = DateTime.Now;
-            comment.UserId = _userProvider.GetUserId();
+            comment.UserId = _userProviderService.GetUserId();
             _context.Comments.Add(comment);
             _context.SaveChanges();
         }

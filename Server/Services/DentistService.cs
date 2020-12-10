@@ -14,12 +14,12 @@ namespace DentistryManagement.Server.Services
     public class DentistService : IDentistService
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserProviderService _userProvider;
+        private readonly IUserProviderService _userProviderService;
 
-        public DentistService(ApplicationDbContext context, UserProviderService userProvider)
+        public DentistService(ApplicationDbContext context, IUserProviderService userProviderService)
         {
             _context = context;
-            _userProvider = userProvider;
+            _userProviderService = userProviderService;
         }
 
         public void Create(DentistDTO dentistDTO)
@@ -40,7 +40,7 @@ namespace DentistryManagement.Server.Services
                 Role = role,
             });
 
-            var userId = _userProvider.GetUserId();
+            var userId = _userProviderService.GetUserId();
 
             var affiliateId = _context.ApplicationUsers
                 .Where(u => u.Id.Equals(userId))
@@ -83,7 +83,7 @@ namespace DentistryManagement.Server.Services
 
         public List<DentistDTO> GetAll()
         {
-            var userId = _userProvider.GetUserId();
+            var userId = _userProviderService.GetUserId();
 
             var affiliateId = _context.ApplicationUsers
                 .Where(u => u.Id.Equals(userId))
@@ -120,7 +120,7 @@ namespace DentistryManagement.Server.Services
 
         public DentistDTO GetCurrent()
         {
-            var userId = _userProvider.GetUserId();
+            var userId = _userProviderService.GetUserId();
 
             var applicationUser = _context.ApplicationUsers
                 .Include(ur => ur.UserRoles)
