@@ -1,0 +1,36 @@
+﻿@using DentistryManagement.Shared.ViewModels.TreatmentHistories
+@using Syncfusion.Blazor.Charts
+
+<div class="grph-paper">
+    <div class="grph-chart-datetime">
+        <h5>Monthly treatment statistics</h5>
+        <div>
+            <SfChart Palettes="@palettes">
+                <ChartArea>
+                <ChartAreaBorder Width="0"></ChartAreaBorder>
+                </ChartArea>
+                <ChartPrimaryXAxis IntervalType="IntervalType.Days" Skeleton="Ed" ValueType="Syncfusion.Blazor.Charts.ValueType.DateTimeCategory" EdgeLabelPlacement="EdgeLabelPlacement.Shift">
+                    <ChartAxisMajorGridLines Width="0"></ChartAxisMajorGridLines>
+                </ChartPrimaryXAxis>
+                <ChartPrimaryYAxis Minimum="0" Maximum="@(MonthlyTreatmentHistory.MaxCount + 10)" Interval="@(MonthlyTreatmentHistory.MaxCount / 10)" LabelFormat="{value}" RangePadding="ChartRangePadding.None">
+                    <ChartAxisLineStyle Width="0"></ChartAxisLineStyle>
+                    <ChartAxisMajorTickLines Width="0"></ChartAxisMajorTickLines>
+                    <ChartAxisMinorTickLines Width="0"></ChartAxisMinorTickLines>
+                </ChartPrimaryYAxis>
+                <ChartTooltipSettings Enable="true"></ChartTooltipSettings>
+                <ChartSeriesCollection>
+                    <ChartSeries DataSource="@MonthlyTreatmentHistory.TreatmentHistories" XName="DateOfTreatment" YName="Count" Opacity="1" Name="Treatments" Width="2" Type="ChartSeriesType.Column">
+                    </ChartSeries>
+                </ChartSeriesCollection>
+                <ChartLegendSettings Visible="false"></ChartLegendSettings>
+            </SfChart>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public MonthlyTreatmentHistoryViewModel MonthlyTreatmentHistory { get; set; }
+
+    public String[] palettes = new String[] { "#193c6b" };
+}
