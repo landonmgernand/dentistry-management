@@ -2,6 +2,7 @@
 using DentistryManagement.Server.DataTransferObjects;
 using DentistryManagement.Server.Helpers;
 using DentistryManagement.Server.Mappers;
+using DentistryManagement.Server.Models;
 using DentistryManagement.Server.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -28,31 +29,75 @@ namespace DentistryManagement.Server.Services
                 .Select(u => u.AffiliateId)
                 .Single();
 
-            var patientCount = _context.Patients
-                .Count();
-            var treatmentCount = _context.TreatmentHistories
-                .Where(th => th.AffiliateId.Equals(affiliateId))
-                .Count();
-
             var firstDay = DateTimeDayOfMonth.FirstDayOfMonth(DateTime.Now);
             var firstDayLastMonth = DateTimeDayOfMonth.FirstDayOfMonth(DateTime.Now.AddMonths(-1));
             var lastDay = DateTimeDayOfMonth.LastDayOfMonth(DateTime.Now);
             var lastDayLastMonth = DateTimeDayOfMonth.LastDayOfMonth(DateTime.Now.AddMonths(-1));
 
-            var lastMonthTreatmentHistories = _context.TreatmentHistories.Where(th => th.DateOfTreatment >= firstDayLastMonth
-               && th.DateOfTreatment <= lastDayLastMonth)
-                .Where(th => th.AffiliateId.Equals(affiliateId))
-                .ToList();
+            return GetStatisticData(affiliateId, firstDay, firstDayLastMonth, lastDay, lastDayLastMonth);
+        }
 
-            var thisMonthTreatmentHistories = _context.TreatmentHistories.Where(th => th.DateOfTreatment >= firstDay
-               && th.DateOfTreatment <= lastDay)
-                .Where(th => th.AffiliateId.Equals(affiliateId))
-                .ToList();
+        public StatisticDTO Get(int affiliateId)
+        {
+            var firstDay = DateTimeDayOfMonth.FirstDayOfMonth(DateTime.Now);
+            var firstDayLastMonth = DateTimeDayOfMonth.FirstDayOfMonth(DateTime.Now.AddMonths(-1));
+            var lastDay = DateTimeDayOfMonth.LastDayOfMonth(DateTime.Now);
+            var lastDayLastMonth = DateTimeDayOfMonth.LastDayOfMonth(DateTime.Now.AddMonths(-1));
 
-            var overallTreatmentHistories = _context.TreatmentHistories
-                .Where(th => th.AffiliateId.Equals(affiliateId))
-                .Include(th => th.Treatment)
-                .ToList();
+            return GetStatisticData(affiliateId, firstDay, firstDayLastMonth, lastDay, lastDayLastMonth);
+        }
+
+        public StatisticDTO GetStatisticData(
+            int affiliateId,
+            DateTime firstDay, 
+            DateTime firstDayLastMonth, 
+            DateTime lastDay, 
+            DateTime lastDayLastMonth
+            )
+        {
+            var patientCount = _context.Patients
+                .Count();
+
+            int treatmentCount = 0;
+            List<TreatmentHistory> lastMonthTreatmentHistories, thisMonthTreatmentHistories, overallTreatmentHistories;
+
+            if (affiliateId == 0)
+            {
+                treatmentCount = _context.TreatmentHistories
+                     .Count();
+
+                lastMonthTreatmentHistories = _context.TreatmentHistories.Where(th => th.DateOfTreatment >= firstDayLastMonth
+                   && th.DateOfTreatment <= lastDayLastMonth)
+                   .ToList();
+
+                thisMonthTreatmentHistories = _context.TreatmentHistories.Where(th => th.DateOfTreatment >= firstDay
+                   && th.DateOfTreatment <= lastDay)
+                   .ToList();
+
+                overallTreatmentHistories = _context.TreatmentHistories
+                   .Include(th => th.Treatment)
+                   .ToList();             
+            } else
+            {
+                treatmentCount = _context.TreatmentHistories
+                   .Where(th => th.AffiliateId.Equals(affiliateId))
+                   .Count();
+
+                lastMonthTreatmentHistories = _context.TreatmentHistories.Where(th => th.DateOfTreatment >= firstDayLastMonth
+                   && th.DateOfTreatment <= lastDayLastMonth)
+                   .Where(th => th.AffiliateId.Equals(affiliateId))
+                   .ToList();
+
+                thisMonthTreatmentHistories = _context.TreatmentHistories.Where(th => th.DateOfTreatment >= firstDay
+                  && th.DateOfTreatment <= lastDay)
+                   .Where(th => th.AffiliateId.Equals(affiliateId))
+                   .ToList();
+
+                overallTreatmentHistories = _context.TreatmentHistories
+                   .Where(th => th.AffiliateId.Equals(affiliateId))
+                   .Include(th => th.Treatment)
+                   .ToList();
+            }
 
             var monthlyEarnings = lastMonthTreatmentHistories
                 .Sum(th => th.Price);
@@ -110,6 +155,7 @@ namespace DentistryManagement.Server.Services
             }
 
             return StatisticMapper.ToDTO(
+                affiliateId,
                 patientCount,
                 treatmentCount,
                 monthlyEarnings,

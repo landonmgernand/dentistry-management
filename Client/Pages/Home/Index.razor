@@ -2,8 +2,7 @@
 
 @using DentistryManagement.Client.Pages.Home.Components
 @using DentistryManagement.Shared.ViewModels.Statistics
-@using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using DentistryManagement.Shared.ViewModels.Affiliates
 
 @inject HttpClient Http
 
@@ -16,29 +15,39 @@
     }
     else
     {
+        <AuthorizeView Roles="Admin">
+            <div class="row">
+                <div class="col-7">
+                    <ChartSettings UpdateChartData="UpdateChartData" AffiliateId="@statistic.AffiliateId" Affiliates="affiliates" />
+                </div>
+            </div>
+        </AuthorizeView>
+
+        <br />
+
         <div class="row">
-            <div class="col">
+            <div class="col-3">
                 <PatientCountChart PatientCount="@statistic.PatientCount" />
             </div>
-            <div class="col">
+            <div class="col-3">
                 <TreatmentCountChart TreatmentCount="@statistic.TreatmentCount" />
             </div>
-            <div class="col">
+            <div class="col-3">
                 <MonthlyEarningsChart MonthlyEarnings="@statistic.MonthlyEarnings" />
             </div>
-            <div class="col">
+            <div class="col-3">
                 <OverallEarningsChart OverallEarnings="@statistic.OverallEarnings" />
             </div>
         </div>
 
-        <br/>
+        <br />
 
         <div class="row">
-            <div class="col">
-                <MonthlyTreatmentChart MonthlyTreatmentHistory="@statistic.MonthlyTreatmentHistory"/>
+            <div class="col-6">
+                <MonthlyTreatmentChart MonthlyTreatmentHistory="@statistic.MonthlyTreatmentHistory" />
             </div>
-            <div class="col">
-                <PopularTreatmentChart PopularTreatment="@statistic.PopularTreatment"/>
+            <div class="col-6">
+                <PopularTreatmentChart PopularTreatment="@statistic.PopularTreatment" />
             </div>
         </div>
     }
@@ -50,6 +59,11 @@
 
     private StatisticViewModel statistic;
 
+    private List<AffiliateViewModel> affiliates;
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
@@ -57,11 +71,23 @@
 
         try
         {
+            var user = (await authenticationStateTask).User;
+
+            if (user.IsInRole("Admin"))
+            {
+                affiliates = await Http.GetFromJsonAsync<List<AffiliateViewModel>>("api/Affiliate");
+            }
+
             statistic = await Http.GetFromJsonAsync<StatisticViewModel>("api/statistic");
         }
         catch (AccessTokenNotAvailableException exception)
         {
             exception.Redirect();
         }
+    }
+
+    private void UpdateChartData(StatisticViewModel statisticView)
+    {
+        statistic = statisticView;
     }
 }

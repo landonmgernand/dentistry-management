@@ -5,13 +5,13 @@
     <div class="grph-chart-datetime">
         <h5>Most popular treatments</h5>
         <div>
-            <SfAccumulationChart EnableAnimation="false">
+            <SfAccumulationChart EnableAnimation="false" EnableSmartLabels="true">
                 <AccumulationChartTooltipSettings Enable="true"></AccumulationChartTooltipSettings>
                 <AccumulationChartLegendSettings Visible="false"></AccumulationChartLegendSettings>
                 <AccumulationChartSeriesCollection>
                     <AccumulationChartSeries DataSource="@PopularTreatment.Treatments" XName="Name" YName="Count" Name="Treatment" Radius="@OuterRadius" StartAngle="@StartAngle" EndAngle="@EndAngle"
                                              InnerRadius="0%" ExplodeIndex="@ExplodeIndex" Explode="true" ExplodeOffset="@ExplodeRadius">
-                        <AccumulationDataLabelSettings Visible="true" Name="Name" Position="AccumulationLabelPosition.Outside"></AccumulationDataLabelSettings>
+                        <AccumulationDataLabelSettings Visible="@DataLables" Name="Name" Position="AccumulationLabelPosition.Outside"></AccumulationDataLabelSettings>
                     </AccumulationChartSeries>
                 </AccumulationChartSeriesCollection>
             </SfAccumulationChart>
@@ -22,7 +22,12 @@
 @code {
     [Parameter]
     public PopularTreatmentViewModel PopularTreatment { get; set; }
+
     public int StartAngle = 0, value = 0, EndAngle = 360, radiusValue = 70, exploderadius = 10;
+
     public double ExplodeIndex = 1;
+
     public string OuterRadius = "70%", ExplodeRadius = "10%";
+
+    private bool DataLables => PopularTreatment.Treatments.Count > 0 ? true : false;
 }

@@ -2,6 +2,8 @@
 {
     public class StatisticDTO
     {
+        public int AffiliateId { get; set; }
+
         public int PatientCount { get; set; }
 
         public int TreatmentCount { get; set; }

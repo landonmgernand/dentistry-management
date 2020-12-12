@@ -1,0 +1,49 @@
+﻿@using DentistryManagement.Client.Components
+@using DentistryManagement.Shared.ViewModels.Affiliates
+@using DentistryManagement.Shared.ViewModels.Statistics
+
+@inject HttpClient Http
+
+<div class="grph-paper">
+    <SettingsPanel Title="Settings">
+        <ul class="grph-ul">
+            <li class="grph-settings-li">
+                <div class="col">
+                    <MatSelect Label="Affiliate" Outlined="true" Value="@AffiliateId" ValueChanged="@((int value) => ChangeAffiliate(value))">
+                        <MatOption Value="0">All</MatOption>
+                        @foreach (var affiliate in Affiliates)
+                        {
+                            <MatOption Value="@affiliate.Id">@affiliate.Name</MatOption>
+                        }
+                    </MatSelect>
+                 </div>
+            </li>
+        </ul>
+    </SettingsPanel>
+</div>
+
+@code {
+    [Parameter]
+    public List<AffiliateViewModel> Affiliates { get; set; }
+
+    [Parameter]
+    public EventCallback<StatisticViewModel> UpdateChartData { get; set; }
+
+    [Parameter]
+    public int AffiliateId { get; set; }
+
+    private StatisticViewModel statistic;
+
+    private async Task ChangeAffiliate(int affiliateId)
+    {
+        try
+        {
+            statistic = await Http.GetFromJsonAsync<StatisticViewModel>("api/statistic/" + affiliateId);
+            await UpdateChartData.InvokeAsync(statistic);
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+}

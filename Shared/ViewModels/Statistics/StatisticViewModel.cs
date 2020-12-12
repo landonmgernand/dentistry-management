@@ -6,6 +6,8 @@ namespace DentistryManagement.Shared.ViewModels.Statistics
 {
     public class StatisticViewModel
     {
+        public int AffiliateId { get; set; }
+
         public int PatientCount { get; set; }
 
         public int TreatmentCount { get; set; }

@@ -24,5 +24,12 @@ namespace DentistryManagement.Server.Controllers
             var statisticDTO = _service.Get();
             return StatisticMapper.DTOtoVM(statisticDTO);
         }
+
+        [HttpGet("{affiliateId}")]
+        public ActionResult<StatisticViewModel> GetSpecifiicStatistic(int affiliateId)
+        {
+            var statisticDTO = _service.Get(affiliateId);
+            return StatisticMapper.DTOtoVM(statisticDTO);
+        }
     }
 }

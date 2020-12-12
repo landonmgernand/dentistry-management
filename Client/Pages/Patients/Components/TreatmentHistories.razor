@@ -1,17 +1,16 @@
 ﻿@using DentistryManagement.Client.Components
 @using DentistryManagement.Client.Pages.Patients.Modals
 @using DentistryManagement.Shared.ViewModels.TreatmentHistories
-@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using Microsoft.Extensions.Logging
 
 @inject HttpClient Http
 @inject IModalService Modal
 @inject ILogger<TreatmentHistories> Logger
 
-@if (treatmentHistories != null)
-{
-    <div class="grph-paper">
-        <Panel Title="Treatment Histories">
+<div class="grph-paper">
+    <Panel Title="Treatment Histories">
+        @if (treatmentHistories != null)
+        {
             <div class="grph-paper">
                 <table class="grp-table">
                     <thead class="grph-table-head">
@@ -26,25 +25,25 @@
                     <tbody>
                         @foreach (var treatmentHistory in treatmentHistories)
                         {
-                        <tr class="grph-table-row">
-                            <td>@treatmentHistory.DateOfTreatment</td>
-                            <td>@treatmentHistory.Treatment</td>
-                            <td>@treatmentHistory.Tooth</td>
-                            <td>@treatmentHistory.User</td>
-                            <td class="grph-actions">
-                                <span class="oi oi-pencil" @onclick="@(() => Edit(treatmentHistory))"></span>
-                                <AuthorizeView Roles="Admin">
-                                    <span class="oi oi-trash" @onclick="@(() => Delete(treatmentHistory))"></span>
-                                </AuthorizeView>
-                            </td>
-                        </tr>
+                            <tr class="grph-table-row">
+                                <td>@treatmentHistory.DateOfTreatment</td>
+                                <td>@treatmentHistory.Treatment</td>
+                                <td>@treatmentHistory.Tooth</td>
+                                <td>@treatmentHistory.User</td>
+                                <td class="grph-actions">
+                                    <span class="oi oi-pencil" @onclick="@(() => Edit(treatmentHistory))"></span>
+                                    <AuthorizeView Roles="Admin">
+                                        <span class="oi oi-trash" @onclick="@(() => Delete(treatmentHistory))"></span>
+                                    </AuthorizeView>
+                                </td>
+                            </tr>
                         }
                     </tbody>
                 </table>
             </div>
-        </Panel>
-    </div>
-}
+        }
+     </Panel>
+</div>
 
 @code {
     [Parameter]

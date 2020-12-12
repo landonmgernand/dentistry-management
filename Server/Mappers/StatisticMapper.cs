@@ -7,6 +7,7 @@ namespace DentistryManagement.Server.Mappers
     public class StatisticMapper
     {
         public static StatisticDTO ToDTO(
+            int affiliateId,
             int patientCount,
             int treatmentCount,
             decimal monthlyEarnings,
@@ -17,6 +18,7 @@ namespace DentistryManagement.Server.Mappers
         {
             return new StatisticDTO
             {
+                AffiliateId = affiliateId,
                 PatientCount = patientCount,
                 TreatmentCount = treatmentCount,
                 MonthlyEarnings = monthlyEarnings,
@@ -30,6 +32,7 @@ namespace DentistryManagement.Server.Mappers
         {
             return new StatisticViewModel
             {
+                AffiliateId = statisticDTO.AffiliateId,
                 PatientCount = statisticDTO.PatientCount,
                 TreatmentCount = statisticDTO.TreatmentCount,
                 MonthlyEarnings = statisticDTO.MonthlyEarnings.ToString("c", new CultureInfo("fr-FR")),

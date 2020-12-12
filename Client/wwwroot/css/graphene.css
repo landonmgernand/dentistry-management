@@ -825,3 +825,46 @@
     height: 100%;
     border-top: 1px solid #f7f7f7;
 }
+
+.grph-settings-header-root {
+    display: flex;
+    padding: 16px;
+    align-items: center;
+}
+
+.grph-settings-header-content {
+    flex: 1 1 auto;
+}
+
+.grph-settings-title {
+    display: block;
+    font-size: 1.2857142857142856rem;
+    font-family: Ubuntu,sans-serif;
+    font-weight: 400;
+    line-height: 1.334;
+    margin: 0;
+}
+
+.grph-settings-text {
+    color: #193C6B;
+    font-size: 20px;
+    font-weight: 400;
+    margin-right: 24px;
+    vertical-align: middle;
+}
+
+.grph-settings-content {
+    padding-left: 5px;
+}
+
+.grph-settings-li {
+    width: 100%;
+    display: flex;
+    position: relative;
+    box-sizing: border-box;
+    text-align: left;
+    align-items: center;
+    padding-bottom: 8px;
+    justify-content: flex-start;
+    text-decoration: none;
+}
