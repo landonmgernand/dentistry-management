@@ -68,7 +68,8 @@ namespace DentistryManagement.Server
             services.AddScoped<ITreatmentService<TreatmentDTO>, TreatmentService>();
             services.AddScoped<ITreatmentHistoryService, TreatmentHistoryService>();
             services.AddScoped<ICommentService, CommentService>();
-            services.AddScoped<UserProviderService>();
+            services.AddScoped<IUserProviderService, UserProviderService>();
+            services.AddScoped<IStatisticService, StatisticService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

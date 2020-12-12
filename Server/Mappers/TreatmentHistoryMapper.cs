@@ -1,6 +1,8 @@
 ﻿using DentistryManagement.Server.DataTransferObjects;
 using DentistryManagement.Server.Models;
 using DentistryManagement.Shared.ViewModels.TreatmentHistories;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DentistryManagement.Server.Mappers
 {
@@ -71,6 +73,25 @@ namespace DentistryManagement.Server.Mappers
                 Tooth = treatmentHistoryDTO.Tooth.Category + " (" + treatmentHistoryDTO.Tooth.Number + ")",
                 ToothId = treatmentHistoryDTO.Tooth.Id,
                 Affiliate = treatmentHistoryDTO.Affiliate.Name               
+            };
+        }
+
+        public static TreatmentHistoryChartViewModel DTOtoTreatmentHistoryChartVM(TreatmentHistoryChartDTO treatmentHistoryChart)
+        {
+            return new TreatmentHistoryChartViewModel
+            {
+                DateOfTreatment = treatmentHistoryChart.DateOfTreatment.ToString("dd-MM-yyyy"),
+                Count = treatmentHistoryChart.Count
+            };
+        }
+
+        public static MonthlyTreatmentHistoryViewModel DTOtoMonthlyTreatmentHistoryVM(MonthlyTreatmentHistoryDTO monthlyTreatmentHistoryDTO)
+        {
+            return new MonthlyTreatmentHistoryViewModel
+            {
+                TreatmentHistories = monthlyTreatmentHistoryDTO.TreatmentHistories
+                .Select(th => DTOtoTreatmentHistoryChartVM(th)).ToList(),
+                MaxCount = monthlyTreatmentHistoryDTO.MaxCount
             };
         }
     }

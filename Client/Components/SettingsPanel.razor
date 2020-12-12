@@ -1,0 +1,20 @@
+﻿<div class="grph-settings">
+    <div class="grph-settings-header-root">
+        <div class="grph-settings-header-content">
+            <span class="grph-settings-title">
+                <span class="grph-settings-text">@Title</span>
+            </span>
+        </div>
+    </div>
+    <div class="grph-settings-content">
+        @ChildContent
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public string Title { get; set; }
+}

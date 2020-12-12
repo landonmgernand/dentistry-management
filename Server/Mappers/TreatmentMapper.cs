@@ -1,10 +1,8 @@
 ﻿using DentistryManagement.Server.DataTransferObjects;
 using DentistryManagement.Server.Models;
 using DentistryManagement.Shared.ViewModels.Treatments;
-using System;
-using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DentistryManagement.Server.Mappers
 {
@@ -54,7 +52,25 @@ namespace DentistryManagement.Server.Mappers
             {
                 Id = treatmentDTO.Id,
                 Name = treatmentDTO.Name,
-                Price = treatmentDTO.Price
+                Price = treatmentDTO.Price.ToString("c", new CultureInfo("fr-FR"))
+            };
+        }
+
+        public static TreatmentChartViewModel DTOtoTreatmentChartVM(TreatmentChartDTO treatmentChartDTO)
+        {
+            return new TreatmentChartViewModel
+            {
+                Name = treatmentChartDTO.Name,
+                Count = treatmentChartDTO.Count
+            };
+        }
+
+        public static PopularTreatmentViewModel DTOtoPopularTreatmentVM(PopularTreatmentDTO popularTreatmentDTO)
+        {
+            return new PopularTreatmentViewModel
+            {
+                Treatments = popularTreatmentDTO.Treatments
+                .Select(th => DTOtoTreatmentChartVM(th)).ToList()
             };
         }
     }

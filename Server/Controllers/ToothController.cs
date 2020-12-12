@@ -3,12 +3,14 @@ using DentistryManagement.Server.Services.Interfaces;
 using DentistryManagement.Shared.ViewModels.Comments;
 using DentistryManagement.Shared.ViewModels.Diseases;
 using DentistryManagement.Shared.ViewModels.Teeth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace DentistryManagement.Server.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ToothController : ControllerBase

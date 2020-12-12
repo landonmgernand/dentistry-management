@@ -11,12 +11,12 @@ namespace DentistryManagement.Server.Services
     public class TreatmentHistoryService : ITreatmentHistoryService
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserProviderService _userProvider;
+        private readonly IUserProviderService _userProviderService;
 
-        public TreatmentHistoryService(ApplicationDbContext context, UserProviderService userProvider)
+        public TreatmentHistoryService(ApplicationDbContext context, IUserProviderService userProviderService)
         {
             _context = context;
-            _userProvider = userProvider;
+            _userProviderService = userProviderService;
         }
 
         public void Create(TreatmentHistoryDTO treatmentHistoryDTO)
@@ -30,7 +30,7 @@ namespace DentistryManagement.Server.Services
 
             if (treatmentHistoryDTO.UserId is null)
             {
-                 userId = _userProvider.GetUserId();
+                 userId = _userProviderService.GetUserId();
             } else
             {
                  userId = treatmentHistoryDTO.UserId;
@@ -96,7 +96,7 @@ namespace DentistryManagement.Server.Services
 
             if (treatmentHistoryDTO.UserId is null)
             {
-                userId = _userProvider.GetUserId();
+                userId = _userProviderService.GetUserId();
             }
             else
             {

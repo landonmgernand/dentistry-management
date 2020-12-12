@@ -1,0 +1,21 @@
+﻿<div class="grph-paper">
+    <div class="grph-chart-number-container">
+        <div class="col-3">
+            <div class="grph-chart-number-icon">
+                <DentistryManagement.Client.Icons.Papers />
+            </div>
+        </div>
+        <div class="col-9">
+            <h6 class="grph-chart-number-h6">Earnings from last month</h6>
+            <h5 class="grph-chart-number-h5">@MonthlyEarnings</h5>
+        </div>
+    </div>
+    <div class="grph-chart-number-footer">
+        <p>All treatment history's earnings from the last thirty days</p>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string MonthlyEarnings { get; set; }
+}

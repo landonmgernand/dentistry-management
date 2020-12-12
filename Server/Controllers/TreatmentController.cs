@@ -2,12 +2,14 @@
 using DentistryManagement.Server.Mappers;
 using DentistryManagement.Server.Services.Interfaces;
 using DentistryManagement.Shared.ViewModels.Treatments;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace DentistryManagement.Server.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TreatmentController : ControllerBase
