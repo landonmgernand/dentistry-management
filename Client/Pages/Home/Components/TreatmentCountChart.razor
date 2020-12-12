@@ -1,0 +1,21 @@
+﻿<div class="grph-paper">
+    <div class="grph-chart-number-container">
+        <div class="col-3">
+            <div class="grph-chart-number-icon">
+                <DentistryManagement.Client.Icons.PersonCheck />
+            </div>
+        </div>
+        <div class="col-9">
+            <h6 class="grph-chart-number-h6">Treatments in total</h6>
+            <h5 class="grph-chart-number-h5">@TreatmentCount</h5>
+        </div>
+    </div>
+    <div class="grph-chart-number-footer">
+        <p>All treatment histories your dentists have made</p>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int TreatmentCount { get; set; }
+}
