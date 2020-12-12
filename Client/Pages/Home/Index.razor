@@ -1,0 +1,67 @@
+﻿@page "/"
+
+@using DentistryManagement.Client.Pages.Home.Components
+@using DentistryManagement.Shared.ViewModels.Statistics
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+
+@inject HttpClient Http
+
+@attribute [Authorize]
+
+<div class="content px-4">
+    @if (statistic == null)
+    {
+        <div class="loader">Loading...</div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col">
+                <PatientCountChart PatientCount="@statistic.PatientCount" />
+            </div>
+            <div class="col">
+                <TreatmentCountChart TreatmentCount="@statistic.TreatmentCount" />
+            </div>
+            <div class="col">
+                <MonthlyEarningsChart MonthlyEarnings="@statistic.MonthlyEarnings" />
+            </div>
+            <div class="col">
+                <OverallEarningsChart OverallEarnings="@statistic.OverallEarnings" />
+            </div>
+        </div>
+
+        <br/>
+
+        <div class="row">
+            <div class="col">
+                <MonthlyTreatmentChart MonthlyTreatmentHistory="@statistic.MonthlyTreatmentHistory"/>
+            </div>
+            <div class="col">
+                <PopularTreatmentChart PopularTreatment="@statistic.PopularTreatment"/>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [CascadingParameter]
+    protected MainLayout navigationSet { get; set; }
+
+    private StatisticViewModel statistic;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        navigationSet.resetNavigationPanelWithState();
+
+        try
+        {
+            statistic = await Http.GetFromJsonAsync<StatisticViewModel>("api/statistic");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+}
