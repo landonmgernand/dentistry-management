@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>DentistryManagement.Server-67EA173F-6370-422D-B47C-0C7213D36FAF</UserSecretsId>
   </PropertyGroup>
 
