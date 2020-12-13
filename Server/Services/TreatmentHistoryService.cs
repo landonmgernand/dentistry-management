@@ -11,12 +11,12 @@ namespace DentistryManagement.Server.Services
     public class TreatmentHistoryService : ITreatmentHistoryService
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserProviderService _userProvider;
+        private readonly IUserProviderService _userProviderService;
 
-        public TreatmentHistoryService(ApplicationDbContext context, UserProviderService userProvider)
+        public TreatmentHistoryService(ApplicationDbContext context, IUserProviderService userProviderService)
         {
             _context = context;
-            _userProvider = userProvider;
+            _userProviderService = userProviderService;
         }
 
         public void Create(TreatmentHistoryDTO treatmentHistoryDTO)
@@ -24,12 +24,13 @@ namespace DentistryManagement.Server.Services
             var treatmentHistory = TreatmentHistoryMapper.DTOtoTreatmentHistory(treatmentHistoryDTO);
             var medicalChart = _context.MedicalCharts.Find(treatmentHistoryDTO.MedicalChartId);
             var treatment = _context.Treatments.Find(treatmentHistoryDTO.TreatmentId);
+            var tooth = _context.Teeth.Find(treatmentHistoryDTO.ToothId);
 
             string userId;
 
             if (treatmentHistoryDTO.UserId is null)
             {
-                 userId = _userProvider.GetUserId();
+                 userId = _userProviderService.GetUserId();
             } else
             {
                  userId = treatmentHistoryDTO.UserId;
@@ -46,6 +47,7 @@ namespace DentistryManagement.Server.Services
 
             treatmentHistory.Price = treatment.Price;
             treatmentHistory.Treatment = treatment;
+            treatmentHistory.Tooth = tooth;
             treatmentHistory.Affiliate = affiliate;
             treatmentHistory.MedicalChart = medicalChart;
             treatmentHistory.User = user;
@@ -71,12 +73,11 @@ namespace DentistryManagement.Server.Services
             var treatmentHistory = _context.TreatmentHistories
                  .Include(th => th.User)
                  .Include(th => th.Treatment)
+                 .Include(th => th.Tooth)
                  .Include(th => th.Affiliate)
                  .Where(th => th.Id.Equals(treatmentHistoryId))
                  .Where(th => th.MedicalChartId.Equals(medicalChartId))
                  .SingleOrDefault();
- 
-                // .SingleOrDefault(x => x.Id.Equals(treatmentHistoryId));
 
             if (treatmentHistory == null)
             {
@@ -90,11 +91,12 @@ namespace DentistryManagement.Server.Services
         {
             var treatmentHistory = _context.TreatmentHistories.Find(treatmentHistoryDTO.Id);
             var treatment = _context.Treatments.Find(treatmentHistoryDTO.TreatmentId);
+            var tooth = _context.Teeth.Find(treatmentHistoryDTO.ToothId);
             string userId;
 
             if (treatmentHistoryDTO.UserId is null)
             {
-                userId = _userProvider.GetUserId();
+                userId = _userProviderService.GetUserId();
             }
             else
             {
@@ -112,6 +114,7 @@ namespace DentistryManagement.Server.Services
 
             treatmentHistory.Comment = treatmentHistoryDTO.Comment;
             treatmentHistory.Treatment = treatment;
+            treatmentHistory.Tooth = tooth;
             treatmentHistory.Price = treatment.Price;
             treatmentHistory.Affiliate = affiliate;
             treatmentHistory.User = user;

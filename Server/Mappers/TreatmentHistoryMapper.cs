@@ -1,6 +1,8 @@
 ﻿using DentistryManagement.Server.DataTransferObjects;
 using DentistryManagement.Server.Models;
 using DentistryManagement.Shared.ViewModels.TreatmentHistories;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DentistryManagement.Server.Mappers
 {
@@ -15,6 +17,7 @@ namespace DentistryManagement.Server.Mappers
                 MedicalChartId = createTreatmentHistory.MedicalChartId,
                 TreatmentId = createTreatmentHistory.TreatmentId,
                 UserId = createTreatmentHistory.UserId,
+                ToothId = createTreatmentHistory.ToothId
             };
         }
 
@@ -26,6 +29,7 @@ namespace DentistryManagement.Server.Mappers
                 Comment = updateTreatmentHistory.Comment,
                 TreatmentId = updateTreatmentHistory.TreatmentId,
                 UserId = updateTreatmentHistory.UserId,
+                ToothId = updateTreatmentHistory.ToothId
             };
         }
 
@@ -39,6 +43,7 @@ namespace DentistryManagement.Server.Mappers
                 Price = treatmentHistory.Price,
                 MedicalChart = treatmentHistory.MedicalChart,
                 Treatment = treatmentHistory.Treatment,
+                Tooth = treatmentHistory.Tooth,
                 User = treatmentHistory.User,
                 Affiliate = treatmentHistory.Affiliate
             };
@@ -65,7 +70,28 @@ namespace DentistryManagement.Server.Mappers
                 UserId = treatmentHistoryDTO.User.Id,
                 Treatment = treatmentHistoryDTO.Treatment.Name,
                 TreatmentId = treatmentHistoryDTO.Treatment.Id,
+                Tooth = treatmentHistoryDTO.Tooth.Category + " (" + treatmentHistoryDTO.Tooth.Number + ")",
+                ToothId = treatmentHistoryDTO.Tooth.Id,
                 Affiliate = treatmentHistoryDTO.Affiliate.Name               
+            };
+        }
+
+        public static TreatmentHistoryChartViewModel DTOtoTreatmentHistoryChartVM(TreatmentHistoryChartDTO treatmentHistoryChart)
+        {
+            return new TreatmentHistoryChartViewModel
+            {
+                DateOfTreatment = treatmentHistoryChart.DateOfTreatment.ToString("dd-MM-yyyy"),
+                Count = treatmentHistoryChart.Count
+            };
+        }
+
+        public static MonthlyTreatmentHistoryViewModel DTOtoMonthlyTreatmentHistoryVM(MonthlyTreatmentHistoryDTO monthlyTreatmentHistoryDTO)
+        {
+            return new MonthlyTreatmentHistoryViewModel
+            {
+                TreatmentHistories = monthlyTreatmentHistoryDTO.TreatmentHistories
+                .Select(th => DTOtoTreatmentHistoryChartVM(th)).ToList(),
+                MaxCount = monthlyTreatmentHistoryDTO.MaxCount
             };
         }
     }

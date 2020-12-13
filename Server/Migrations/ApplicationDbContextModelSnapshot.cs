@@ -182,7 +182,7 @@ namespace DentistryManagement.Server.Migrations
                             Id = "B22698B8-42A2-4115-9631-1C2D1E2AC5F7",
                             AccessFailedCount = 0,
                             AffiliateId = 1,
-                            ConcurrencyStamp = "0ecc78dd-7dbd-4c20-ae56-36d07583207a",
+                            ConcurrencyStamp = "21678110-fcb7-4792-9157-1b30b706da23",
                             Email = "admin@graphene.com",
                             EmailConfirmed = true,
                             FirstName = "Graphene",
@@ -190,12 +190,39 @@ namespace DentistryManagement.Server.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "admin@graphene.com",
                             NormalizedUserName = "admin@graphene.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEM79P1ScPESGXxwZdNOeKahvipP5VK6BaubvVnZHKBoAWQDFkAwQSd25eg4F2guvrQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJbH7S0Wk31TiVTE6QLV2zFRWDrd9udZWR+z87Vkcmk8gHunENUC2ydJxdy1OKhR0g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "028d8f0b-c7c9-4948-b1e1-ca55306c32b9",
+                            SecurityStamp = "bfb89618-e953-4eac-bf19-cc5e02099334",
                             TwoFactorEnabled = false,
                             UserName = "admin@graphene.com"
                         });
+                });
+
+            modelBuilder.Entity("DentistryManagement.Server.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<int>("ToothId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ToothId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("DentistryManagement.Server.Models.Disease", b =>
@@ -314,6 +341,9 @@ namespace DentistryManagement.Server.Migrations
                     b.Property<int>("MedicalChartId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
+
                     b.Property<int>("Order")
                         .HasColumnType("int");
 
@@ -384,6 +414,9 @@ namespace DentistryManagement.Server.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,4)");
 
+                    b.Property<int>("ToothId")
+                        .HasColumnType("int");
+
                     b.Property<int>("TreatmentId")
                         .HasColumnType("int");
 
@@ -396,6 +429,8 @@ namespace DentistryManagement.Server.Migrations
                     b.HasIndex("AffiliateId");
 
                     b.HasIndex("MedicalChartId");
+
+                    b.HasIndex("ToothId");
 
                     b.HasIndex("TreatmentId");
 
@@ -640,21 +675,21 @@ namespace DentistryManagement.Server.Migrations
                         new
                         {
                             Id = "2301D884-221A-4E7D-B509-0113DCC043E1",
-                            ConcurrencyStamp = "dbda4b70-554d-460a-8702-46be59dd579b",
+                            ConcurrencyStamp = "523f5b48-d2e8-443a-a35f-1344ebba082a",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         },
                         new
                         {
-                            Id = "f016dd82-c21a-4b06-b0a2-a5e53e7d030b",
-                            ConcurrencyStamp = "b13dab17-5ec2-4eb2-af02-f80e4bddafdd",
+                            Id = "b0211b05-6272-49b8-85fe-994cce590f71",
+                            ConcurrencyStamp = "94e0d71a-c40d-4a5d-8cd0-86c9da6a554a",
                             Name = "Manager",
                             NormalizedName = "Manager"
                         },
                         new
                         {
-                            Id = "c96e7111-fe86-419c-aaa7-3546211c8e13",
-                            ConcurrencyStamp = "bb6b286f-ca53-47b2-b838-22b788b8cc35",
+                            Id = "e7de91d3-6be4-49c0-b94f-5274ae84e715",
+                            ConcurrencyStamp = "7cb1e95b-72f1-476f-bf50-bfa7320215e6",
                             Name = "Dentist",
                             NormalizedName = "Dentist"
                         });
@@ -699,6 +734,19 @@ namespace DentistryManagement.Server.Migrations
                         .HasForeignKey("AffiliateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("DentistryManagement.Server.Models.Comment", b =>
+                {
+                    b.HasOne("DentistryManagement.Server.Models.Tooth", "Tooth")
+                        .WithMany("Comments")
+                        .HasForeignKey("ToothId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DentistryManagement.Server.Models.ApplicationUser", "User")
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("DentistryManagement.Server.Models.File", b =>
@@ -754,6 +802,12 @@ namespace DentistryManagement.Server.Migrations
                     b.HasOne("DentistryManagement.Server.Models.MedicalChart", "MedicalChart")
                         .WithMany("TreatmentHistories")
                         .HasForeignKey("MedicalChartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DentistryManagement.Server.Models.Tooth", "Tooth")
+                        .WithMany("TreatmentHistories")
+                        .HasForeignKey("ToothId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

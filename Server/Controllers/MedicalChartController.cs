@@ -9,11 +9,13 @@ using DentistryManagement.Shared.ViewModels.Files;
 using DentistryManagement.Shared.ViewModels.MedicalChart;
 using DentistryManagement.Shared.ViewModels.Teeth;
 using DentistryManagement.Shared.ViewModels.TreatmentHistories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DentistryManagement.Server.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class MedicalChartController : ControllerBase

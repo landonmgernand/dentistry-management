@@ -24,6 +24,7 @@ namespace DentistryManagement.Server.Data
             builder.Entity<ApplicationUser>(b => {
                 b.HasMany(x => x.UserRoles).WithOne().HasForeignKey(ur => ur.UserId).IsRequired();
                 b.HasMany(t => t.TreatmentHistories).WithOne(th => th.User).HasForeignKey(th => th.UserId).IsRequired();
+                b.HasMany(t => t.Comments).WithOne(c => c.User).HasForeignKey(th => th.UserId);
             });
 
             builder.Entity<ApplicationRole>(b =>
@@ -88,6 +89,15 @@ namespace DentistryManagement.Server.Data
 
             #endregion
 
+            #region Tooth
+
+            builder.Entity<Tooth>(b => {
+                b.HasMany(t => t.Comments).WithOne(c => c.Tooth);
+                b.HasMany(t => t.TreatmentHistories).WithOne(c => c.Tooth);
+            });
+
+            #endregion
+
             #region Seeds
 
             RoleSeeder.Seed(builder);
@@ -112,5 +122,6 @@ namespace DentistryManagement.Server.Data
         public DbSet<File> Files { get; set; }
         public DbSet<Treatment> Treatments { get; set; }
         public DbSet<TreatmentHistory> TreatmentHistories { get; set; }
+        public DbSet<Comment> Comments { get; set; }
     }
 }

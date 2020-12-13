@@ -1,9 +1,9 @@
 ﻿@using DentistryManagement.Shared.ViewModels.TreatmentHistories;
 @using DentistryManagement.Shared.ViewModels.Treatments;
+@using DentistryManagement.Shared.ViewModels.Teeth;
 @using DentistryManagement.Shared.ViewModels.Dentists;
 @using DentistryManagement.Client.Pages.Patients
 @using DentistryManagement.Client.Helpers
-@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using System.Net
 @using System.Net.Http.Json
 @using Microsoft.Extensions.Logging
@@ -51,7 +51,16 @@
                 <ValidationMessage For="@(() => treatmentHistoryViewModel.TreatmentId)" />
             </div>
             <div class="col">
-
+                <MatSelect Label="Tooth" Outlined="true" @bind-Value="treatmentHistoryViewModel.ToothId">
+                    @if (treatments != null)
+                    {
+                        @foreach (var tooth in teethCategories.All)
+                        {
+                            <MatOption Value="@tooth.Id">@(tooth.Name)</MatOption>
+                        }
+                    }
+                </MatSelect>
+                <ValidationMessage For="@(() => treatmentHistoryViewModel.ToothId)" />
             </div>
         </div>
 
@@ -90,6 +99,8 @@
 
     private List<TreatmentViewModel> treatments;
 
+    private TeethCategoryViewModel teethCategories;
+
     private DateTime DateOfTreatment { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -98,6 +109,7 @@
         {
             treatments = await Http.GetFromJsonAsync<List<TreatmentViewModel>>("api/Treatment");
             dentistViewModel = await Http.GetFromJsonAsync<DentistViewModel>("api/Dentist/current");
+            teethCategories = await Http.GetFromJsonAsync<TeethCategoryViewModel>("api/MedicalChart/" + MedicalChartId + "/Teeth");
             DateOfTreatment = DateTime.Now;
             treatmentHistoryViewModel.DateOfTreatment = DateOfTreatment;
             treatmentHistoryViewModel.MedicalChartId = MedicalChartId;

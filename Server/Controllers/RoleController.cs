@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DentistryManagement.Server.DataTransferObjects;
 using DentistryManagement.Server.Mappers;
 using DentistryManagement.Server.Services.Interfaces;
 using DentistryManagement.Shared.ViewModels.Roles;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DentistryManagement.Server.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class RoleController : ControllerBase

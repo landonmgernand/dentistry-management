@@ -33,7 +33,12 @@ namespace DentistryManagement.Server.Services
 
             foreach (ToothSettingsDTO toothSettings in teeth.Teeth)
             {
-                Tooth tooth = new Tooth() { Url = toothSettings.Url, Category = toothSettings.Category, Order = toothSettings.Order };
+                Tooth tooth = new Tooth() { 
+                    Url = toothSettings.Url, 
+                    Category = toothSettings.Category, 
+                    Number = toothSettings.Number,
+                    Order = toothSettings.Order 
+                };
                 medicalChart.Teeth.Add(tooth);
             }
 
@@ -95,8 +100,10 @@ namespace DentistryManagement.Server.Services
             var treatmentHistoryDTOS = _context.TreatmentHistories
                 .Include(th => th.User)
                 .Include(th => th.Treatment)
+                .Include(th => th.Tooth)
                 .Include(th => th.Affiliate)
                 .Where(f => f.MedicalChartId.Equals(medicalChartId))
+                .OrderByDescending(th => th.DateOfTreatment)
                 .Select(th => TreatmentHistoryMapper.TreatmentHistoryToDTO(th))
                 .ToList();
 

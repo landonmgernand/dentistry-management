@@ -1,29 +1,27 @@
 ﻿@using DentistryManagement.Client.Components
 @using DentistryManagement.Shared.ViewModels.Allergies
-@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using Microsoft.Extensions.Logging
 
 @inject HttpClient Http
 @inject ILogger<Allergies> Logger
 
-@if (allergies != null)
-{
-    <div class="grph-paper">
-        <Panel Title="Allergies" Class="grph-content">
-            <p class="validation-message" style="@messageStyles">
-                @message
-            </p>
+<div class="grph-paper">
+    <Panel Title="Allergies" Class="grph-content">
+        <p class="validation-message" style="@messageStyles">
+            @message
+        </p>
+        @if (allergies != null)
+        {
             <MatChipSet>
                 @foreach (var allergy in allergies)
                 {
                     <MatChip class="mt-1" Label=@allergy.Name TrailingIcon="clear" TrailingIconClick="@(() => Delete(allergy))"></MatChip>
                 }
             </MatChipSet>
-
-            <MatTextField @bind-Value="@allergyViewModel.Name" Label="" FullWidth="true" OnKeyUp="Add"></MatTextField>          
+        }
+            <MatTextField @bind-Value="@allergyViewModel.Name" Label="" FullWidth="true" OnKeyUp="Add"></MatTextField>
         </Panel>
-    </div>
-}
+</div>
 
 @code {
     [Parameter]

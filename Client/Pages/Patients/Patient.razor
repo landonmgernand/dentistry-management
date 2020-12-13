@@ -4,8 +4,6 @@
 @using DentistryManagement.Shared.ViewModels.MedicalChart
 @using DentistryManagement.Client.Pages.Patients.Components
 @using DentistryManagement.Client.Components
-@using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using Microsoft.Extensions.Logging
 
 @inject ILogger<Patient> Logger
@@ -48,6 +46,26 @@
         }
         else
         {
+
+            @*<div class="card-columns">
+                    <div class="card">
+                        <ToothSet>
+                            <Teeth MedicalChartId="patient.MedicalChart.Id" />
+                        </ToothSet>
+                    </div>
+                    <div class="card">
+                        <TreatmentHistories MedicalChartId="patient.MedicalChart.Id" @ref="treatmentHistory" />
+
+                    </div>
+                    <div class="card">
+                        <Allergies MedicalChartId="patient.MedicalChart.Id" />
+                    </div>
+
+                    <div class="card">
+                        <Files MedicalChartId="patient.MedicalChart.Id" />
+                    </div>
+                </div>*@
+
             <div class="row">
                 <div class="col">
                     <ToothSet>
@@ -55,21 +73,20 @@
                     </ToothSet>
                 </div>
                 <div class="col">
-                    <Files MedicalChartId="patient.MedicalChart.Id" /> 
-                </div>
-            </div>
-
-            <br />
-
-            <div class="row">
-                <div class="col">
                     <Allergies MedicalChartId="patient.MedicalChart.Id" />
                 </div>
-
-                <div class="col">
-                    <TreatmentHistories MedicalChartId="patient.MedicalChart.Id" @ref="treatmentHistory" />
-                </div>
             </div>
+
+                <br />
+
+                <div class="row">
+                    <div class="col">
+                        <TreatmentHistories MedicalChartId="patient.MedicalChart.Id" @ref="treatmentHistory" />                   
+                    </div>
+                    <div class="col">
+                        <Files MedicalChartId="patient.MedicalChart.Id" />
+                    </div>
+              </div>
         }
     }
 </div>

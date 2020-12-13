@@ -18,5 +18,7 @@ namespace DentistryManagement.Server.Models
         public Affiliate Affiliate { get; set; }
 
         public ICollection<TreatmentHistory> TreatmentHistories { get; set; }
+
+        public ICollection<Comment> Comments { get; set; }
     }
 }

@@ -15,6 +15,8 @@ namespace DentistryManagement.Server.Models
         [MaxLength(100)]
         public string Category { get; set; }
 
+        public int Number { get; set; }
+
         public int Order { get; set; }
 
         public int MedicalChartId { get; set; }
@@ -22,5 +24,9 @@ namespace DentistryManagement.Server.Models
         public MedicalChart MedicalChart { get; set; }
 
         public ICollection<ToothDisease> ToothDiseases { get; set; }
+
+        public ICollection<Comment> Comments { get; set; }
+
+        public ICollection<TreatmentHistory> TreatmentHistories { get; set; }
     }
 }
