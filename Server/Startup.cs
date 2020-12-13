@@ -13,6 +13,7 @@ using DentistryManagement.Server.Services;
 using System.IdentityModel.Tokens.Jwt;
 using DentistryManagement.Server.Helpers;
 using DentistryManagement.Server.DataTransferObjects;
+using System;
 
 namespace DentistryManagement.Server
 {
@@ -31,7 +32,7 @@ namespace DentistryManagement.Server
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseMySql(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(8, 0, 21))));
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<ApplicationRole>()  
@@ -51,6 +52,7 @@ namespace DentistryManagement.Server
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.Configure<TeethSettingsDTO>(Configuration.GetSection("TeethSettings"));
     
@@ -78,8 +80,8 @@ namespace DentistryManagement.Server
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
                 app.UseWebAssemblyDebugging();
+                app.UseMigrationsEndPoint();
             }
             else
             {
