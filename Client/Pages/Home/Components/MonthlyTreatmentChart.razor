@@ -1,13 +1,20 @@
 ﻿@using DentistryManagement.Shared.ViewModels.TreatmentHistories
 @using Syncfusion.Blazor.Charts
+@using DentistryManagement.Client.Components
 
 <div class="grph-paper">
     <div class="grph-chart-datetime">
         <h5>Monthly treatment statistics</h5>
         <div>
+            @if (Initializing)
+            {
+                <Loading Name="Initializing" />
+            }
+
             <SfChart Palettes="@palettes">
+                <ChartEvents Loaded="AfterRender" />
                 <ChartArea>
-                <ChartAreaBorder Width="0"></ChartAreaBorder>
+                    <ChartAreaBorder Width="0"></ChartAreaBorder>
                 </ChartArea>
                 <ChartPrimaryXAxis IntervalType="IntervalType.Days" Skeleton="Ed" ValueType="Syncfusion.Blazor.Charts.ValueType.DateTimeCategory" EdgeLabelPlacement="EdgeLabelPlacement.Shift">
                     <ChartAxisMajorGridLines Width="0"></ChartAxisMajorGridLines>
@@ -33,4 +40,11 @@
     public MonthlyTreatmentHistoryViewModel MonthlyTreatmentHistory { get; set; }
 
     public String[] palettes = new String[] { "#193c6b" };
+
+    private bool Initializing = true;
+
+    private void AfterRender()
+    {
+        Initializing = false;
+    }
 }

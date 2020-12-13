@@ -1,11 +1,18 @@
 ﻿@using DentistryManagement.Shared.ViewModels.Treatments
+@using DentistryManagement.Client.Components
 @using Syncfusion.Blazor.Charts
 
 <div class="grph-paper">
     <div class="grph-chart-datetime">
         <h5>Most popular treatments</h5>
         <div>
+            @if (Initializing)
+            {
+                <Loading Name="Initializing"/>
+            }
+
             <SfAccumulationChart EnableAnimation="false" EnableSmartLabels="true">
+                <AccumulationChartEvents Loaded="AfterRender" />
                 <AccumulationChartTooltipSettings Enable="true"></AccumulationChartTooltipSettings>
                 <AccumulationChartLegendSettings Visible="false"></AccumulationChartLegendSettings>
                 <AccumulationChartSeriesCollection>
@@ -30,4 +37,11 @@
     public string OuterRadius = "70%", ExplodeRadius = "10%";
 
     private bool DataLables => PopularTreatment.Treatments.Count > 0 ? true : false;
+
+    private bool Initializing = true;
+
+    private void AfterRender()
+    {
+        Initializing = false;
+    }
 }

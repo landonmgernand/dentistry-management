@@ -1,0 +1,58 @@
+﻿@page "/calendar"
+
+@using Syncfusion.Blazor.Schedule
+@using DentistryManagement.Client.Components
+
+@if (Initializing)
+{
+    <Loading Name="Loading" />
+}
+
+<div class="content px-4" hidden="@Hide">
+    <div class="grph-paper">
+        <SfSchedule CssClass="grph-schedule-header" TValue="AppointmentData" Width="100%" Height="650px" @bind-SelectedDate="@CurrentDate">
+            <ScheduleViews>
+                <ScheduleView Option="View.Week"></ScheduleView>
+            </ScheduleViews>
+         
+            <ScheduleEvents TValue="AppointmentData" DataBound="Created" />
+            <ScheduleEventSettings DataSource="@DataSource"></ScheduleEventSettings>
+        </SfSchedule>
+    </div>
+</div>
+
+
+
+@code {
+    public View ViewNow = View.Week;
+
+    public class AppointmentData
+    {
+        public int Id { get; set; }
+        public string Subject { get; set; }
+        public string Location { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+        public string Description { get; set; }
+        public bool IsAllDay { get; set; }
+        public string RecurrenceRule { get; set; }
+        public string RecurrenceException { get; set; }
+        public Nullable<int> RecurrenceID { get; set; }
+    }
+
+    List<AppointmentData> DataSource = new List<AppointmentData>
+    {
+        new AppointmentData { Id = 1, Subject = "Meeting", StartTime = new DateTime(2020, 3, 10, 9, 30, 0) , EndTime = new DateTime(2020, 3, 10, 12, 0, 0) }
+    };
+
+    public DateTime CurrentDate = new DateTime(2020, 1, 9);
+
+    private bool Initializing = true;
+
+    private bool Hide => Initializing ? true : false;
+
+    private void Created()
+    {
+        Initializing = false;
+    }
+}

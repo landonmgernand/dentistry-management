@@ -1,0 +1,83 @@
+﻿.e-spinner-pane {
+    display: none !important;
+} 
+
+.e-schedule .e-schedule-toolbar {
+    background: #CDE4F0;
+}
+
+    .e-schedule .e-schedule-toolbar .e-toolbar-items {
+        background: #CDE4F0;
+    }
+
+    .e-schedule .e-schedule-toolbar .e-tbar-btn {
+        background: #CDE4F0;
+    }
+
+    .e-schedule .e-schedule-toolbar .e-toolbar-items .e-toolbar-left .e-tbar-btn.e-icon-btn:hover {
+        background: #91C8E5;
+    }
+
+    .e-schedule .e-schedule-toolbar .e-tbar-btn:active {
+        background: #91C8E5;
+    }
+
+    .e-schedule .e-schedule-toolbar .e-tbar-btn:hover, .e-schedule .e-schedule-toolbar .e-tbar-btn:focus {
+        background: #91C8E5;
+    }
+
+    .e-schedule .e-schedule-toolbar .e-toolbar-items .e-toolbar-left .e-tbar-btn.e-icon-btn:focus {
+        background: #91C8E5;
+    }
+
+.e-toolbar .e-toolbar-items .e-toolbar-item .e-tbar-btn.e-btn .e-icons.e-btn-icon:hover {
+    color: white;
+}
+
+.e-toolbar .e-toolbar-items .e-toolbar-item .e-tbar-btn.e-btn .e-icons.e-btn-icon:focus {
+    color: white;
+}
+
+.e-schedule .e-schedule-toolbar .e-tbar-btn:hover, .e-schedule .e-schedule-toolbar .e-tbar-btn:hover > span {
+    color: white !important;
+}
+
+.e-schedule .e-schedule-toolbar .e-tbar-btn:hover, .e-schedule .e-schedule-toolbar .e-tbar-btn:focus > span {
+    color: white !important;
+}
+
+.e-calendar .e-content td.e-selected span.e-day, .e-bigger.e-small .e-calendar .e-content td.e-selected span.e-day {
+    background: #91C8E5;
+}
+
+.e-calendar .e-content td.e-today.e-selected:hover span.e-day, .e-calendar .e-content td.e-selected:hover span.e-day, .e-calendar .e-content td.e-selected.e-focused-date span.e-day, .e-bigger.e-small .e-calendar .e-content td.e-today.e-selected:hover span.e-day, .e-bigger.e-small .e-calendar .e-content td.e-selected:hover span.e-day, .e-bigger.e-small .e-calendar .e-content td.e-selected.e-focused-date span.e-day {
+    background: #7DBBD9;
+}
+
+.e-btn.e-flat.e-primary:hover, .e-css.e-btn.e-flat.e-primary:hover {
+    background-color: rgba(205, 228, 240, 0.2);
+    color: #91C8E5;
+}
+
+.e-btn.e-flat.e-primary:active, .e-btn.e-flat.e-primary.e-active, .e-css.e-btn.e-flat.e-primary:active, .e-css.e-btn.e-flat.e-primary.e-active {
+    background-color: rgba(205, 228, 240, 0.2);
+    color: #91C8E5;
+}
+
+.e-btn.e-flat.e-primary, .e-css.e-btn.e-flat.e-primary {
+    color: #91C8E5;
+}
+
+.e-calendar .e-content td.e-today.e-selected span.e-day, .e-bigger.e-small .e-calendar .e-content td.e-today.e-selected span.e-day {
+    background-color: #91C8E5;
+    border: 1px solid #91C8E5;
+}
+
+.e-calendar .e-content td.e-today span.e-day, .e-calendar .e-content td.e-focused-date.e-today span.e-day, .e-bigger.e-small .e-calendar .e-content td.e-today span.e-day, .e-bigger.e-small .e-calendar .e-content td.e-focused-date.e-today span.e-day {
+    border: 1px solid #91C8E5;
+    color: #91C8E5;
+}
+
+.e-schedule .e-vertical-view .e-header-cells.e-current-day {
+    color: #91C8E5;
+}
