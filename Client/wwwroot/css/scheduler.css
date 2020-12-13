@@ -81,3 +81,7 @@
 .e-schedule .e-vertical-view .e-header-cells.e-current-day {
     color: #91C8E5;
 }
+
+.e-schedule .e-vertical-view .e-day-wrapper .e-appointment {
+    background: #193c6b;
+}

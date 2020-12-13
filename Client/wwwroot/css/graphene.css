@@ -868,3 +868,7 @@
     justify-content: flex-start;
     text-decoration: none;
 }
+
+.grph-calendar-content {
+    margin-top: 1.1rem;
+}
