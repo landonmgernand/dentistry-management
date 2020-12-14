@@ -24,6 +24,7 @@ namespace DentistryManagement.Server.Data
             builder.Entity<ApplicationUser>(b => {
                 b.HasMany(x => x.UserRoles).WithOne().HasForeignKey(ur => ur.UserId).IsRequired();
                 b.HasMany(t => t.TreatmentHistories).WithOne(th => th.User).HasForeignKey(th => th.UserId).IsRequired();
+                b.HasMany(t => t.Schedule).WithOne(s => s.User).HasForeignKey(s => s.UserId).IsRequired();
                 b.HasMany(t => t.Comments).WithOne(c => c.User).HasForeignKey(th => th.UserId);
             });
 
@@ -55,6 +56,7 @@ namespace DentistryManagement.Server.Data
             builder.Entity<Patient>(b =>
             {
                 b.HasOne(p => p.MedicalChart).WithOne(mc => mc.Patient).HasForeignKey<MedicalChart>(mc => mc.PatientId);
+                b.HasMany(p => p.Schedule).WithOne(c => c.Patient).HasForeignKey(th => th.PatientId);
             });
 
             #endregion
@@ -123,5 +125,6 @@ namespace DentistryManagement.Server.Data
         public DbSet<Treatment> Treatments { get; set; }
         public DbSet<TreatmentHistory> TreatmentHistories { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<Schedule> Schedule { get; set; }
     }
 }

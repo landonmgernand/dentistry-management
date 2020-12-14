@@ -2,6 +2,18 @@
 
 @using Syncfusion.Blazor.Schedule
 @using DentistryManagement.Client.Components
+@using DentistryManagement.Shared.ViewModels.Patients
+@using DentistryManagement.Shared.ViewModels.Schedule
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Spinner
+@using System.Globalization
+@using Microsoft.Extensions.Logging
+
+@inject HttpClient Http
+@inject ILogger<Calendar> Logger
+
+@attribute [Authorize]
 
 @if (Initializing)
 {
@@ -10,18 +22,41 @@
 
 <div class="grph-calendar-content" style="visibility: @Hide">
     <div class="grph-paper">
-        <SfSchedule TValue="AppointmentData"
+        <p class="validation-message" style="@messageStyles">
+            @message
+        </p>
+        <SfSchedule TValue="ScheduleViewModel"
+                    @ref="SheduleRef"
                     Width="100%"
                     Height="800px"
                     @bind-SelectedDate="@CurrentDate"
                     StartHour="08:00" EndHour="20:00">
+            <SfSpinner CssClass="jocke" />
             <ScheduleWorkHours Highlight="true" Start="08:00" End="20:00"></ScheduleWorkHours>
             <ScheduleQuickInfoTemplates TemplateType="TemplateType.Cell">
                 <HeaderTemplate>
+                    <div class="quick-info-header">
+                        <div class="quick-info-header-content">
+                            <div class="quick-info-title">
+                                Add Appointment
+                            </div>
+                            <div class="duration-text">@(GetEventDetails((context as ScheduleViewModel)))</div>
+                        </div>
+                    </div>
                 </HeaderTemplate>
                 <ContentTemplate>
+                    <div class="e-cell-content">
+                        <div class="content-area">
+                            <SfDropDownList @ref="EventTypeRef" TValue="int" TItem="PatientViewModel" Index="0" DataSource="@patients" Placeholder="Patient">
+                                <DropDownListFieldSettings Text="FirstName" Value="Id"></DropDownListFieldSettings>
+                            </SfDropDownList>
+                        </div>
+                    </div>
                 </ContentTemplate>
                 <FooterTemplate>
+                    <div class="cell-footer">
+                        <SfButton Content="Add" IsPrimary="true" OnClick="@(e => OnAdd(e, context as ScheduleViewModel))"></SfButton>
+                    </div>
                 </FooterTemplate>
             </ScheduleQuickInfoTemplates>
             <ScheduleViews>
@@ -32,51 +67,57 @@
                 <ScheduleView Option="View.Week"></ScheduleView>
             </ScheduleViews>
 
-            <ScheduleEvents TValue="AppointmentData" DataBound="@Created" OnPopupOpen="@OnPopupOpen" />
-            <ScheduleEventSettings DataSource="@DataSource"></ScheduleEventSettings>
+            <ScheduleEvents TValue="ScheduleViewModel" DataBound="@Created" OnPopupOpen="@OnPopupOpen" Dragged="OnScheduleDragged" />
+            <ScheduleEventSettings DataSource="@schedule"></ScheduleEventSettings>
         </SfSchedule>
     </div>
 </div>
-    
+
 
 
 @code {
-    [CascadingParameter]
-    protected MainLayout navigationSet { get; set; }
+        [CascadingParameter]
+        protected MainLayout navigationSet { get; set; }
 
     public View ViewNow = View.Week;
 
-    public class AppointmentData
-    {
-        public int Id { get; set; }
-        public string Subject { get; set; }
-        public string Location { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
-        public string Description { get; set; }
-        public bool IsAllDay { get; set; }
-        public string RecurrenceRule { get; set; }
-        public string RecurrenceException { get; set; }
-        public Nullable<int> RecurrenceID { get; set; }
-        public virtual string ElementType { get; set; }
-    }
+    SfSchedule<ScheduleViewModel> SheduleRef;
+    SfDropDownList<int, PatientViewModel> EventTypeRef;
 
-    List<AppointmentData> DataSource = new List<AppointmentData>
-    {
-        new AppointmentData { Id = 1, Subject = "Meeting", StartTime = new DateTime(2020, 3, 10, 9, 30, 0) , EndTime = new DateTime(2020, 3, 10, 12, 0, 0) }
-    };
+    public int PatientId { get; set; }
 
     public DateTime CurrentDate = DateTime.Now;
 
-    private bool Initializing = true;
+    private bool Initializing { get; set; } = true;
 
-    private string Hide => Initializing ? "hidden" : "visible";
+    private string Hide => Initializing && schedule is null ? "hidden" : "visible";
 
-    protected override void OnInitialized()
+    private List<PatientViewModel> patients;
+    private List<ScheduleViewModel> schedule;
+
+    private string message;
+
+    private string messageStyles = "display:none";
+
+    private string GetEventDetails(ScheduleViewModel data)
     {
-        base.OnInitialized();
+        return data.StartTime.ToString("dddd dd, MMMM yyyy", CultureInfo.InvariantCulture) + " (" + data.StartTime.ToString("hh:mm tt", CultureInfo.InvariantCulture) + "-" + data.EndTime.ToString("hh:mm tt", CultureInfo.InvariantCulture) + ")";
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
         navigationSet.resetNavigationPanelWithoutState();
         navigationSet.addNavigationItem("Calendar");
+
+        try
+        {
+            patients = await Http.GetFromJsonAsync<List<PatientViewModel>>("api/patient");
+            schedule = await Http.GetFromJsonAsync<List<ScheduleViewModel>>("api/schedule");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
     }
 
     private void Created()
@@ -84,11 +125,59 @@
         Initializing = false;
     }
 
-    private void OnPopupOpen(PopupOpenEventArgs<AppointmentData> args)
+    private void OnPopupOpen(PopupOpenEventArgs<ScheduleViewModel> args)
     {
         if (args.Type == PopupType.Editor)
         {
             args.Cancel = true;
+        }
+    }
+
+    private async Task OnScheduleDragged(Syncfusion.Blazor.Schedule.DragEventArgs<ScheduleViewModel> args)
+    {
+        try
+        {
+            var response = await Http.PutAsJsonAsync("api/Schedule/" + args.Data.Id, args.Data);
+            await OnInitializedAsync();
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError("Form processing error: {Message}", exception.Message);
+            messageStyles = "display:block";
+            message = "There was an error processing the form.";
+        }
+    }
+
+    private async Task OnAdd(MouseEventArgs args, ScheduleViewModel data)
+    {
+        if (EventTypeRef.Value != 0)
+        {
+            await SheduleRef.CloseQuickInfoPopup();
+            CreateScheduleViewModel createSchedule = new CreateScheduleViewModel
+            {
+                PatientId = EventTypeRef.Value,
+                StartTime = data.StartTime,
+                EndTime = data.EndTime,
+            };
+            try
+            {
+                var response = await Http.PostAsJsonAsync("api/Schedule", createSchedule);
+                await OnInitializedAsync();
+            }
+            catch (AccessTokenNotAvailableException exception)
+            {
+                exception.Redirect();
+            }
+            catch (Exception exception)
+            {
+                Logger.LogError("Form processing error: {Message}", exception.Message);
+                messageStyles = "display:block";
+                message = "There was an error processing the form.";
+            }
         }
     }
 }

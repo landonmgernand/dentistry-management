@@ -46,42 +46,47 @@
     color: white !important;
 }
 
-.e-calendar .e-content td.e-selected span.e-day, .e-bigger.e-small .e-calendar .e-content td.e-selected span.e-day {
-    background: #91C8E5;
-}
-
-.e-calendar .e-content td.e-today.e-selected:hover span.e-day, .e-calendar .e-content td.e-selected:hover span.e-day, .e-calendar .e-content td.e-selected.e-focused-date span.e-day, .e-bigger.e-small .e-calendar .e-content td.e-today.e-selected:hover span.e-day, .e-bigger.e-small .e-calendar .e-content td.e-selected:hover span.e-day, .e-bigger.e-small .e-calendar .e-content td.e-selected.e-focused-date span.e-day {
-    background: #7DBBD9;
-}
-
-.e-btn.e-flat.e-primary:hover, .e-css.e-btn.e-flat.e-primary:hover {
-    background-color: rgba(205, 228, 240, 0.2);
-    color: #91C8E5;
-}
-
-.e-btn.e-flat.e-primary:active, .e-btn.e-flat.e-primary.e-active, .e-css.e-btn.e-flat.e-primary:active, .e-css.e-btn.e-flat.e-primary.e-active {
-    background-color: rgba(205, 228, 240, 0.2);
-    color: #91C8E5;
-}
-
-.e-btn.e-flat.e-primary, .e-css.e-btn.e-flat.e-primary {
-    color: #91C8E5;
-}
-
-.e-calendar .e-content td.e-today.e-selected span.e-day, .e-bigger.e-small .e-calendar .e-content td.e-today.e-selected span.e-day {
-    background-color: #91C8E5;
-    border: 1px solid #91C8E5;
-}
-
-.e-calendar .e-content td.e-today span.e-day, .e-calendar .e-content td.e-focused-date.e-today span.e-day, .e-bigger.e-small .e-calendar .e-content td.e-today span.e-day, .e-bigger.e-small .e-calendar .e-content td.e-focused-date.e-today span.e-day {
-    border: 1px solid #91C8E5;
-    color: #91C8E5;
-}
-
-.e-schedule .e-vertical-view .e-header-cells.e-current-day {
-    color: #91C8E5;
-}
-
 .e-schedule .e-vertical-view .e-day-wrapper .e-appointment {
     background: #193c6b;
+}
+
+.quick-info-header-content {
+    align-items: center;
+    color: #193c6b;
+    justify-content: flex-end;
+    display: flex;
+    flex-direction: column;
+    padding: 5px 10px 5px;
+}
+
+.quick-info-title {
+    font-weight: 500;
+    font-size: 16px;
+    letter-spacing: 0.48px;
+    height: 22px;
+}
+
+.duration-text {
+    font-size: 11px;
+    letter-spacing: 0.33px;
+    height: 14px;
+}
+
+.content-area {
+    padding: 10px;
+    width: 100%;
+}
+
+.e-popup-content {
+    padding: 0 14px;
+}
+
+.cell-footer {
+    padding-top: 10px;
+}
+
+.e-popup-footer {
+    display: block;
+    padding: 0 14px 14px 0 !important;
+    text-align: right;
 }

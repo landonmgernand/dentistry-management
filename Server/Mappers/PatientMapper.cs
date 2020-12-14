@@ -71,5 +71,10 @@ namespace DentistryManagement.Server.Mappers
                 MedicalChart = patientDTO.MedicalChartDTO is null ? null : MedicalChartMapper.DTOtoMedicalChartVM(patientDTO.MedicalChartDTO)
             };
         }
+
+        public static string DTOtoPatientString(PatientDTO patientDTO)
+        {
+            return patientDTO.FirstName + " " + patientDTO.LastName + " (" + patientDTO.DateOfBirth.ToString("dd-MM-yyyy") + ")";
+        }
     }
 }
