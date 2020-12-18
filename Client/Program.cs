@@ -16,7 +16,7 @@ namespace DentistryManagement.Client
         {
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzQyMTY5QDMxMzgyZTMzMmUzMEs0R2RoQ29vMW5Pc0h1VG0vblJjTjZnNCtGTUV4d2ZaclQ3d2VQaVNDbVk9;MzQyMTcwQDMxMzgyZTMzMmUzMGVYQjBxQzVER2FoSHB2azZmdXJQWDFnSElrbUJsYkgxamdiSUI0WFFRSmc9;MzQyMTcxQDMxMzgyZTMzMmUzMEQ4ZlBBa2prcWo2V3BvT3pGa21QSnBXRm50QUdwOVIza0h3NGRTK0wvMTg9");
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
-            builder.RootComponents.Add<App>("app");
+            builder.RootComponents.Add<App>("#app");
 
             builder.Services.AddHttpClient("DentistryManagement.ServerAPI", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
                 .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();

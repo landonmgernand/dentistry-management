@@ -24,7 +24,7 @@ namespace DentistryManagement.Server.Services
         {
             var schedule = ScheduleMapper.DTOtoSchedule(scheduleDTO);
             var patient = _context.Patients.Find(scheduleDTO.PatientId);
-            var user = _context.ApplicationUsers.Find(_userProviderService.GetUserId());
+            var user = _context.ApplicationUsers.Find(scheduleDTO.UserId);
 
             schedule.Patient = patient;
             schedule.User = user;
@@ -61,6 +61,18 @@ namespace DentistryManagement.Server.Services
             return ScheduleMapper.ScheduleToDTO(schedule);
         }
 
+        public List<ScheduleDTO> GetAffiliateSchedule(int affiliateId)
+        {
+            var scheduleDTOs = _context.Schedule
+                .Include(s => s.Patient)
+                .Include(s => s.User)
+                .Where(u => u.User.AffiliateId.Equals(affiliateId))
+                .Select(s => ScheduleMapper.ScheduleToDTO(s))
+                .ToList();
+
+            return scheduleDTOs;
+        }
+
         public List<ScheduleDTO> GetAll()
         {
             var scheduleDTOs = _context.Schedule
@@ -75,8 +87,10 @@ namespace DentistryManagement.Server.Services
         public void Update(ScheduleDTO scheduleDTO)
         {
             var schedule = _context.Schedule.Find(scheduleDTO.Id);
+            var user = _context.ApplicationUsers.Find(scheduleDTO.UserId);
             schedule.StartTime = scheduleDTO.StartTime;
             schedule.EndTime = scheduleDTO.EndTime;
+            schedule.User = user;
             _context.SaveChanges();
         }
     }

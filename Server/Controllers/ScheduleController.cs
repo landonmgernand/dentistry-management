@@ -16,11 +16,20 @@ namespace DentistryManagement.Server.Controllers
     {
         private readonly IScheduleService<ScheduleDTO> _scheduleService;
         private readonly IPatientService<PatientDTO> _patientService;
+        private readonly IAffiliateService<AffiliateDTO> _affiliateService;
+        private readonly IUserService _userService;
 
-        public ScheduleController(IScheduleService<ScheduleDTO> scheduleService, IPatientService<PatientDTO> patientService)
+        public ScheduleController(
+            IScheduleService<ScheduleDTO> scheduleService, 
+            IPatientService<PatientDTO> patientService,
+            IAffiliateService<AffiliateDTO> affiliateService,
+            IUserService userService
+            )
         {
             _scheduleService = scheduleService;
             _patientService = patientService;
+            _affiliateService = affiliateService;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -29,23 +38,21 @@ namespace DentistryManagement.Server.Controllers
             return _scheduleService.GetAll().Select(s => ScheduleMapper.DTOtoScheduleVM(s)).ToArray();
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<ScheduleViewModel> GetScheduleItem(int id)
+        [HttpGet("{affiliateId}")]
+        public ActionResult<IEnumerable<ScheduleViewModel>> GetSchedule(int affiliateId)
         {
-            var scheduleDTO = _scheduleService.Get(id);
-
-            if (scheduleDTO is null)
+            if (!_affiliateService.Exist(affiliateId))
             {
                 return NotFound();
             }
 
-            return ScheduleMapper.DTOtoScheduleVM(scheduleDTO);
+            return _scheduleService.GetAffiliateSchedule(affiliateId).Select(s => ScheduleMapper.DTOtoScheduleVM(s)).ToArray();
         }
 
         [HttpPost]
         public IActionResult CreateSchedule([FromBody] CreateScheduleViewModel createSchedule)
         {
-            if (!_patientService.Exist(createSchedule.PatientId))
+            if (!_patientService.Exist(createSchedule.PatientId) && !_userService.Exist(createSchedule.UserId))
             {
                 return NotFound();
             }
@@ -64,7 +71,7 @@ namespace DentistryManagement.Server.Controllers
                 return BadRequest();
             }
 
-            if (!_scheduleService.Exist(id))
+            if (!_scheduleService.Exist(id) && !_userService.Exist(updateSchedule.UserId))
             {
                 return NotFound();
             }

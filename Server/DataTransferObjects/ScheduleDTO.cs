@@ -8,6 +8,8 @@ namespace DentistryManagement.Server.DataTransferObjects
 
         public int PatientId { get; set; }
 
+        public string UserId { get; set; }
+
         public PatientDTO PatientDTO { get; set; }
 
         public DateTime StartTime { get; set; }

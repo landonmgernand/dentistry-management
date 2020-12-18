@@ -1,6 +1,7 @@
 ﻿.loader {
 
     width: 250px;
+    overflow: hidden;
     height: 50px;
     line-height: 50px;
     text-align: center;

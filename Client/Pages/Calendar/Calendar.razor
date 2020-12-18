@@ -1,9 +1,12 @@
 ﻿@page "/calendar"
 
-@using Syncfusion.Blazor.Schedule
 @using DentistryManagement.Client.Components
 @using DentistryManagement.Shared.ViewModels.Patients
 @using DentistryManagement.Shared.ViewModels.Schedule
+@using DentistryManagement.Shared.ViewModels.Users
+@using DentistryManagement.Shared.ViewModels.Affiliates
+@using DentistryManagement.Client.Pages.Calendar.Components
+@using Syncfusion.Blazor.Schedule
 @using Syncfusion.Blazor.Buttons
 @using Syncfusion.Blazor.DropDowns
 @using Syncfusion.Blazor.Spinner
@@ -15,94 +18,169 @@
 
 @attribute [Authorize]
 
-@if (Initializing)
-{
-    <Loading Name="Loading" />
-}
-
-<div class="grph-calendar-content" style="visibility: @Hide">
-    <div class="grph-paper">
-        <p class="validation-message" style="@messageStyles">
-            @message
-        </p>
-        <SfSchedule TValue="ScheduleViewModel"
-                    @ref="SheduleRef"
-                    Width="100%"
-                    Height="800px"
-                    @bind-SelectedDate="@CurrentDate"
-                    StartHour="08:00" EndHour="20:00">
-            <SfSpinner CssClass="jocke" />
-            <ScheduleWorkHours Highlight="true" Start="08:00" End="20:00"></ScheduleWorkHours>
-            <ScheduleQuickInfoTemplates TemplateType="TemplateType.Cell">
-                <HeaderTemplate>
-                    <div class="quick-info-header">
-                        <div class="quick-info-header-content">
-                            <div class="quick-info-title">
-                                Add Appointment
+<div class="content px-4">
+    @if (Initializing)
+    {
+        <Loading Name="Loading" />
+    }
+    else
+    {
+        if (user != null & user.Role == "Admin")
+        {
+            <div class="row">
+                <div class="col-7">
+                    <CalendarSettings AffiliateId="AffiliateId"
+                                      Affiliates="affiliates"
+                                      AffiliateSchedule="AffiliateSchedule" />
+                </div>
+            </div>
+        }
+        <br />
+    }
+        <div class="grph-paper" style="visibility: @Hide">
+            <p class="validation-message" style="@messageStyles">
+                @message
+            </p>
+            <SfSchedule TValue="ScheduleViewModel"
+                        @ref="ScheduleRef"
+                        Width="100%"
+                        Height="@ScheduleHeight"
+                        ShowTimeIndicator="false"
+                        @bind-SelectedDate="@CurrentDate"
+                        @bind-CurrentView="@CurrentView"
+                        StartHour="08:00" EndHour="20:00">
+                <SfSpinner />
+                <ScheduleWorkHours Highlight="true" Start="08:00" End="20:00"></ScheduleWorkHours>
+                <ScheduleQuickInfoTemplates>
+                    <HeaderTemplate>
+                        @if ((context as ScheduleViewModel).ElementType == "cell")
+                        {
+                            <div class="quick-info-header">
+                                <div class="quick-info-header-content">
+                                    <div class="quick-info-title">
+                                        Add Appointment
+                                    </div>
+                                    <div class="duration-text">@(GetCellDetails((context as ScheduleViewModel)))</div>
+                                </div>
                             </div>
-                            <div class="duration-text">@(GetEventDetails((context as ScheduleViewModel)))</div>
-                        </div>
-                    </div>
-                </HeaderTemplate>
-                <ContentTemplate>
-                    <div class="e-cell-content">
-                        <div class="content-area">
-                            <SfDropDownList @ref="EventTypeRef" TValue="int" TItem="PatientViewModel" Index="0" DataSource="@patients" Placeholder="Patient">
-                                <DropDownListFieldSettings Text="FirstName" Value="Id"></DropDownListFieldSettings>
-                            </SfDropDownList>
-                        </div>
-                    </div>
-                </ContentTemplate>
-                <FooterTemplate>
-                    <div class="cell-footer">
-                        <SfButton Content="Add" IsPrimary="true" OnClick="@(e => OnAdd(e, context as ScheduleViewModel))"></SfButton>
-                    </div>
-                </FooterTemplate>
-            </ScheduleQuickInfoTemplates>
-            <ScheduleViews>
-                <ScheduleView Option="View.Week"></ScheduleView>
-                <ScheduleView MaxEventsPerRow="25" Option="View.TimelineWeek"></ScheduleView>
-            </ScheduleViews>
-            <ScheduleViews>
-                <ScheduleView Option="View.Week"></ScheduleView>
-            </ScheduleViews>
-
-            <ScheduleEvents TValue="ScheduleViewModel" DataBound="@Created" OnPopupOpen="@OnPopupOpen" Dragged="OnScheduleDragged" />
-            <ScheduleEventSettings DataSource="@schedule"></ScheduleEventSettings>
-        </SfSchedule>
-    </div>
+                        }
+                        else
+                        {
+                            <div class="event-header">
+                                <div class="e-header-icon-wrapper">
+                                    <SfButton IconCss="e-icons e-delete-icon" CssClass="e-delete e-flat e-round e-small" OnClick="@(e => OnDelete(e, context as ScheduleViewModel))"></SfButton>
+                                    <SfButton IconCss="e-icons e-close-icon" CssClass="e-close e-flat e-round e-small" OnClick="@OnClose"></SfButton>
+                                </div>
+                                <div class="event-subject">
+                                    <div class="event-subject-text">
+                                        @(GetSubjectDetails((context as ScheduleViewModel)))
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </HeaderTemplate>
+                    <ContentTemplate>
+                        @if ((context as ScheduleViewModel).ElementType == "cell")
+                        {
+                            <div class="e-cell-content">
+                                <div class="content-area">
+                                    <SfDropDownList @ref="EventTypeRef" TValue="int" TItem="PatientViewModel" Index="0" DataSource="@patients" Placeholder="Patient" AllowFiltering="true">
+                                        <DropDownListTemplates TItem="PatientViewModel">
+                                            <ItemTemplate Context="patient">
+                                                <span><span class='name'>@((patient as PatientViewModel).FirstName + " " + (patient as PatientViewModel).LastName)</span><span class='grph-patient-dateofbirth'>@((patient as PatientViewModel).DateOfBirth.ToString("dd-MM-yyyy"))</span></span>
+                                            </ItemTemplate>
+                                        </DropDownListTemplates>
+                                        <DropDownListFieldSettings Text="FirstName" Value="Id"></DropDownListFieldSettings>
+                                    </SfDropDownList>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="event-date-time">
+                                <div class="e-date-time-icon e-icons"></div>
+                                <div class="event-date-time-details">
+                                    @(GetEventDetails((context as ScheduleViewModel)))
+                                </div>
+                            </div>
+                        }
+                    </ContentTemplate>
+                    <FooterTemplate>
+                        @if ((context as ScheduleViewModel).ElementType == "cell")
+                        {
+                            <div class="cell-footer">
+                                <SfButton Content="Add" IsPrimary="true" OnClick="@(e => OnAdd(e, context as ScheduleViewModel))"></SfButton>
+                            </div>
+                        }
+                    </FooterTemplate>
+                </ScheduleQuickInfoTemplates>
+                <ScheduleViews>
+                    <ScheduleView Option="@CurrentView"></ScheduleView>
+                </ScheduleViews>
+                <AuthorizeView Roles="Admin, Manager">
+                    <ScheduleGroup EnableCompactView="false" Resources="@GroupData"></ScheduleGroup>
+                    <ScheduleResources>
+                        <ScheduleResource TItem="UserViewModel"
+                                          TValue="int[]"
+                                          DataSource="@users"
+                                          Name="Dentists"
+                                          Field="UserId"
+                                          TextField="FullName"
+                                          IdField="Id"
+                                          AllowMultiple="true">
+                        </ScheduleResource>
+                    </ScheduleResources>
+                </AuthorizeView>
+                <ScheduleEvents TValue="ScheduleViewModel"
+                                DataBound="OnDataBound"
+                                OnPopupOpen="@OnPopupOpen"
+                                Dragged="OnDragged"
+                                Resized="OnResized"
+                                EventRendered="OnEventRendered" />
+                <ScheduleEventSettings TValue="ScheduleViewModel" DataSource="@schedule"></ScheduleEventSettings>
+            </SfSchedule>
+        </div>
 </div>
 
-
-
 @code {
-        [CascadingParameter]
-        protected MainLayout navigationSet { get; set; }
+    [CascadingParameter]
+    protected MainLayout navigationSet { get; set; }
 
-    public View ViewNow = View.Week;
+    SfSchedule<ScheduleViewModel> ScheduleRef;
 
-    SfSchedule<ScheduleViewModel> SheduleRef;
     SfDropDownList<int, PatientViewModel> EventTypeRef;
 
     public int PatientId { get; set; }
 
-    public DateTime CurrentDate = DateTime.Now;
-
     private bool Initializing { get; set; } = true;
 
-    private string Hide => Initializing && schedule is null ? "hidden" : "visible";
+    private string Hide => (Initializing || schedule == null) ? "hidden" : "visible";
 
     private List<PatientViewModel> patients;
+
     private List<ScheduleViewModel> schedule;
+
+    private List<AffiliateViewModel> affiliates;
+
+    private List<UserViewModel> users;
+
+    private DateTime CurrentDate = DateTime.Now;
 
     private string message;
 
     private string messageStyles = "display:none";
 
-    private string GetEventDetails(ScheduleViewModel data)
-    {
-        return data.StartTime.ToString("dddd dd, MMMM yyyy", CultureInfo.InvariantCulture) + " (" + data.StartTime.ToString("hh:mm tt", CultureInfo.InvariantCulture) + "-" + data.EndTime.ToString("hh:mm tt", CultureInfo.InvariantCulture) + ")";
-    }
+    private string ScheduleHeight { get; set; } = "100px";
+
+    public string[] GroupData = new string[] { "Dentists" };
+
+    private bool IsAdmin { get; set; } = false;
+
+    private View CurrentView { get; set; } = View.Week;
+
+    private UserViewModel user { get; set; }
+
+    private int AffiliateId { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -112,17 +190,73 @@
         try
         {
             patients = await Http.GetFromJsonAsync<List<PatientViewModel>>("api/patient");
-            schedule = await Http.GetFromJsonAsync<List<ScheduleViewModel>>("api/schedule");
+            user = await Http.GetFromJsonAsync<UserViewModel>("api/user/current");
+            AffiliateId = user.AffiliateId;
+
+            if (user.Role == "Admin" || user.Role == "Manager")
+            {
+                users = await Http.GetFromJsonAsync<List<UserViewModel>>("api/user/affiliate/" + AffiliateId);
+                affiliates = await Http.GetFromJsonAsync<List<AffiliateViewModel>>("api/affiliate");
+                ScheduleHeight = "700px";
+                CurrentView = View.TimelineWeek;
+                schedule = await Http.GetFromJsonAsync<List<ScheduleViewModel>>("api/schedule/" + AffiliateId);
+            }
+            else
+            {
+                ScheduleHeight = "800px";
+                schedule = await Http.GetFromJsonAsync<List<ScheduleViewModel>>("api/schedule");
+            }
         }
         catch (AccessTokenNotAvailableException exception)
         {
             exception.Redirect();
         }
+        catch (Exception exception)
+        {
+            Logger.LogError("Form processing error: {Message}", exception.Message);
+            messageStyles = "display:block";
+            message = "There was an error processing the form.";
+        }
     }
 
-    private void Created()
+    private async Task RefreshData()
     {
-        Initializing = false;
+        try
+        {
+            if (user.Role == "Admin" || user.Role == "Manager")
+            {
+                schedule = await Http.GetFromJsonAsync<List<ScheduleViewModel>>("api/schedule/" + AffiliateId);
+            }
+            else
+            {
+                schedule = await Http.GetFromJsonAsync<List<ScheduleViewModel>>("api/schedule");
+            }
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError("Form processing error: {Message}", exception.Message);
+            messageStyles = "display:block";
+            message = "There was an error processing the form.";
+        }
+    }
+
+    private string GetEventDetails(ScheduleViewModel data)
+    {
+        return data.StartTime.ToString("MMMM dd, yyyy", CultureInfo.InvariantCulture) + " (" + data.StartTime.ToString("hh:mm tt", CultureInfo.InvariantCulture) + "-" + data.EndTime.ToString("hh:mm tt", CultureInfo.InvariantCulture) + ")";
+    }
+
+    private string GetCellDetails(ScheduleViewModel data)
+    {
+        return data.StartTime.ToString("dddd dd, MMMM yyyy", CultureInfo.InvariantCulture) + " (" + data.StartTime.ToString("hh:mm tt", CultureInfo.InvariantCulture) + "-" + data.EndTime.ToString("hh:mm tt", CultureInfo.InvariantCulture) + ")";
+    }
+
+    private string GetSubjectDetails(ScheduleViewModel scheduleView)
+    {
+        return scheduleView.Subject;
     }
 
     private void OnPopupOpen(PopupOpenEventArgs<ScheduleViewModel> args)
@@ -133,12 +267,45 @@
         }
     }
 
-    private async Task OnScheduleDragged(Syncfusion.Blazor.Schedule.DragEventArgs<ScheduleViewModel> args)
+    private void OnEventRendered(EventRenderedArgs<ScheduleViewModel> args)
+    {
+        Initializing = false;
+    }
+
+    private void OnDataBound(DataBoundEventArgs<ScheduleViewModel> args)
+    {
+        if (schedule.Count == 0)
+        {
+            Initializing = false;
+        }
+    }
+
+    private async Task OnDragged(Syncfusion.Blazor.Schedule.DragEventArgs<ScheduleViewModel> args)
     {
         try
         {
             var response = await Http.PutAsJsonAsync("api/Schedule/" + args.Data.Id, args.Data);
-            await OnInitializedAsync();
+            await RefreshData();
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError("Form processing error: {Message}", exception.Message);
+            messageStyles = "display:block";
+            message = "There was an error processing the form.";
+        }
+    }
+
+    public async Task OnResized(ResizeEventArgs<ScheduleViewModel> args)
+    {
+        args.Cancel = true;
+        try
+        {
+            var response = await Http.PutAsJsonAsync("api/Schedule/" + args.Data.Id, args.Data);
+            await RefreshData();
         }
         catch (AccessTokenNotAvailableException exception)
         {
@@ -156,17 +323,18 @@
     {
         if (EventTypeRef.Value != 0)
         {
-            await SheduleRef.CloseQuickInfoPopup();
+            await ScheduleRef.CloseQuickInfoPopup();
             CreateScheduleViewModel createSchedule = new CreateScheduleViewModel
             {
                 PatientId = EventTypeRef.Value,
                 StartTime = data.StartTime,
                 EndTime = data.EndTime,
+                UserId = data.UserId is null ? user.Id : data.UserId
             };
             try
             {
                 var response = await Http.PostAsJsonAsync("api/Schedule", createSchedule);
-                await OnInitializedAsync();
+                await RefreshData();
             }
             catch (AccessTokenNotAvailableException exception)
             {
@@ -178,6 +346,52 @@
                 messageStyles = "display:block";
                 message = "There was an error processing the form.";
             }
+        }
+    }
+
+    private async Task OnDelete(MouseEventArgs args, ScheduleViewModel data)
+    {
+        await ScheduleRef.CloseQuickInfoPopup();
+
+        try
+        {
+            var response = await Http.DeleteAsync("api/Schedule/" + data.Id);
+            await ScheduleRef.DeleteEvent(data, CurrentAction.DeleteSeries);
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError("Form processing error: {Message}", exception.Message);
+            messageStyles = "display:block";
+            message = "There was an error processing the form.";
+        }
+    }
+
+    private async Task OnClose()
+    {
+        await ScheduleRef.CloseQuickInfoPopup();
+    }
+
+    private async Task AffiliateSchedule(int affiliateId)
+    {
+        AffiliateId = affiliateId;
+        try
+        {
+            users = await Http.GetFromJsonAsync<List<UserViewModel>>("api/user/affiliate/" + affiliateId);
+            schedule = await Http.GetFromJsonAsync<List<ScheduleViewModel>>("api/schedule/" + affiliateId);
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError("Form processing error: {Message}", exception.Message);
+            messageStyles = "display:block";
+            message = "There was an error processing the form.";
         }
     }
 }

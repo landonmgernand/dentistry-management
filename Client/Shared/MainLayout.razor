@@ -1,34 +1,36 @@
 ﻿
 @inherits LayoutComponentBase
 
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
 
-<div class="sidebar">
-    <NavMenu />
-</div>
-
-<div class="main">
-    <CascadingValue Value=this> 
-        <div class="top-row px-4 auth">
-            <div class="grph-navigation">
-                <ol>
-                    @for (int i = 0; i < navigations.Count; i++)
-                    {
-                        <li class="@(navigations.Count == i + 1 ? "grph-navigation-active" : "")">@navigations[i]</li>
-                        if (navigations.Count > i && navigations.Count > i + 1)
+    <div class="main">
+        <CascadingValue Value=this>
+            <div class="top-row px-4 auth">
+                <div class="grph-navigation">
+                    <ol>
+                        @for (int i = 0; i < navigations.Count; i++)
                         {
-                            <li class="grph-separator"><svg focusable="false" width="1em" viewBox="0 1 24 24" aria-hidden="true" fill="#193C6B">
-                                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
-                                </svg>
-                            </li>
+                            <li class="@(navigations.Count == i + 1 ? "grph-navigation-active" : "")">@navigations[i]</li>
+                            if (navigations.Count > i && navigations.Count > i + 1)
+                            {
+                                <li class="grph-separator">
+                                    <svg focusable="false" width="1em" viewBox="0 1 24 24" aria-hidden="true" fill="#193C6B">
+                                        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
+                                    </svg>
+                                </li>
+                            }
                         }
-                    }
-                </ol>
+                    </ol>
+                </div>
+                <LoginDisplay />
             </div>
-            <LoginDisplay />
-        </div>
 
-        @Body
-    </CascadingValue>
+            @Body
+        </CascadingValue>
+    </div>
 </div>
 
 @code {

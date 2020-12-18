@@ -11,6 +11,7 @@ namespace DentistryManagement.Server.Mappers
             return new ScheduleDTO
             {
                 PatientId = createSchedule.PatientId,
+                UserId = createSchedule.UserId,
                 StartTime = createSchedule.StartTime,
                 EndTime = createSchedule.EndTime
             };
@@ -21,6 +22,7 @@ namespace DentistryManagement.Server.Mappers
             return new ScheduleDTO
             {
                 Id = updateSchedule.Id,
+                UserId = updateSchedule.UserId,
                 StartTime = updateSchedule.StartTime,
                 EndTime = updateSchedule.EndTime
             };
@@ -33,7 +35,8 @@ namespace DentistryManagement.Server.Mappers
                 Id = schedule.Id,
                 StartTime = schedule.StartTime,
                 EndTime = schedule.EndTime,
-                PatientDTO = schedule.Patient is null ? null : PatientMapper.PatientToDTO(schedule.Patient)
+                PatientDTO = schedule.Patient is null ? null : PatientMapper.PatientToDTO(schedule.Patient),
+                UserId = schedule.UserId
             };
         }
 
@@ -52,6 +55,7 @@ namespace DentistryManagement.Server.Mappers
             {
                 Id = scheduleDTO.Id,
                 Subject = scheduleDTO.PatientDTO is null ? null : PatientMapper.DTOtoPatientString(scheduleDTO.PatientDTO),
+                UserId = scheduleDTO.UserId,
                 StartTime = scheduleDTO.StartTime,
                 EndTime = scheduleDTO.EndTime
             };
