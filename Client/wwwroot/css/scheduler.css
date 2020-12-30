@@ -146,3 +146,7 @@
 .grph-view-settings > span {
     padding-left: 7px;
 }
+
+.grph-chart-datetime {
+    height: 514px;
+}

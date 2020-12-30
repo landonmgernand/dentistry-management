@@ -4,24 +4,19 @@
 <div class="grph-paper">
     <div class="grph-chart-datetime">
         <h5>Most popular treatments</h5>
-        <div>
-            @if (Initializing)
-            {
-                <Loading Name="Initializing"/>
-            }
-
-            <SfAccumulationChart EnableAnimation="false" EnableSmartLabels="true">
+        <div hidden="@(!DataExist)">
+            <SfAccumulationChart EnableSmartLabels="true" @ref="Chart">
                 <AccumulationChartEvents Loaded="AfterRender" />
                 <AccumulationChartTooltipSettings Enable="true"></AccumulationChartTooltipSettings>
                 <AccumulationChartLegendSettings Visible="false"></AccumulationChartLegendSettings>
                 <AccumulationChartSeriesCollection>
                     <AccumulationChartSeries DataSource="@PopularTreatment.Treatments" XName="Name" YName="Count" Name="Treatment" Radius="@OuterRadius" StartAngle="@StartAngle" EndAngle="@EndAngle"
                                              InnerRadius="0%" ExplodeIndex="@ExplodeIndex" Explode="true" ExplodeOffset="@ExplodeRadius">
-                        <AccumulationDataLabelSettings Visible="@DataLables" Name="Name" Position="AccumulationLabelPosition.Outside"></AccumulationDataLabelSettings>
+                        <AccumulationDataLabelSettings Visible="@DataExist" Name="Name" Position="AccumulationLabelPosition.Outside"></AccumulationDataLabelSettings>
                     </AccumulationChartSeries>
                 </AccumulationChartSeriesCollection>
             </SfAccumulationChart>
-        </div>
+        </div>  
     </div>
 </div>
 
@@ -29,18 +24,32 @@
     [Parameter]
     public PopularTreatmentViewModel PopularTreatment { get; set; }
 
+    SfAccumulationChart Chart;
+
     public int StartAngle = 0, value = 0, EndAngle = 360, radiusValue = 70, exploderadius = 10;
 
     public double ExplodeIndex = 1;
 
     public string OuterRadius = "70%", ExplodeRadius = "10%";
 
-    private bool DataLables => PopularTreatment.Treatments.Count > 0 ? true : false;
+    private bool DataExist => PopularTreatment.Treatments.Count > 0 ? true : false;
 
     private bool Initializing = true;
 
-    private void AfterRender()
+    public void AfterRender(AccumulationLoadedEventArgs action)
     {
         Initializing = false;
+    }
+
+    public void RefreshLiveData(PopularTreatmentViewModel popularTreatment)
+    {
+        if (popularTreatment.Treatments.Count == 0)
+        {
+            return;
+        }
+
+        PopularTreatment = popularTreatment;
+        StateHasChanged();
+        Chart.Refresh();
     }
 }

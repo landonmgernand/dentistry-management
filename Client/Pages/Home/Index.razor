@@ -44,10 +44,10 @@
 
         <div class="row">
             <div class="col-6">
-                <MonthlyTreatmentChart MonthlyTreatmentHistory="@statistic.MonthlyTreatmentHistory" />
+                <MonthlyTreatmentChart MonthlyTreatmentHistory="@statistic.MonthlyTreatmentHistory" @ref="monthlyTreatmentChart" />
             </div>
             <div class="col-6">
-                <PopularTreatmentChart PopularTreatment="@statistic.PopularTreatment" />
+                <PopularTreatmentChart PopularTreatment="@statistic.PopularTreatment" @ref="popularTreatmentChart"/>
             </div>
         </div>
     }
@@ -57,12 +57,16 @@
     [CascadingParameter]
     protected MainLayout navigationSet { get; set; }
 
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
     private StatisticViewModel statistic;
 
     private List<AffiliateViewModel> affiliates;
 
-    [CascadingParameter]
-    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    private MonthlyTreatmentChart monthlyTreatmentChart;
+
+    private PopularTreatmentChart popularTreatmentChart;
 
     protected override async Task OnInitializedAsync()
     {
@@ -89,5 +93,7 @@
     private void UpdateChartData(StatisticViewModel statisticView)
     {
         statistic = statisticView;
+        monthlyTreatmentChart.RefreshLiveData(statistic.MonthlyTreatmentHistory);
+        popularTreatmentChart.RefreshLiveData(statistic.PopularTreatment);
     }
 }

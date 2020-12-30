@@ -270,7 +270,7 @@
 
     private void OnDataBound(DataBoundEventArgs<ScheduleViewModel> args)
     {
-        if (schedule.Count == 0)
+        if (schedule.Count == 0 || schedule.Count != 0)
         {
             Initializing = false;
         }
