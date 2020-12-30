@@ -23,7 +23,7 @@ Web application for dental center to record specific information about visitors.
 
 ## Demo
 
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=YOUTUBE_VIDEO_ID_HERE
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=xbJxN07FiwU
 " target="_blank"><img src="http://img.youtube.com/vi/xbJxN07FiwU/0.jpg" 
 alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>
 
