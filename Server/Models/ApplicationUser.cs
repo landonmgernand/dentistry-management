@@ -20,5 +20,7 @@ namespace DentistryManagement.Server.Models
         public ICollection<TreatmentHistory> TreatmentHistories { get; set; }
 
         public ICollection<Comment> Comments { get; set; }
+
+        public ICollection<Schedule> Schedule { get; set; }
     }
 }

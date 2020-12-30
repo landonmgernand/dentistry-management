@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DentistryManagement.Server.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AffiliateController : ControllerBase
@@ -24,12 +24,14 @@ namespace DentistryManagement.Server.Controllers
             _addressService = addressService;
         }
 
+        [Authorize(Roles = "Admin, Manager")]
         [HttpGet]
         public ActionResult<IEnumerable<AffiliateViewModel>> GetAffiliates()
         {
             return _affiiliateService.GetAll().Select(a => AffiliateMapper.DTOtoAffiliateVM(a)).ToArray();
         }
 
+        [Authorize(Roles = "Admin, Manager")]
         [HttpGet("{id}")]
         public ActionResult<AffiliateViewModel> GetAffiliate(int id)
         {
@@ -43,6 +45,7 @@ namespace DentistryManagement.Server.Controllers
             return AffiliateMapper.DTOtoAffiliateVM(affiliate);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("{affiliateId}/address")]
         public ActionResult<AddressViewModel> GetAffiliateAddress(int affiliateId)
         {
@@ -56,6 +59,7 @@ namespace DentistryManagement.Server.Controllers
             return AddressMapper.DTOtoAddressVM(affiliateAddress);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult CreateAffiliate([FromBody] CreateAffiliateViewModel createAffiliateViewModel)
         {
@@ -65,6 +69,7 @@ namespace DentistryManagement.Server.Controllers
             return Ok(ModelState);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public IActionResult UpdateAffiliate(int id, [FromBody] UpdateAffiliateViewModel updateAffiliateViewModel)
         {
@@ -84,6 +89,7 @@ namespace DentistryManagement.Server.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public IActionResult DeleteAffiliate(int id)
         {
@@ -97,6 +103,7 @@ namespace DentistryManagement.Server.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("{affiliateId}/address")]
         public IActionResult CreateAddress(int affiliateId, [FromBody] CreateAddressViewModel createAddressViewModel)
         {
@@ -116,6 +123,7 @@ namespace DentistryManagement.Server.Controllers
             return Ok(ModelState);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{affiliateId}/address/{id}")]
         public IActionResult UpdateAddress(int affiliateId, int id, [FromBody] UpdateAddressViewModel updateAddressViewModel)
         {

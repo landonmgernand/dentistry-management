@@ -1,0 +1,48 @@
+﻿@using DentistryManagement.Client.Components
+@using DentistryManagement.Shared.ViewModels.Affiliates
+@using DentistryManagement.Shared.ViewModels.Statistics
+
+@inject HttpClient Http
+
+<div class="grph-paper">
+    <SettingsPanel Title="Settings">
+        <ul class="grph-ul">
+            <li class="grph-settings-li">
+                <div class="col">
+                    <MatSelect Label="Affiliate" Outlined="true" Value="@CurrentAffiliateId" ValueChanged="@((int value) => ChangeAffiliate(value))">
+                        @foreach (var affiliate in Affiliates)
+                        {
+                            <MatOption Value="@affiliate.Id">@affiliate.Name</MatOption>
+                        }
+                    </MatSelect>
+                </div>
+            </li>
+        </ul>
+    </SettingsPanel>
+</div>
+
+@code {
+    [Parameter]
+    public List<AffiliateViewModel> Affiliates { get; set; }
+
+    [Parameter]
+    public EventCallback<int> AffiliateSchedule { get; set; }
+
+    [Parameter]
+    public int AffiliateId { get; set; }
+
+
+    private int CurrentAffiliateId { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        CurrentAffiliateId = AffiliateId;
+    }
+
+    private async Task ChangeAffiliate(int affiliateId)
+    {
+        CurrentAffiliateId = affiliateId;
+        await AffiliateSchedule.InvokeAsync(affiliateId);
+    }
+}

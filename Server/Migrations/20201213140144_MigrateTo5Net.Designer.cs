@@ -3,14 +3,16 @@ using System;
 using DentistryManagement.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DentistryManagement.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201213140144_MigrateTo5Net")]
+    partial class MigrateTo5Net
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -182,7 +184,7 @@ namespace DentistryManagement.Server.Migrations
                             Id = "B22698B8-42A2-4115-9631-1C2D1E2AC5F7",
                             AccessFailedCount = 0,
                             AffiliateId = 1,
-                            ConcurrencyStamp = "f8ca3d9b-1ac8-4890-a100-25065fd12716",
+                            ConcurrencyStamp = "2dc44f9e-4ee4-4d6d-9df8-436b766a38fc",
                             Email = "admin@graphene.com",
                             EmailConfirmed = true,
                             FirstName = "Graphene",
@@ -190,9 +192,9 @@ namespace DentistryManagement.Server.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "admin@graphene.com",
                             NormalizedUserName = "admin@graphene.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEOq6oi9tay5xLOz61DXiQ9wFkNhcmOVB4yOserHm68BfQLrtuZWZKFhMYjssBFfHDg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAECuf3cQdLFdygN0XTblnTOf0TFjbTt8UiLOLpYf6y/DRZ1FFvQ7KiNvZ3v9x1PekLQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "0d38537b-21ef-4680-bf83-0f8fee6f138c",
+                            SecurityStamp = "debc597b-e59e-429f-8864-0708d5b28485",
                             TwoFactorEnabled = false,
                             UserName = "admin@graphene.com"
                         });
@@ -325,34 +327,6 @@ namespace DentistryManagement.Server.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Patients");
-                });
-
-            modelBuilder.Entity("DentistryManagement.Server.Models.Schedule", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("PatientId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PatientId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Schedule");
                 });
 
             modelBuilder.Entity("DentistryManagement.Server.Models.Tooth", b =>
@@ -724,21 +698,21 @@ namespace DentistryManagement.Server.Migrations
                         new
                         {
                             Id = "2301D884-221A-4E7D-B509-0113DCC043E1",
-                            ConcurrencyStamp = "7677177c-6aaf-4eb5-9c24-06b5e02774f9",
+                            ConcurrencyStamp = "768e32fc-5f54-4653-b149-2a363b9ee23c",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         },
                         new
                         {
-                            Id = "dff13feb-c0cf-4c58-8278-90612d70a79b",
-                            ConcurrencyStamp = "40a72143-3b08-4c39-acaf-03dd51d5fca5",
+                            Id = "6f4ac592-08bd-49dc-8faa-68eedaecb016",
+                            ConcurrencyStamp = "ba94980f-812f-47e5-ae68-86f09f7e8eb4",
                             Name = "Manager",
                             NormalizedName = "Manager"
                         },
                         new
                         {
-                            Id = "ea036eb1-16db-4aa1-8924-c318cf3cb22c",
-                            ConcurrencyStamp = "36258e33-c366-40df-9a93-fe12c17375fa",
+                            Id = "f9a86ac5-acee-4bff-9cab-eeeb583c96cb",
+                            ConcurrencyStamp = "2a8ee5c8-591b-4fbb-9419-23cc2b5d6b87",
                             Name = "Dentist",
                             NormalizedName = "Dentist"
                         });
@@ -828,25 +802,6 @@ namespace DentistryManagement.Server.Migrations
                         .IsRequired();
 
                     b.Navigation("Patient");
-                });
-
-            modelBuilder.Entity("DentistryManagement.Server.Models.Schedule", b =>
-                {
-                    b.HasOne("DentistryManagement.Server.Models.Patient", "Patient")
-                        .WithMany("Schedule")
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DentistryManagement.Server.Models.ApplicationUser", "User")
-                        .WithMany("Schedule")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Patient");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DentistryManagement.Server.Models.Tooth", b =>
@@ -999,8 +954,6 @@ namespace DentistryManagement.Server.Migrations
                 {
                     b.Navigation("Comments");
 
-                    b.Navigation("Schedule");
-
                     b.Navigation("TreatmentHistories");
 
                     b.Navigation("UserRoles");
@@ -1025,8 +978,6 @@ namespace DentistryManagement.Server.Migrations
             modelBuilder.Entity("DentistryManagement.Server.Models.Patient", b =>
                 {
                     b.Navigation("MedicalChart");
-
-                    b.Navigation("Schedule");
                 });
 
             modelBuilder.Entity("DentistryManagement.Server.Models.Tooth", b =>
