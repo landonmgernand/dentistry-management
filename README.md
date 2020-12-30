@@ -1,6 +1,6 @@
 # Dentistry Management
 
-Web application for dental center to record specific information about visitors.
+Web application for a dental center to record specific information about visitors as well to manage their own Affiliate, Dentists to look at Statistics how Affiliate is doing in terms of Patients, basically the whole system which one Dentist Ordination might need.
 
 ## Main Features
 1. [Statistics](#statistic)
