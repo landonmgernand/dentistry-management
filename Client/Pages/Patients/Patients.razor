@@ -39,7 +39,7 @@
                         <tr class="grph-table-row">
                             <td @onclick="@(() => Details(patient))">@patient.FirstName</td>
                             <td @onclick="@(() => Details(patient))">@patient.LastName</td>
-                            <td @onclick="@(() => Details(patient))">@patient.DateOfBirth.ToShortDateString()</td>
+                            <td @onclick="@(() => Details(patient))">@patient.DateOfBirth.ToString("dd-MM-yyyy")</td>
                             <td @onclick="@(() => Details(patient))">@patient.Email</td>
                             <td @onclick="@(() => Details(patient))">@patient.PhoneNumber</td>
                             <td class="grph-actions">

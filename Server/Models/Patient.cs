@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DentistryManagement.Server.Models
@@ -27,5 +28,7 @@ namespace DentistryManagement.Server.Models
         public string PhoneNumber { get; set; }
 
         public MedicalChart MedicalChart { get; set; }
+
+        public ICollection<Schedule> Schedule { get; set; }
     }
 }

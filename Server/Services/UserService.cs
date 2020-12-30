@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using System;
 using DentistryManagement.Server.DataTransferObjects;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore;
 using DentistryManagement.Server.Services.Interfaces;
+using DentistryManagement.Server.Helpers;
 
 namespace DentistryManagement.Server.Services
 {
@@ -17,11 +17,17 @@ namespace DentistryManagement.Server.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUserProviderService _userProviderService;
 
-        public UserService(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public UserService(
+            ApplicationDbContext context,
+            UserManager<ApplicationUser> userManager,
+            IUserProviderService userProviderService
+            )
         {
             _context = context;
             _userManager = userManager;
+            _userProviderService = userProviderService;
         }
 
         public List<UserDTO> GetAll()
@@ -50,11 +56,6 @@ namespace DentistryManagement.Server.Services
             }
 
             return UserMapper.ApplicationUserToDTO(applicationUser);
-        }
-
-        public void Add(UserDTO item)
-        {
-            throw new NotImplementedException();
         }
 
         public UserDTO GetByUsername(string username)
@@ -147,6 +148,34 @@ namespace DentistryManagement.Server.Services
         {
             var applicationUser =  await _userManager.FindByIdAsync(id);
             return await _userManager.CheckPasswordAsync(applicationUser, password);
+        }
+
+        public List<UserDTO> GetAffiliateUsers(int affiliateId)
+        {
+            var users = _context.ApplicationUsers
+                .Include(ur => ur.UserRoles)
+                .ThenInclude(r => r.Role)
+                .Where(u => u.AffiliateId.Equals(affiliateId))
+                .Select(x => UserMapper.ApplicationUserToDTO(x))
+                .ToList();
+
+            return users;
+        }
+
+        public UserDTO GetCurrent()
+        {
+            var applicationUser = _context.ApplicationUsers
+                 .Include(ur => ur.UserRoles)
+                 .ThenInclude(r => r.Role)
+                 .Include(a => a.Affiliate)
+                 .SingleOrDefault(x => x.Id.Equals(_userProviderService.GetUserId()));
+
+            if (applicationUser == null)
+            {
+                return null;
+            }
+
+            return UserMapper.ApplicationUserToDTO(applicationUser);
         }
     }
 }

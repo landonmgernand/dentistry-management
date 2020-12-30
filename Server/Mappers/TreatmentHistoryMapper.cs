@@ -80,7 +80,7 @@ namespace DentistryManagement.Server.Mappers
         {
             return new TreatmentHistoryChartViewModel
             {
-                DateOfTreatment = treatmentHistoryChart.DateOfTreatment.ToString("dd-MM-yyyy"),
+                DateOfTreatment = treatmentHistoryChart.DateOfTreatment,
                 Count = treatmentHistoryChart.Count
             };
         }

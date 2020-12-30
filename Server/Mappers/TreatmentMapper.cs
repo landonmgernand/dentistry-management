@@ -52,7 +52,8 @@ namespace DentistryManagement.Server.Mappers
             {
                 Id = treatmentDTO.Id,
                 Name = treatmentDTO.Name,
-                Price = treatmentDTO.Price.ToString("c", new CultureInfo("fr-FR"))
+                Price = treatmentDTO.Price,
+                PriceString = treatmentDTO.Price.ToString("c", new CultureInfo("fr-FR"))
             };
         }
 

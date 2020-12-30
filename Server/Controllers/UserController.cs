@@ -38,6 +38,18 @@ namespace DentistryManagement.Server.Controllers
             return _userService.GetAll().Select(x => UserMapper.DTOtoUserViewModel(x)).ToArray();
         }
 
+        [Authorize(Roles = "Admin, Manager")]
+        [HttpGet("affiliate/{affiliateId}")]
+        public ActionResult<IEnumerable<UserViewModel>> GetAffiliateUsers(int affiliateId)
+        {
+            if (!_affiliateService.Exist(affiliateId))
+            {
+                return NotFound();
+            }
+
+            return _userService.GetAffiliateUsers(affiliateId).Select(x => UserMapper.DTOtoUserViewModel(x)).ToArray();
+        }
+
         [Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
         public ActionResult<UserViewModel> GetUser(string id)
@@ -63,6 +75,19 @@ namespace DentistryManagement.Server.Controllers
             }
            
             return UserMapper.DTOtoUserViewModel(user);
+        }
+
+        [HttpGet("current")]
+        public ActionResult<UserViewModel> GetCurrentUser()
+        {
+            var userDTO = _userService.GetCurrent();
+
+            if (userDTO == null)
+            {
+                return NotFound();
+            }
+
+            return UserMapper.DTOtoUserViewModel(userDTO);
         }
 
         [Authorize(Roles = "Admin")]

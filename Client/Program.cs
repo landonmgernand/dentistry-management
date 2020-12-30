@@ -14,9 +14,9 @@ namespace DentistryManagement.Client
     {
         public static async Task Main(string[] args)
         {
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzQyMTY5QDMxMzgyZTMzMmUzMEs0R2RoQ29vMW5Pc0h1VG0vblJjTjZnNCtGTUV4d2ZaclQ3d2VQaVNDbVk9;MzQyMTcwQDMxMzgyZTMzMmUzMGVYQjBxQzVER2FoSHB2azZmdXJQWDFnSElrbUJsYkgxamdiSUI0WFFRSmc9;MzQyMTcxQDMxMzgyZTMzMmUzMEQ4ZlBBa2prcWo2V3BvT3pGa21QSnBXRm50QUdwOVIza0h3NGRTK0wvMTg9");
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzY4NTE3QDMxMzgyZTM0MmUzMGFVa0tWeWtTazFOQ0lTQ3E4YVVISEJZUUQyeUprQ09LdFQzVE50Y2w3bTQ9;MzY4NTE4QDMxMzgyZTM0MmUzMEFXZVdZR1lSVmVVRjJpUzdYK0hlNW1sUnlRRW54aWVOWTg1bnZrNG1sUWc9;MzY4NTE5QDMxMzgyZTM0MmUzMFlDMGRBd0R6Ylc0MXllZkxzMzZ6ZmZ1NmloS3FKMndvR1paSndIREl2a2s9;MzY4NTIwQDMxMzgyZTM0MmUzMGJYMzlLbFQ0NzFqWVBIcnRPZ0V1bHM2Q1cxRHFHM29PRnkxYmMrZDBBQ0k9");
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
-            builder.RootComponents.Add<App>("app");
+            builder.RootComponents.Add<App>("#app");
 
             builder.Services.AddHttpClient("DentistryManagement.ServerAPI", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
                 .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
