@@ -6,7 +6,7 @@ Web application for dental center to record specific information about visitors.
 1. [Statistics](#statistic)
 2. [Managing Users](#managing-users)
 3. [Managing Patients / Affiliates / Dentists / Diseases / Treatments](#rest)
-4. [Patient's Chart](#patien's-chart)
+4. [Patient's Chart](#patient's-chart)
 5. [Scheduler](#scheduler)
 
 ## Statistics
