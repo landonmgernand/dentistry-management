@@ -1,4 +1,4 @@
-## Dentistry Management
+# Dentistry Management
 
 Web application for dental center to record specific information about visitors.
 
