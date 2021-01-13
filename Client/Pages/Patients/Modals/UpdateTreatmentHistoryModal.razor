@@ -88,7 +88,7 @@
         </div>
 
         <div class="input-group grph-button-actions">
-            <button class="btn btn-primary grph-cancel" @onclick="BlazoredModal.Cancel">Cancel</button>
+            <button class="btn btn-primary grph-cancel" @onclick="BlazoredModal.CancelAsync">Cancel</button>
             <button class="btn btn-primary grph-primary" disabled="@disabled">Update Treatment History</button>
         </div>
 
@@ -158,7 +158,7 @@
             }
             else
             {
-                await BlazoredModal.Close(ModalResult.Ok(response));
+                await BlazoredModal.CloseAsync(ModalResult.Ok(response));
             }
         }
         catch (AccessTokenNotAvailableException exception)
