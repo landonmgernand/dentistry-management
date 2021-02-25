@@ -95,7 +95,7 @@
 
         parameters.Add(nameof(patient.Id), patient.Id);
 
-        var updateModal = Modal.Show<UpdatePatientModal>("Details of " + patient.FirstName + patient.LastName, parameters, modalOptions);
+        var updateModal = Modal.Show<UpdatePatientModal>("Details of " + patient.FirstName + " " + patient.LastName, parameters, modalOptions);
 
         var result = await updateModal.Result;
 

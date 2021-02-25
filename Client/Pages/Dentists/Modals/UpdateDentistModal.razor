@@ -35,7 +35,7 @@
         <br />
 
         <div class="input-group grph-button-actions">
-            <button class="btn btn-primary grph-cancel" @onclick="BlazoredModal.Cancel">Cancel</button>
+            <button class="btn btn-primary grph-cancel" @onclick="BlazoredModal.CancelAsync">Cancel</button>
             <button class="btn btn-primary grph-primary" disabled="@disabled">Update User</button>
         </div>
     </EditForm>
@@ -77,7 +77,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                await BlazoredModal.Close(ModalResult.Ok(response));
+                await BlazoredModal.CloseAsync(ModalResult.Ok(response));
             }
         }
         catch (AccessTokenNotAvailableException exception)
